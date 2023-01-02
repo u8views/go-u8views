@@ -41,3 +41,5 @@ jobs:
           git add version.txt
           git commit -m "[skip ci] Updating version.txt with a new patch version."
           git push
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
