@@ -3,7 +3,7 @@ name: Run tests and increment version
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   code-quality:
