@@ -25,10 +25,15 @@ jobs:
         run: go test $(go list ./... | grep -v '/integrationtest') -v
 
   release:
-    name: Increment version
+    name: Release
     needs: [code-quality]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
       - name: Increment version
         run: |
           git pull
