@@ -23,23 +23,3 @@ jobs:
 
       - name: Unit tests
         run: go test $(go list ./... | grep -v '/integrationtest') -v
-
-  release:
-    name: Release
-    needs: [code-quality]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-        with:
-          fetch-depth: 0
-
-      - name: Increment version
-        run: |
-          git pull
-          bash version.sh minor
-          git add version.txt
-          git commit -m "[skip ci] Updating version.txt with a new patch version."
-          git push
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
