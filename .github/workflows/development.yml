@@ -1,0 +1,38 @@
+name: Run tests and increment version
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  code-quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Unit tests
+        run: go test $(go list ./... | grep -v '/integrationtest') -v
+
+  release:
+    name: Increment version
+    needs: [code-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Increment version
+        run: |
+          git pull
+          bash version.sh minor
+          git add version.txt
+          git commit -m "[skip ci] Updating version.txt with a new patch version."
+          git push
