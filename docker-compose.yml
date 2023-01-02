@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: "go_u8views_postgres"
+    image: postgres:14.2
+    env_file:
+      - .pgsql.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+volumes:
+  postgres-data: # Define the volume
