@@ -14,7 +14,7 @@ const profileHourlyViewsStatsUpsert = `-- name: ProfileHourlyViewsStatsUpsert :e
 INSERT INTO profile_hourly_views_stats (time, user_id, count)
 VALUES ($1, $2, $3)
 ON CONFLICT (time, user_id) DO UPDATE
-    SET count = count + $3
+    SET count = profile_hourly_views_stats.count + $3
 `
 
 type ProfileHourlyViewsStatsUpsertParams struct {

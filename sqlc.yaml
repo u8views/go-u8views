@@ -1,7 +1,7 @@
 version: "1"
 packages:
-  - path: "./internal/pgsql/dbs/"
+  - path: "./internal/storage/dbs/"
     engine: "postgresql"
-    schema: "./internal/pgsql/schema/"
-    queries: "./internal/pgsql/query/"
+    schema: "./internal/storage/schema/"
+    queries: "./internal/storage/query/"
     emit_prepared_queries: true

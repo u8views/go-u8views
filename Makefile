@@ -14,20 +14,20 @@ down-with-clear:
 
 # make migrate-pgsql-create NAME=init
 migrate-pgsql-create:
-	# mkdir -p ./internal/pgsql/schema
+	# mkdir -p ./internal/storage/schema
 	$(eval NAME ?= todo)
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) create $(NAME) sql
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) create $(NAME) sql
 
 migrate-pgsql-up:
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) up
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) up
 migrate-pgsql-redo:
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) redo
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) redo
 migrate-pgsql-down:
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) down
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) down
 migrate-pgsql-reset:
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) reset
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) reset
 migrate-pgsql-status:
-	goose -dir ./internal/pgsql/schema -table schema_migrations postgres $(POSTGRES_DSN) status
+	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) status
 
 migrate-all-reset:
 	time make migrate-pgsql-reset migrate-pgsql-up
@@ -38,7 +38,13 @@ generate-dbs:
 bench:
 	go test ./internal/tests/... -v -bench=. -benchmem
 
+postgres-user-fixtures:
+	cat ./console/postgres-user-fixtures.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
+
 go-mod-update:
 	go get -u
 	go mod tidy
 	go mod vendor
+
+local-run:
+	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go

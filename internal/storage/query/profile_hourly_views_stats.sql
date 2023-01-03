@@ -2,4 +2,4 @@
 INSERT INTO profile_hourly_views_stats (time, user_id, count)
 VALUES (@time, @user_id, @count)
 ON CONFLICT (time, user_id) DO UPDATE
-    SET count = count + @count;
+    SET count = profile_hourly_views_stats.count + @count;
