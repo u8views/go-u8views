@@ -23,7 +23,10 @@ type ProfileCountURI struct {
 }
 
 type ProfileCountResponse struct {
-	Count int64 `json:"count"`
+	DayCount   int64 `json:"day_count"`
+	WeekCount  int64 `json:"week_count"`
+	MonthCount int64 `json:"month_count"`
+	TotalCount int64 `json:"total_count"`
 }
 
 type ErrorResponse struct {
@@ -44,10 +47,13 @@ func (c *ProfileStatsController) Count(ctx *gin.Context) {
 		return
 	}
 
-	count, err := c.service.Count(ctx, uri.UserID)
+	statsCount, err := c.service.StatsCount(ctx, uri.UserID)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusOK, &ProfileCountResponse{
-			Count: 0,
+			DayCount:   0,
+			WeekCount:  0,
+			MonthCount: 0,
+			TotalCount: 0,
 		})
 
 		return
@@ -64,6 +70,9 @@ func (c *ProfileStatsController) Count(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, &ProfileCountResponse{
-		Count: count,
+		DayCount:   statsCount.DayCount,
+		WeekCount:  statsCount.WeekCount,
+		MonthCount: statsCount.MonthCount,
+		TotalCount: statsCount.TotalCount,
 	})
 }

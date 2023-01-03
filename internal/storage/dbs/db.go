@@ -24,6 +24,9 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.profileHourlyViewsStatsStmt, err = db.PrepareContext(ctx, profileHourlyViewsStats); err != nil {
+		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStats: %w", err)
+	}
 	if q.profileHourlyViewsStatsUpsertStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsUpsert); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsUpsert: %w", err)
 	}
@@ -41,6 +44,11 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 
 func (q *Queries) Close() error {
 	var err error
+	if q.profileHourlyViewsStatsStmt != nil {
+		if cerr := q.profileHourlyViewsStatsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing profileHourlyViewsStatsStmt: %w", cerr)
+		}
+	}
 	if q.profileHourlyViewsStatsUpsertStmt != nil {
 		if cerr := q.profileHourlyViewsStatsUpsertStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileHourlyViewsStatsUpsertStmt: %w", cerr)
@@ -100,6 +108,7 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 type Queries struct {
 	db                                DBTX
 	tx                                *sql.Tx
+	profileHourlyViewsStatsStmt       *sql.Stmt
 	profileHourlyViewsStatsUpsertStmt *sql.Stmt
 	profileTotalViewsStmt             *sql.Stmt
 	profileTotalViewsIncStmt          *sql.Stmt
@@ -110,6 +119,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
 		db:                                tx,
 		tx:                                tx,
+		profileHourlyViewsStatsStmt:       q.profileHourlyViewsStatsStmt,
 		profileHourlyViewsStatsUpsertStmt: q.profileHourlyViewsStatsUpsertStmt,
 		profileTotalViewsStmt:             q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:          q.profileTotalViewsIncStmt,

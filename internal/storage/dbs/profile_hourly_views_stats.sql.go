@@ -10,6 +10,40 @@ import (
 	"time"
 )
 
+const profileHourlyViewsStats = `-- name: ProfileHourlyViewsStats :one
+SELECT COALESCE(SUM(CASE WHEN time >= $1 THEN count ELSE 0 END), 0)::BIGINT  AS day_count,
+       COALESCE(SUM(CASE WHEN time >= $2 THEN count ELSE 0 END), 0)::BIGINT AS week_count,
+       COALESCE(SUM(count), 0)::BIGINT                                         AS month_count
+FROM profile_hourly_views_stats
+WHERE time >= $3
+  AND user_id = $4
+`
+
+type ProfileHourlyViewsStatsParams struct {
+	Day    time.Time
+	Week   time.Time
+	Month  time.Time
+	UserID int64
+}
+
+type ProfileHourlyViewsStatsRow struct {
+	DayCount   int64
+	WeekCount  int64
+	MonthCount int64
+}
+
+func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourlyViewsStatsParams) (ProfileHourlyViewsStatsRow, error) {
+	row := q.queryRow(ctx, q.profileHourlyViewsStatsStmt, profileHourlyViewsStats,
+		arg.Day,
+		arg.Week,
+		arg.Month,
+		arg.UserID,
+	)
+	var i ProfileHourlyViewsStatsRow
+	err := row.Scan(&i.DayCount, &i.WeekCount, &i.MonthCount)
+	return i, err
+}
+
 const profileHourlyViewsStatsUpsert = `-- name: ProfileHourlyViewsStatsUpsert :exec
 INSERT INTO profile_hourly_views_stats (time, user_id, count)
 VALUES ($1, $2, $3)
