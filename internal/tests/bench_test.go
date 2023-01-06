@@ -27,6 +27,7 @@ func BenchmarkProfileStatsService(b *testing.B) {
 
 	var count int64
 
+	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			var userID = atomic.AddInt64(&count, 1)%10000 + 1

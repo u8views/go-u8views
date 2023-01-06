@@ -16,7 +16,7 @@ FROM generate_series(1, 10 * 1000) AS generated_user_id;
 INSERT INTO profile_hourly_views_stats (time, user_id, count)
 SELECT generated_time, generated_user_id, generated_user_id % 100 + 1
 FROM generate_series(
-             (DATE_TRUNC('hour', NOW()) - INTERVAL '1 YEAR')::TIMESTAMP,
+             (DATE_TRUNC('hour', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
              (DATE_TRUNC('hour', NOW()))::TIMESTAMP,
              '1 hour'::INTERVAL
          ) AS generated_time
@@ -27,6 +27,7 @@ FROM generate_series(
              1
          ) AS generated_user_id ON TRUE;
 
--- 87610000
+-- 1 MONTH =  7 450 000
+-- 1 YEAR  = 87 610 000
 SELECT COUNT(*)
 FROM profile_hourly_views_stats;

@@ -35,8 +35,11 @@ migrate-all-reset:
 generate-dbs:
 	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
 
+# BENCHTIME=100x make bench
 bench:
-	DSN=$(POSTGRES_DSN) go test ./internal/tests/... -v -bench=. -benchmem -benchtime=100x
+	$(eval BENCHTIME ?= 100x)
+	echo "BENCHTIME=$(BENCHTIME) make bench"
+	DSN=$(POSTGRES_DSN) go test ./internal/tests/... -v -bench=. -benchmem -benchtime=$(BENCHTIME)
 
 postgres-fixtures:
 	test -f "./console/postgres-fixtures.sql"
@@ -58,7 +61,8 @@ go-mod-update:
 local-run:
 	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go
 
-# 8.447GB
+# 1 MONTH = 1.735GB
+# 1 YEAR  = 8.447GB
 postgres-volume-size:
 	docker system df -v | grep go-u8views_postgres-data
 	docker stats --no-stream
