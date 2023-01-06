@@ -36,10 +36,19 @@ generate-dbs:
 	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
 
 bench:
-	go test ./internal/tests/... -v -bench=. -benchmem
+	DSN=$(POSTGRES_DSN) go test ./internal/tests/... -v -bench=. -benchmem -benchtime=100x
 
-postgres-user-fixtures:
-	cat ./console/postgres-user-fixtures.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
+postgres-fixtures:
+	test -f "./console/postgres-fixtures.sql"
+	cat ./console/postgres-fixtures.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
+
+postgres-fixtures-count:
+	test -f "./console/postgres-fixtures-count.sql"
+	cat ./console/postgres-fixtures-count.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
+
+postgres-fixtures-clear:
+	test -f "./console/postgres-fixtures-clear.sql"
+	cat ./console/postgres-fixtures-clear.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
 
 go-mod-update:
 	go get -u
@@ -48,3 +57,8 @@ go-mod-update:
 
 local-run:
 	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go
+
+# 8.447GB
+postgres-volume-size:
+	docker system df -v | grep go-u8views_postgres-data
+	docker stats --no-stream

@@ -47,7 +47,7 @@ func (c *ProfileStatsController) Count(ctx *gin.Context) {
 		return
 	}
 
-	statsCount, err := c.service.StatsCount(ctx, uri.UserID)
+	statsCount, err := c.service.StatsCount(ctx, uri.UserID, true)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusOK, &ProfileCountResponse{
 			DayCount:   0,

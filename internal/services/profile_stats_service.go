@@ -23,7 +23,7 @@ func NewProfileStatsService(repository *db.Repository) *ProfileStatsService {
 	return &ProfileStatsService{repository: repository}
 }
 
-func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64) (ProfileStatsCount, error) {
+func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, increment bool) (ProfileStatsCount, error) {
 	totalCount, err := s.repository.Queries().ProfileTotalViews(ctx, userID)
 	if err != nil {
 		return ProfileStatsCount{}, err
@@ -40,25 +40,27 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64) (Pro
 		return ProfileStatsCount{}, err
 	}
 
-	txErr := s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
-		err := queries.ProfileTotalViewsInc(ctx, userID)
-		if err != nil {
-			return err
-		}
+	if increment {
+		txErr := s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
+			err := queries.ProfileTotalViewsInc(ctx, userID)
+			if err != nil {
+				return err
+			}
 
-		err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
-			Time:   now,
-			UserID: userID,
-			Count:  1,
+			err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
+				Time:   now,
+				UserID: userID,
+				Count:  1,
+			})
+			if err != nil {
+				return err
+			}
+
+			return nil
 		})
-		if err != nil {
-			return err
+		if txErr != nil {
+			return ProfileStatsCount{}, txErr
 		}
-
-		return nil
-	})
-	if txErr != nil {
-		return ProfileStatsCount{}, txErr
 	}
 
 	return ProfileStatsCount{
