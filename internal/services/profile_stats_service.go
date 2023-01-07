@@ -48,8 +48,8 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 			}
 
 			err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
-				Time:   now,
 				UserID: userID,
+				Time:   now,
 				Count:  1,
 			})
 			if err != nil {

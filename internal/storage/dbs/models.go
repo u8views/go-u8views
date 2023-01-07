@@ -9,8 +9,8 @@ import (
 )
 
 type ProfileHourlyViewsStat struct {
-	Time   time.Time
 	UserID int64
+	Time   time.Time
 	Count  int64
 }
 

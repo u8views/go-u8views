@@ -13,10 +13,10 @@ CREATE TABLE profile_total_views
 
 CREATE TABLE profile_hourly_views_stats
 (
-    time    TIMESTAMP NOT NULL,
     user_id BIGINT    NOT NULL REFERENCES users (id),
+    time    TIMESTAMP NOT NULL,
     count   BIGINT    NOT NULL,
-    PRIMARY KEY (time, user_id)
+    PRIMARY KEY (user_id, time)
 );
 -- +goose StatementEnd
 

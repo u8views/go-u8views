@@ -28,25 +28,40 @@ BENCHTIME=100x make bench
 ```
 ```text
 BenchmarkProfileStatsService
-BenchmarkProfileStatsService-12    	     100	  93718529 ns/op	    4774 B/op	      77 allocs/op
+BenchmarkProfileStatsService-12    	     100	    627990 ns/op	    5033 B/op	      80 allocs/op
 PASS
-ok  	github.com/u8views/go-u8views/internal/tests	9.625s
+ok  	github.com/u8views/go-u8views/internal/tests	0.088s
 ```
 ```bash
 BENCHTIME=1000x make bench
 ```
 ```text
 BenchmarkProfileStatsService
-BenchmarkProfileStatsService-12    	    1000	  58595528 ns/op	    2267 B/op	      51 allocs/op
+BenchmarkProfileStatsService-12    	    1000	    449478 ns/op	    4124 B/op	      72 allocs/op
 PASS
-ok  	github.com/u8views/go-u8views/internal/tests	58.879s
+ok  	github.com/u8views/go-u8views/internal/tests	0.471s
 ```
 ```bash
 BENCHTIME=10000x make bench
 ```
 ```text
 BenchmarkProfileStatsService
-BenchmarkProfileStatsService-12    	   10000	  58260299 ns/op	    2410 B/op	      54 allocs/op
+BenchmarkProfileStatsService-12    	   10000	    546875 ns/op	    4885 B/op	      81 allocs/op
 PASS
-ok  	github.com/u8views/go-u8views/internal/tests	582.842s
+ok  	github.com/u8views/go-u8views/internal/tests	5.492s
+```
+
+### Database schema templates
+* [DrawSQL](https://drawsql.app/templates)
+
+### Database schema
+![Database schema](https://github.com/u8views/go-u8views/blob/master/database-schema/v001.png?raw=true)
+
+### SQL
+```sql
+SELECT user_id, SUM(count), COUNT(*)
+FROM profile_hourly_views_stats
+GROUP BY user_id
+ORDER BY SUM(count) DESC
+LIMIT 100;
 ```

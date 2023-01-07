@@ -27,7 +27,7 @@ FROM generate_series(
              1
          ) AS generated_user_id ON TRUE;
 
--- 1 MONTH =  7 450 000
--- 1 YEAR  = 87 610 000
+-- 1 MONTH * 10 000 =  7 450 000
+-- 1 YEAR  * 10 000 = 87 610 000
 SELECT COUNT(*)
 FROM profile_hourly_views_stats;

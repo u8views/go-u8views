@@ -15,15 +15,15 @@ SELECT COALESCE(SUM(CASE WHEN time >= $1 THEN count ELSE 0 END), 0)::BIGINT  AS 
        COALESCE(SUM(CASE WHEN time >= $2 THEN count ELSE 0 END), 0)::BIGINT AS week_count,
        COALESCE(SUM(count), 0)::BIGINT                                         AS month_count
 FROM profile_hourly_views_stats
-WHERE time >= $3
-  AND user_id = $4
+WHERE user_id = $3
+  AND time >= $4
 `
 
 type ProfileHourlyViewsStatsParams struct {
 	Day    time.Time
 	Week   time.Time
-	Month  time.Time
 	UserID int64
+	Month  time.Time
 }
 
 type ProfileHourlyViewsStatsRow struct {
@@ -36,8 +36,8 @@ func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourly
 	row := q.queryRow(ctx, q.profileHourlyViewsStatsStmt, profileHourlyViewsStats,
 		arg.Day,
 		arg.Week,
-		arg.Month,
 		arg.UserID,
+		arg.Month,
 	)
 	var i ProfileHourlyViewsStatsRow
 	err := row.Scan(&i.DayCount, &i.WeekCount, &i.MonthCount)
@@ -45,19 +45,19 @@ func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourly
 }
 
 const profileHourlyViewsStatsUpsert = `-- name: ProfileHourlyViewsStatsUpsert :exec
-INSERT INTO profile_hourly_views_stats (time, user_id, count)
+INSERT INTO profile_hourly_views_stats (user_id, time, count)
 VALUES ($1, $2, $3)
-ON CONFLICT (time, user_id) DO UPDATE
+ON CONFLICT (user_id, time) DO UPDATE
     SET count = profile_hourly_views_stats.count + $3
 `
 
 type ProfileHourlyViewsStatsUpsertParams struct {
-	Time   time.Time
 	UserID int64
+	Time   time.Time
 	Count  int64
 }
 
 func (q *Queries) ProfileHourlyViewsStatsUpsert(ctx context.Context, arg ProfileHourlyViewsStatsUpsertParams) error {
-	_, err := q.exec(ctx, q.profileHourlyViewsStatsUpsertStmt, profileHourlyViewsStatsUpsert, arg.Time, arg.UserID, arg.Count)
+	_, err := q.exec(ctx, q.profileHourlyViewsStatsUpsertStmt, profileHourlyViewsStatsUpsert, arg.UserID, arg.Time, arg.Count)
 	return err
 }
