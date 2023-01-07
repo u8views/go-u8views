@@ -55,7 +55,7 @@ ok  	github.com/u8views/go-u8views/internal/tests	5.492s
 * [DrawSQL](https://drawsql.app/templates)
 
 ### Database schema
-![Database schema](https://github.com/u8views/go-u8views/blob/master/database-schema/v001.png?raw=true)
+![Database schema](https://github.com/u8views/go-u8views/blob/main/database-schema/v001.png?raw=true)
 
 ### SQL
 ```sql
