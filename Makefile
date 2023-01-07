@@ -36,6 +36,8 @@ generate-dbs:
 	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
 
 # BENCHTIME=100x make bench
+# BENCHTIME=1000x make bench
+# BENCHTIME=10000x make bench
 bench:
 	$(eval BENCHTIME ?= 100x)
 	echo "BENCHTIME=$(BENCHTIME) make bench"
@@ -61,9 +63,10 @@ go-mod-update:
 local-run:
 	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go
 
-# PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
-# PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB
-# PRIMARY KEY (user_id, time) 1 MONTH * 10 000 = 1.804GB
+# BIGINT PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
+# BIGINT PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB
+# BIGINT PRIMARY KEY (user_id, time) 1 MONTH * 10 000 = 1.804GB
+#    INT PRIMARY KEY (user_id, time) 1 MONTH * 10 000 = 1.804GB
 postgres-volume-size:
 	docker system df -v | grep go-u8views_postgres-data
 	docker stats --no-stream
