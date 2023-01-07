@@ -32,9 +32,13 @@ func BenchmarkProfileStatsService(b *testing.B) {
 		for pb.Next() {
 			var userID = atomic.AddInt64(&count, 1)%10000 + 1
 
-			_, err := service.StatsCount(context.Background(), userID, false)
+			stats, err := service.StatsCount(context.Background(), userID, false)
 
 			require.NoError(b, err)
+			require.True(b, stats.DayCount > 0)
+			require.True(b, stats.WeekCount > 0)
+			require.True(b, stats.MonthCount > 0)
+			require.True(b, stats.TotalCount > 0)
 		}
 	})
 }
