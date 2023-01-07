@@ -11,5 +11,17 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data/
 
+  timescaledb:
+    container_name: "go_u8views_timescaledb"
+    image: timescale/timescaledb:2.9.1-pg14
+    env_file:
+      - .pgsql.env
+    ports:
+      - "54321:5432"
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data/
+
+
 volumes:
   postgres-data: # Define the volume
+  timescaledb-data: # Define the volume

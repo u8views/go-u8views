@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/u8views/go-u8views/internal/storage/dbs"
+	"github.com/u8views/go-u8views/internal/storage-ts/dbs"
 )
 
 type Repository struct {

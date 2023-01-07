@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/u8views/go-u8views/internal/db"
-	"github.com/u8views/go-u8views/internal/storage/dbs"
+	"github.com/u8views/go-u8views/internal/storage-ts/dbs"
 )
 
 type ProfileStatsCount struct {

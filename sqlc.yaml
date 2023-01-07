@@ -5,3 +5,9 @@ packages:
     schema: "./internal/storage/schema/"
     queries: "./internal/storage/query/"
     emit_prepared_queries: true
+
+  - path: "./internal/storage-ts/dbs/"
+    engine: "postgresql"
+    schema: "./internal/storage-ts/schema/"
+    queries: "./internal/storage-ts/query/"
+    emit_prepared_queries: true
