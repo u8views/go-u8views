@@ -1,16 +1,13 @@
 package main
 
 import (
-	"log"
-
+	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 	"github.com/u8views/go-u8views/internal/controllers"
 	"github.com/u8views/go-u8views/internal/db"
 	"github.com/u8views/go-u8views/internal/env"
 	"github.com/u8views/go-u8views/internal/services"
-
-	"github.com/gin-gonic/gin"
-
-	_ "github.com/lib/pq"
+	"log"
 )
 
 func main() {
@@ -31,7 +28,7 @@ func main() {
 
 	var r = gin.New()
 
-	r.GET("/:user_id/count", profileStatsController.Count)
+	r.GET("/:user_id/count.svg", profileStatsController.Count)
 
 	var serverErr = r.Run(":" + port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	if serverErr != nil {

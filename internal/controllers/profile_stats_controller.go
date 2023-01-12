@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/u8views/go-u8views/internal/badge"
+	"github.com/u8views/go-u8views/internal/services"
 	"log"
 	"net/http"
-
-	"github.com/u8views/go-u8views/internal/services"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -69,10 +71,48 @@ func (c *ProfileStatsController) Count(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, &ProfileCountResponse{
+	//ctx.JSON(http.StatusOK, &ProfileCountResponse{
+	//	DayCount:   statsCount.DayCount,
+	//	WeekCount:  statsCount.WeekCount,
+	//	MonthCount: statsCount.MonthCount,
+	//	TotalCount: statsCount.TotalCount,
+	//})
+
+	counters := ProfileCountResponse{
 		DayCount:   statsCount.DayCount,
 		WeekCount:  statsCount.WeekCount,
 		MonthCount: statsCount.MonthCount,
 		TotalCount: statsCount.TotalCount,
-	})
+	}
+
+	ctx.Writer.WriteHeader(http.StatusOK)
+
+	ctx.Writer.Write([]byte(StatTemplate(
+		strconv.FormatInt(counters.DayCount, 10),
+		strconv.FormatInt(statsCount.WeekCount, 10),
+		strconv.FormatInt(statsCount.MonthCount, 10),
+		strconv.FormatInt(statsCount.TotalCount, 10),
+	)))
+
+}
+
+func CreateBadge(subject string, status string, colorSVG badge.Color) string {
+	svg, err := badge.RenderBytes(
+		subject,
+		status,
+		colorSVG,
+	)
+	if err != nil {
+		panic(err)
+	}
+	return string(svg)
+}
+
+func StatTemplate(day, week, month, total string) string {
+	dayCount := CreateBadge("Views per day", day, "blue")
+	weekCount := CreateBadge("Views per week", week, "green")
+	monthCount := CreateBadge("Views per mount", month, "#ff0000")
+	totalCount := CreateBadge("Total views", total, "orange")
+	return fmt.Sprintf(`<div style="display:flex; gap:10px"> %s %s %s %s</div>`, dayCount, weekCount, monthCount, totalCount)
+
 }
