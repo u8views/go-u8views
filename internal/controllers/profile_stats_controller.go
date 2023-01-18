@@ -3,11 +3,12 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
-	"github.com/u8views/go-u8views/internal/badge"
-	"github.com/u8views/go-u8views/internal/services"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/u8views/go-u8views/internal/badge"
+	"github.com/u8views/go-u8views/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,83 +37,109 @@ type ErrorResponse struct {
 }
 
 func (c *ProfileStatsController) Count(ctx *gin.Context) {
+	statsCount, done := c.statsCount(ctx)
+	if done {
+		return
+	}
+
+	ctx.JSON(http.StatusOK, &ProfileCountResponse{
+		DayCount:   statsCount.DayCount,
+		WeekCount:  statsCount.WeekCount,
+		MonthCount: statsCount.MonthCount,
+		TotalCount: statsCount.TotalCount,
+	})
+}
+
+func (c *ProfileStatsController) CountBadge(ctx *gin.Context) {
+	statsCount, done := c.statsCount(ctx)
+	if done {
+		return
+	}
+
+	statsBadge, err := statsBadge(
+		statsCount.DayCount,
+		statsCount.WeekCount,
+		statsCount.MonthCount,
+		statsCount.TotalCount,
+	)
+	if err != nil {
+		log.Printf("Cannot generate badge %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Cannot generate badge",
+		})
+
+		return
+	}
+
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(statsBadge))
+}
+
+func (c *ProfileStatsController) statsCount(ctx *gin.Context) (services.ProfileStatsCount, bool) {
 	var uri ProfileCountURI
 
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
-		log.Printf("cannot parse uri %s\n", err)
+		log.Printf("Cannot parse UserID from URI %s\n", err)
 
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
 			ErrorMessage: "Cannot parse UserID from URI",
 		})
 
-		return
+		return services.ProfileStatsCount{}, true
 	}
 
 	statsCount, err := c.service.StatsCount(ctx, uri.UserID, true)
 	if err == sql.ErrNoRows {
-		ctx.JSON(http.StatusOK, &ProfileCountResponse{
-			DayCount:   0,
-			WeekCount:  0,
-			MonthCount: 0,
-			TotalCount: 0,
+		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
+			ErrorMessage: "User not found",
 		})
 
-		return
+		return services.ProfileStatsCount{}, true
 	}
 
 	if err != nil {
-		log.Printf("cannot parse uri %s\n", err)
+		log.Printf("Database error %s\n", err)
 
 		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
 			ErrorMessage: "Database error",
 		})
 
-		return
+		return services.ProfileStatsCount{}, true
 	}
-
-	//ctx.JSON(http.StatusOK, &ProfileCountResponse{
-	//	DayCount:   statsCount.DayCount,
-	//	WeekCount:  statsCount.WeekCount,
-	//	MonthCount: statsCount.MonthCount,
-	//	TotalCount: statsCount.TotalCount,
-	//})
-
-	counters := ProfileCountResponse{
-		DayCount:   statsCount.DayCount,
-		WeekCount:  statsCount.WeekCount,
-		MonthCount: statsCount.MonthCount,
-		TotalCount: statsCount.TotalCount,
-	}
-
-	ctx.Writer.WriteHeader(http.StatusOK)
-
-	ctx.Writer.Write([]byte(StatTemplate(
-		strconv.FormatInt(counters.DayCount, 10),
-		strconv.FormatInt(statsCount.WeekCount, 10),
-		strconv.FormatInt(statsCount.MonthCount, 10),
-		strconv.FormatInt(statsCount.TotalCount, 10),
-	)))
-
+	return statsCount, false
 }
 
-func CreateBadge(subject string, status string, colorSVG badge.Color) string {
+func statsBadge(day, week, month, total int64) (string, error) {
+	dayCount, err := createBadge("Views per day", day, "blue")
+	if err != nil {
+		return "", err
+	}
+	weekCount, err := createBadge("Views per week", week, "green")
+	if err != nil {
+		return "", err
+	}
+	monthCount, err := createBadge("Views per mount", month, "#ff0000")
+	if err != nil {
+		return "", err
+	}
+	totalCount, err := createBadge("Total views", total, "orange")
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(`<div style="display:flex; gap:10px"> %s %s %s %s</div>`, dayCount, weekCount, monthCount, totalCount), nil
+}
+
+func createBadge(subject string, count int64, colorSVG badge.Color) (string, error) {
 	svg, err := badge.RenderBytes(
 		subject,
-		status,
+		strconv.FormatInt(count, 10),
 		colorSVG,
 	)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(svg)
-}
 
-func StatTemplate(day, week, month, total string) string {
-	dayCount := CreateBadge("Views per day", day, "blue")
-	weekCount := CreateBadge("Views per week", week, "green")
-	monthCount := CreateBadge("Views per mount", month, "#ff0000")
-	totalCount := CreateBadge("Total views", total, "orange")
-	return fmt.Sprintf(`<div style="display:flex; gap:10px"> %s %s %s %s</div>`, dayCount, weekCount, monthCount, totalCount)
-
+	return string(svg), nil
 }
