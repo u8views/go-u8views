@@ -63,7 +63,7 @@ go-mod-update:
 	go mod vendor
 
 local-run:
-	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go
+	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/v1/main.go
 
 # BIGINT PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
 # BIGINT PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB
