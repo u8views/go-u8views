@@ -1,5 +1,7 @@
 POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 
+include Makefile.ansible
+
 up:
 	docker-compose up -d
 
@@ -70,3 +72,7 @@ local-run:
 postgres-volume-size:
 	docker system df -v | grep go-u8views_postgres-data
 	docker stats --no-stream
+
+ssh:
+	# cat ~/.ssh/id_rsa.pub | ssh root@70.34.254.126 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	ssh -t root@70.34.254.126 "cd /var/go/u8views/; bash --login"

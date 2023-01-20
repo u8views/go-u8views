@@ -1,0 +1,58 @@
+---
+# https://cloudinfrastructureservices.co.uk/how-to-install-docker-compose-using-ansible-playbook/
+# https://support.netfoundry.io/hc/en-us/articles/360057865692-Installing-Docker-and-docker-compose-for-Ubuntu-20-04
+- name: "Install docker-compose"
+  hosts: web
+  gather_facts: no
+  tasks:
+    - name: "sudo apt update"
+      apt:
+        update_cache: yes
+
+    - name: "docker dependencies"
+      apt:
+        name:
+          - "apt-transport-https"
+          - "ca-certificates"
+          - "curl"
+          - "software-properties-common"
+        state: present
+        update_cache: yes
+
+    - name: "docker's gpg key"
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: "configure docker repository"
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: "sudo apt update"
+      apt:
+        update_cache: yes
+
+    - name: "docker-ce"
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: "docker --version"
+      shell: "docker --version"
+      register: out
+    - debug:
+        var: out.stdout
+
+    - name: "install docker-compose from official GitHub repository"
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-{{ lookup('pipe', 'uname -s') }}-{{ lookup('pipe', 'uname -m') }}
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+
+    - name: "docker-compose --version"
+      shell: "docker-compose --version"
+      register: out
+    - debug:
+        var: out.stdout

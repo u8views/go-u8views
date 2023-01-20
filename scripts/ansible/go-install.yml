@@ -1,0 +1,70 @@
+---
+# https://go.dev/doc/install
+- name: "Download and install Go"
+  hosts: web
+  gather_facts: no
+  vars:
+    - GO_VERSION: "1.19"
+    - DOWNLOAD_SOURCE: "https://go.dev/dl/go{{ GO_VERSION }}.linux-amd64.tar.gz"
+    - DOWNLOAD_DESTINATION_PATH: "/var/go/zips"
+    - DOWNLOAD_DESTINATION_FILENAME: "{{ DOWNLOAD_DESTINATION_PATH }}/go{{ GO_VERSION }}.linux-amd64.tar.gz"
+
+  tasks:
+    - name: "Directory {{ DOWNLOAD_DESTINATION_PATH }}"
+      file:
+        path: "{{ DOWNLOAD_DESTINATION_PATH }}"
+        state: directory
+
+    - name: "GET {{ DOWNLOAD_SOURCE }}"
+      get_url:
+        url: "{{ DOWNLOAD_SOURCE }}"
+        dest: "{{ DOWNLOAD_DESTINATION_FILENAME }}"
+
+    - name: "Unzip go{{ GO_VERSION }}.linux-amd64.tar.gz"
+      shell: "rm -rf /usr/local/go && tar -C /usr/local -xzf go{{ GO_VERSION }}.linux-amd64.tar.gz"
+      args:
+        chdir: "{{ DOWNLOAD_DESTINATION_PATH }}"
+
+    - name: "export GOROOT=/usr/local/go"
+      shell: grep -c "^export GOROOT=/usr/local/go" ~/.profile || true
+      register: out
+    - debug:
+        var: out.stdout
+
+    - name: "export GOROOT=/usr/local/go"
+      lineinfile:
+        dest: ~/.profile
+        line: "export GOROOT=/usr/local/go"
+      when: out.stdout == "0"
+
+    - name: "export GOPATH=$HOME/go"
+      shell: grep -c "^export GOPATH=\$HOME/go" ~/.profile || true
+      register: out
+    - debug:
+        var: out.stdout
+
+    - name: "export GOPATH=$HOME/go"
+      lineinfile:
+        dest: ~/.profile
+        line: "export GOPATH=$HOME/go"
+      when: out.stdout == "0"
+
+    - name: "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH"
+      shell: grep -c "^export PATH=\$GOPATH/bin:\$GOROOT/bin:\$PATH" ~/.profile || true
+      register: out
+    - debug:
+        var: out.stdout
+
+    - name: "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH"
+      lineinfile:
+        dest: ~/.profile
+        line: "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH"
+      when: out.stdout == "0"
+
+    - name: "Source ~/.profile"
+      shell: "source ~/.profile; go version"
+      args:
+        executable: /bin/bash
+      register: out
+    - debug:
+        var: out.stdout
