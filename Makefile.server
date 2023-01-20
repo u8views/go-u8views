@@ -1,2 +1,9 @@
 ping:
 	echo "pong"
+
+restart:
+	mkdir -p ./docker/volumes/go/tls-certificates
+
+	go build -o u8views-server ./cmd/v2/main.go
+	pkill u8views-server || echo "u8views-server already stopped"
+	TLS_CERTIFICATES_DIR=./docker/volumes/go/tls-certificates sudo ./u8views-server
