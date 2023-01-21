@@ -11,5 +11,15 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data/
 
+  app:
+    container_name: "go_u8views_app"
+    image: golang:1.19.0-alpine
+    working_dir: /go/src/github.com/u8views/go-u8views
+    volumes:
+      - .:/go/src/github.com/u8views/go-u8views
+    command: "go run ./cmd/v1/main.go"
+    depends_on:
+      - postgres
+
 volumes:
   postgres-data: # Define the volume

@@ -74,5 +74,5 @@ postgres-volume-size:
 	docker stats --no-stream
 
 ssh:
-	# cat ~/.ssh/id_rsa.pub | ssh root@70.34.254.126 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-	ssh -t root@70.34.254.126 "cd /var/go/u8views/; bash --login"
+	# cat ~/.ssh/id_rsa.pub | ssh root@45.76.36.202 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	ssh -t root@45.76.36.202 "cd /var/go/u8views/; bash --login"
