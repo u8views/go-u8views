@@ -1,0 +1,25 @@
+ansible-ping:
+	# https://askubuntu.com/questions/46424/how-do-i-add-ssh-keys-to-authorized-keys-file
+	# https://askubuntu.com/a/262074
+	# cat ~/.ssh/id_rsa.pub | ssh root@70.34.254.126 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	ansible -i ./scripts/ansible/hosts.txt all -m ping
+
+ansible-install-docker-compose:
+	# https://docs.ansible.com/ansible/latest/network/getting_started/first_playbook.html
+	ansible-playbook -i ./scripts/ansible/hosts.txt ./scripts/ansible/install-docker-compose-playbook.yml
+
+ansible-git-pull:
+	ansible-playbook -i ./scripts/ansible/hosts.txt ./scripts/ansible/git-pull.yml
+
+# alias
+agp: ansible-git-pull
+
+ansible-make:
+	ansible-playbook -i ./scripts/ansible/hosts.txt ./scripts/ansible/make.yml
+
+ansible-shell:
+	# ansible -i ./scripts/ansible/hosts.txt all -m shell -a "ps aux"
+	ansible -i ./scripts/ansible/hosts.txt all -m shell -a "cd /var/go/u8views; env"
+
+ansible-go-install:
+	ansible-playbook -i ./scripts/ansible/hosts.txt ./scripts/ansible/go-install.yml

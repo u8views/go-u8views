@@ -11,5 +11,23 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data/
 
+  app:
+    container_name: "go_u8views_app"
+    image: golang:1.19.0-alpine
+    working_dir: /go/src/github.com/u8views/go-u8views
+    volumes:
+      - .:/go/src/github.com/u8views/go-u8views
+      - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
+    command: "go run ./cmd/v2/main.go"
+    environment:
+      DSN: ${DSN}
+      PORT: ${PORT}
+      TLS_CERTIFICATES_DIR: ${TLS_CERTIFICATES_DIR}
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - postgres
+
 volumes:
   postgres-data: # Define the volume

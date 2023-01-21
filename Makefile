@@ -1,7 +1,9 @@
 POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 
+include Makefile.ansible
+
 up:
-	docker-compose up -d
+	docker-compose --env-file .env up -d
 
 pg:
 	docker exec -it go_u8views_postgres bash
@@ -61,7 +63,7 @@ go-mod-update:
 	go mod vendor
 
 local-run:
-	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/main.go
+	DSN=$(POSTGRES_DSN) PORT=8080 go run ./cmd/v1/main.go
 
 # BIGINT PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
 # BIGINT PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB
@@ -70,3 +72,7 @@ local-run:
 postgres-volume-size:
 	docker system df -v | grep go-u8views_postgres-data
 	docker stats --no-stream
+
+ssh:
+	# cat ~/.ssh/id_rsa.pub | ssh root@45.76.36.202 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	ssh -t root@45.76.36.202 "cd /var/go/u8views/; bash --login"
