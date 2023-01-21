@@ -18,6 +18,9 @@ services:
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
     command: "go run ./cmd/v1/main.go"
+    environment:
+      DSN: ${DSN}
+      PORT: ${PORT}
     ports:
       - "80:80"
     depends_on:

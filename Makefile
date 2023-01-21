@@ -3,7 +3,7 @@ POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 include Makefile.ansible
 
 up:
-	docker-compose up -d --env-file .env
+	docker-compose --env-file .env up -d
 
 pg:
 	docker exec -it go_u8views_postgres bash
