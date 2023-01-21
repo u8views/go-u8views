@@ -17,12 +17,15 @@ services:
     working_dir: /go/src/github.com/u8views/go-u8views
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
-    command: "go run ./cmd/v1/main.go"
+      - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
+    command: "go run ./cmd/v2/main.go"
     environment:
       DSN: ${DSN}
       PORT: ${PORT}
+      TLS_CERTIFICATES_DIR: ${TLS_CERTIFICATES_DIR}
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - postgres
 
