@@ -18,6 +18,8 @@ services:
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
     command: "go run ./cmd/v1/main.go"
+    ports:
+      - "80:80"
     depends_on:
       - postgres
 
