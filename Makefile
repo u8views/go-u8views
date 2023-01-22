@@ -11,7 +11,7 @@ pg:
 env-local-down:
 	docker-compose -f docker-compose.local.yml --env-file .local.env down
 
-down-with-clear:
+env-local-down-with-clear:
 	docker-compose -f docker-compose.local.yml --env-file .local.env down --remove-orphans -v # --rmi=all
 
 # make migrate-pgsql-create NAME=init
@@ -20,16 +20,18 @@ migrate-pgsql-create:
 	$(eval NAME ?= todo)
 	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) create $(NAME) sql
 
-migrate-pgsql-up:
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) up
+migrate-pgsql-goose-install:
+	docker exec go_u8views_app go install github.com/pressly/goose/v3/cmd/goose@latest
+migrate-pgsql-up: migrate-pgsql-goose-install
+	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres up
 migrate-pgsql-redo:
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) redo
+	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres redo
 migrate-pgsql-down:
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) down
+	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres down
 migrate-pgsql-reset:
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) reset
+	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres reset
 migrate-pgsql-status:
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) status
+	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres status
 
 migrate-all-reset:
 	time make migrate-pgsql-reset migrate-pgsql-up
@@ -43,7 +45,7 @@ generate-dbs:
 bench:
 	$(eval BENCHTIME ?= 100x)
 	echo "BENCHTIME=$(BENCHTIME) make bench"
-	DSN=$(POSTGRES_DSN) go test ./internal/tests/... -v -bench=. -benchmem -benchtime=$(BENCHTIME)
+	POSTGRES_DSN=$(POSTGRES_DSN) go test ./internal/tests/... -v -bench=. -benchmem -benchtime=$(BENCHTIME)
 
 postgres-fixtures:
 	test -f "./console/postgres-fixtures.sql"

@@ -10,16 +10,20 @@ make env-local-up
 make migrate-all-reset
 make postgres-fixtures
 make postgres-fixtures-count
+# and
+# make postgres-fixtures-clear
 ```
 
 ##### Run after code changes
 ```bash
-make local-go-app-run
+make env-local-up
 ```
 
 ##### End development session
 ```bash
 make env-local-down
+# or
+# make env-local-down-with-clear
 ```
 
 ##### Benchmark

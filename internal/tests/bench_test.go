@@ -14,7 +14,7 @@ import (
 
 func BenchmarkProfileStatsService(b *testing.B) {
 	var (
-		dsn = env.Must("DSN")
+		dsn = env.Must("POSTGRES_DSN")
 	)
 
 	var pgConnection = db.MustConnection(dsn)
