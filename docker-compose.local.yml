@@ -4,12 +4,14 @@ services:
   postgres:
     container_name: "go_u8views_postgres"
     image: postgres:14.2
-    env_file:
-      - .pgsql.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data/
+      - ./docker/volumes/postgresql/data/:/var/lib/postgresql/data/
 
   app:
     container_name: "go_u8views_app"
@@ -18,16 +20,15 @@ services:
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
       - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
-    command: "go run ./cmd/v2/main.go"
+    command: "go run ./cmd/v1/main.go"
     environment:
-      DSN: ${DSN}
       PORT: ${PORT}
-      TLS_CERTIFICATES_DIR: ${TLS_CERTIFICATES_DIR}
+      GIN_MODE: release
+      POSTGRES_DSN: ${POSTGRES_DSN}
+      GOOSE_DBSTRING: ${POSTGRES_DSN}
+      TLS_CERTIFICATES_DIR: /var/lib/tls-certificates/data/
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - postgres
-
-volumes:
-  postgres-data: # Define the volume

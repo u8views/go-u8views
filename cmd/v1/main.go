@@ -15,7 +15,7 @@ import (
 
 func main() {
 	var (
-		dsn  = env.Must("DSN")
+		dsn  = env.Must("POSTGRES_DSN")
 		port = env.Must("PORT")
 	)
 
@@ -34,7 +34,7 @@ func main() {
 	r.GET("/:user_id/count", profileStatsController.Count)
 	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
 
-	var serverErr = r.Run(":" + port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	var serverErr = r.Run(port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	if serverErr != nil {
 		log.Fatalln(serverErr)
 

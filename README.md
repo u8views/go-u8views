@@ -4,22 +4,26 @@ Profile views counter
 
 ### Development
 
-##### Start development session
+##### Start local development session
 ```bash
-make up
+make env-local-up
 make migrate-all-reset
 make postgres-fixtures
 make postgres-fixtures-count
+# and
+# make postgres-fixtures-clear
 ```
 
 ##### Run after code changes
 ```bash
-make local-run
+make env-local-up
 ```
 
 ##### End development session
 ```bash
-make down
+make env-local-down
+# or
+# make env-local-down-with-clear
 ```
 
 ##### Benchmark
