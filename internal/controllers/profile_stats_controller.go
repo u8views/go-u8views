@@ -111,19 +111,19 @@ func (c *ProfileStatsController) statsCount(ctx *gin.Context) (services.ProfileS
 }
 
 func statsBadge(day, week, month, total int64) (string, error) {
-	dayCount, err := createBadge("Views per day", day, "blue")
+	dayCount, err := createBadge("Views per day", day)
 	if err != nil {
 		return "", err
 	}
-	weekCount, err := createBadge("Views per week", week, "green")
+	weekCount, err := createBadge("Views per week", week)
 	if err != nil {
 		return "", err
 	}
-	monthCount, err := createBadge("Views per mount", month, "#ff0000")
+	monthCount, err := createBadge("Views per mount", month)
 	if err != nil {
 		return "", err
 	}
-	totalCount, err := createBadge("Total views", total, "orange")
+	totalCount, err := createBadge("Total views", total)
 	if err != nil {
 		return "", err
 	}
@@ -131,11 +131,10 @@ func statsBadge(day, week, month, total int64) (string, error) {
 	return fmt.Sprintf(`<div style="display:flex; gap:10px"> %s %s %s %s</div>`, dayCount, weekCount, monthCount, totalCount), nil
 }
 
-func createBadge(subject string, count int64, colorSVG badge.Color) (string, error) {
+func createBadge(subject string, count int64) (string, error) {
 	svg, err := badge.RenderBytes(
 		subject,
 		strconv.FormatInt(count, 10),
-		colorSVG,
 	)
 	if err != nil {
 		return "", err

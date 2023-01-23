@@ -15,7 +15,6 @@ import (
 type badge struct {
 	Subject string
 	Status  string
-	Color   Color
 	Bounds  bounds
 }
 
@@ -39,7 +38,7 @@ type badgeDrawer struct {
 	mutex *sync.Mutex
 }
 
-func (d *badgeDrawer) Render(subject, status string, color Color, w io.Writer) error {
+func (d *badgeDrawer) Render(subject, status string, w io.Writer) error {
 	d.mutex.Lock()
 	subjectDx := d.measureString(subject)
 	statusDx := d.measureString(status)
@@ -48,7 +47,6 @@ func (d *badgeDrawer) Render(subject, status string, color Color, w io.Writer) e
 	bdg := badge{
 		Subject: subject,
 		Status:  status,
-		Color:   color,
 		Bounds: bounds{
 			SubjectDx: subjectDx,
 			SubjectX:  subjectDx/2.0 + 1,
@@ -60,9 +58,9 @@ func (d *badgeDrawer) Render(subject, status string, color Color, w io.Writer) e
 	return d.tmpl.Execute(w, bdg)
 }
 
-func (d *badgeDrawer) RenderBytes(subject, status string, color Color) ([]byte, error) {
+func (d *badgeDrawer) RenderBytes(subject, status string) ([]byte, error) {
 	buf := &bytes.Buffer{}
-	err := d.Render(subject, status, color, buf)
+	err := d.Render(subject, status, buf)
 	return buf.Bytes(), err
 }
 
@@ -80,8 +78,8 @@ func (d *badgeDrawer) measureString(s string) float64 {
 //}
 
 // RenderBytes renders a badge of the given color, with given subject and status to bytes.
-func RenderBytes(subject, status string, color Color) ([]byte, error) {
-	return drawer.RenderBytes(subject, status, color)
+func RenderBytes(subject, status string) ([]byte, error) {
+	return drawer.RenderBytes(subject, status)
 }
 
 const (
