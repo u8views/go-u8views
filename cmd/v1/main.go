@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"log"
+
 	"github.com/u8views/go-u8views/internal/controllers"
 	"github.com/u8views/go-u8views/internal/db"
 	"github.com/u8views/go-u8views/internal/env"
 	"github.com/u8views/go-u8views/internal/services"
-	"log"
-	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	_ "github.com/lib/pq"
 )
@@ -33,22 +34,18 @@ func main() {
 	r.GET("/:user_id/count", profileStatsController.Count)
 	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
 
-	r.LoadHTMLGlob("cmd/v1/public/*.html")
+	r.Static("/assets/files", "./public/assets/files")
 
-	r.Static("/assets/files", "./cmd/v1/public/assets/files")
-
-	//r.StaticFS("/", http.Dir("./cmd/v1/public/"))
-
-	r.GET("/u8views-main.html", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "u8views-main.html", gin.H{})
+	r.GET("/", func(c *gin.Context) {
+		c.File("./public/index.html")
 	})
 
-	r.GET("/u8views-profile.html", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "u8views-profile.html", gin.H{})
+	r.GET("/profile", func(c *gin.Context) {
+		c.File("./public/profile.html")
 	})
 
-	r.GET("/u8views-stat.html", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "u8views-stat.html", gin.H{})
+	r.GET("/stats", func(c *gin.Context) {
+		c.File("./public/stats.html")
 	})
 
 	var serverErr = r.Run(port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
