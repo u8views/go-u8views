@@ -34,6 +34,20 @@ func main() {
 	r.GET("/:user_id/count", profileStatsController.Count)
 	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
 
+	r.Static("/assets/files", "./public/assets/files")
+
+	r.GET("/", func(c *gin.Context) {
+		c.File("./public/index.html")
+	})
+
+	r.GET("/profile", func(c *gin.Context) {
+		c.File("./public/profile.html")
+	})
+
+	r.GET("/stats", func(c *gin.Context) {
+		c.File("./public/stats.html")
+	})
+
 	var serverErr = r.Run(port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	if serverErr != nil {
 		log.Fatalln(serverErr)
