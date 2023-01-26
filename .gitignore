@@ -1,4 +1,4 @@
-u8views-server # server
-docker/volumes # volumes with DB and TLS certificates
-private # test scripts
+u8views-server
+docker/volumes
+private
 .production.env

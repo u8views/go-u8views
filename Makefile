@@ -81,7 +81,7 @@ ssh:
 
 ssh-copy-tls-certificates:
 	mkdir -p ./docker/volumes/go/tls-certificates
-	scp -r root@78.141.220.147:/var/go/u8views/docker/volumes/go/tls-certificates ./docker/volumes/go/tls-certificates
+	scp -r root@78.141.220.147:/var/go/u8views/docker/volumes/go/tls-certificates ./docker/volumes/go
 
 # POSTGRES_PASSWORD=$(echo "$RANDOM$RANDOM" | md5sum | head -c 16; echo;) make generate-production-environment-file
 generate-production-environment-file:
