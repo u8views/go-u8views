@@ -76,8 +76,12 @@ postgres-volume-size:
 	docker stats --no-stream
 
 ssh:
-	# cat ~/.ssh/id_rsa.pub | ssh root@45.76.36.202 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-	ssh -t root@45.76.36.202 "cd /var/go/u8views/; bash --login"
+	# cat ~/.ssh/id_rsa.pub | ssh root@78.141.220.147 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	ssh -t root@78.141.220.147 "cd /var/go/u8views/; bash --login"
+
+ssh-copy-tls-certificates:
+	mkdir -p ./docker/volumes/go/tls-certificates
+	scp -r root@78.141.220.147:/var/go/u8views/docker/volumes/go/tls-certificates ./docker/volumes/go/tls-certificates
 
 # POSTGRES_PASSWORD=$(echo "$RANDOM$RANDOM" | md5sum | head -c 16; echo;) make generate-production-environment-file
 generate-production-environment-file:
