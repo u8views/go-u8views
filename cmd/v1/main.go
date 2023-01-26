@@ -7,6 +7,7 @@ import (
 	"github.com/u8views/go-u8views/internal/db"
 	"github.com/u8views/go-u8views/internal/env"
 	"github.com/u8views/go-u8views/internal/services"
+	"github.com/u8views/go-u8views/internal/storage"
 
 	"github.com/gin-gonic/gin"
 
@@ -21,6 +22,8 @@ func main() {
 
 	var pgConnection = db.MustConnection(dsn)
 	defer pgConnection.Close()
+
+	storage.MustMigrateUp(pgConnection)
 
 	var repository = db.MustRepository(pgConnection)
 	defer repository.Close()
