@@ -13,7 +13,7 @@
     - name: "git pull"
       ansible.builtin.git:
         repo: https://github.com/u8views/go-u8views.git
-        version: ansible-deployment # main
+        version: https # main
         dest: /var/go/u8views
 
     - name: "git status"

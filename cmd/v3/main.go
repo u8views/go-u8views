@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"github.com/u8views/go-u8views/internal/controllers"
 	"github.com/u8views/go-u8views/internal/db"
 	"github.com/u8views/go-u8views/internal/env"
+	"github.com/u8views/go-u8views/internal/server"
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage"
 
@@ -16,8 +15,7 @@ import (
 
 func main() {
 	var (
-		dsn  = env.Must("POSTGRES_DSN")
-		port = env.Must("PORT")
+		dsn = env.Must("POSTGRES_DSN")
 	)
 
 	var pgConnection = db.MustConnection(dsn)
@@ -51,10 +49,5 @@ func main() {
 		c.File("./public/stats.html")
 	})
 
-	var serverErr = r.Run(port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	if serverErr != nil {
-		log.Fatalln(serverErr)
-
-		return
-	}
+	server.Run(r.Handler())
 }

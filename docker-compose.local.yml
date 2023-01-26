@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
       - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
-    command: "go run ./cmd/v1/main.go"
+    command: "go run ./cmd/v3/main.go"
     environment:
       PORT: ${PORT}
       GIN_MODE: release
