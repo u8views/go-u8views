@@ -50,6 +50,29 @@ func (c *ProfileStatsController) Count(ctx *gin.Context) {
 	})
 }
 
+func (c *ProfileStatsController) CountOnlyTotalBadge(ctx *gin.Context) {
+	statsCount, done := c.statsCount(ctx)
+	if done {
+		return
+	}
+
+	totalCountBadge, err := createBadge("Total views", statsCount.TotalCount)
+	if err != nil {
+		log.Printf("Cannot generate badge %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Cannot generate badge",
+		})
+
+		return
+	}
+
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(totalCountBadge))
+}
+
 func (c *ProfileStatsController) CountBadge(ctx *gin.Context) {
 	statsCount, done := c.statsCount(ctx)
 	if done {
