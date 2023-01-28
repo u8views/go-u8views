@@ -39,6 +39,12 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
 	}
+	if q.usersNewStmt, err = db.PrepareContext(ctx, usersNew); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersNew: %w", err)
+	}
+	if q.usersUpdateUsernameStmt, err = db.PrepareContext(ctx, usersUpdateUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersUpdateUsername: %w", err)
+	}
 	return &q, nil
 }
 
@@ -67,6 +73,16 @@ func (q *Queries) Close() error {
 	if q.profileTotalViewsNewStmt != nil {
 		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersNewStmt != nil {
+		if cerr := q.usersNewStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersNewStmt: %w", cerr)
+		}
+	}
+	if q.usersUpdateUsernameStmt != nil {
+		if cerr := q.usersUpdateUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersUpdateUsernameStmt: %w", cerr)
 		}
 	}
 	return err
@@ -113,6 +129,8 @@ type Queries struct {
 	profileTotalViewsStmt             *sql.Stmt
 	profileTotalViewsIncStmt          *sql.Stmt
 	profileTotalViewsNewStmt          *sql.Stmt
+	usersNewStmt                      *sql.Stmt
+	usersUpdateUsernameStmt           *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
@@ -124,5 +142,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileTotalViewsStmt:             q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:          q.profileTotalViewsIncStmt,
 		profileTotalViewsNewStmt:          q.profileTotalViewsNewStmt,
+		usersNewStmt:                      q.usersNewStmt,
+		usersUpdateUsernameStmt:           q.usersUpdateUsernameStmt,
 	}
 }
