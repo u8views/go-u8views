@@ -75,8 +75,8 @@ func (c *ProfileStatsController) CountOnlyTotalBadge(ctx *gin.Context) {
 
 func (c *ProfileStatsController) CountHitsSeeyoufarmStyleBadge(ctx *gin.Context) {
 	// language=SVG
-	const pattern = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="103" height="20">
- <linearGradient id="smooth" x2="0" y2="%s">
+	const staticSVG = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="103" height="20">
+ <linearGradient id="smooth" x2="0" y2="100%">
    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
    <stop offset="1" stop-opacity=".1"/>
  </linearGradient>
@@ -94,20 +94,15 @@ func (c *ProfileStatsController) CountHitsSeeyoufarmStyleBadge(ctx *gin.Context)
  <g fill="#fff" text-anchor="middle" font-family="Verdana,DejaVu Sans,Geneva,sans-serif" font-size="11"> 
    <text x="16" y="15" fill="#010101" fill-opacity=".3">hits</text>
    <text x="16" y="14" fill="#fff">hits</text>
-   <text x="65.5" y="15" fill="#010101" fill-opacity=".3">%d</text>
-   <text x="65.5" y="14" fill="#fff">%d</text>
+   <text x="65.5" y="15" fill="#010101" fill-opacity=".3">123</text>
+   <text x="65.5" y="14" fill="#fff">123</text>
  </g>
 </svg>`
-
-	statsCount, done := c.statsCount(ctx)
-	if done {
-		return
-	}
 
 	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	ctx.Header("Pragma", "no-cache")
 	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(fmt.Sprintf(pattern, "100%", statsCount.TotalCount, statsCount.TotalCount)))
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(staticSVG))
 }
 
 func (c *ProfileStatsController) CountBadge(ctx *gin.Context) {
