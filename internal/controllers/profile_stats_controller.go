@@ -76,7 +76,7 @@ func (c *ProfileStatsController) CountOnlyTotalBadge(ctx *gin.Context) {
 func (c *ProfileStatsController) CountHitsSeeyoufarmStyleBadge(ctx *gin.Context) {
 	// language=SVG
 	const pattern = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="103" height="20">
- <linearGradient id="smooth" x2="0" y2="100%">
+ <linearGradient id="smooth" x2="0" y2="%s">
    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
    <stop offset="1" stop-opacity=".1"/>
  </linearGradient>
@@ -107,7 +107,7 @@ func (c *ProfileStatsController) CountHitsSeeyoufarmStyleBadge(ctx *gin.Context)
 	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	ctx.Header("Pragma", "no-cache")
 	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(fmt.Sprintf(pattern, statsCount.TotalCount, statsCount.TotalCount)))
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(fmt.Sprintf(pattern, "100%", statsCount.TotalCount, statsCount.TotalCount)))
 }
 
 func (c *ProfileStatsController) CountBadge(ctx *gin.Context) {
