@@ -72,6 +72,9 @@ func (c *ProfileStatsController) CountBadge(ctx *gin.Context) {
 		return
 	}
 
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(statsBadge))
 }
 
