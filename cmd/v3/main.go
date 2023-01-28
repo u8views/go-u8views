@@ -35,6 +35,7 @@ func main() {
 	r.GET("/:user_id/count", profileStatsController.Count)
 	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
 	r.GET("/:user_id/count-only-total.svg", profileStatsController.CountOnlyTotalBadge)
+	r.GET("/:user_id/count-hits-seeyoufarm-com-style-total.svg", profileStatsController.CountHitsSeeyoufarmStyleBadge)
 
 	r.Static("/assets/files", "./public/assets/files")
 	r.StaticFile("/favicon.ico", "./public/assets/files/favicon.ico")
