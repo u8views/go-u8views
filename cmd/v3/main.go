@@ -34,6 +34,7 @@ func main() {
 
 	r.GET("/:user_id/count", profileStatsController.Count)
 	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
+	r.GET("/:user_id/count-only-total.svg", profileStatsController.CountOnlyTotalBadge)
 
 	r.Static("/assets/files", "./public/assets/files")
 
