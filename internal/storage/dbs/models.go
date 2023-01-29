@@ -5,8 +5,53 @@
 package dbs
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
+
+type SocialProvider string
+
+const (
+	SocialProviderGithub    SocialProvider = "github"
+	SocialProviderGitlab    SocialProvider = "gitlab"
+	SocialProviderBitbucket SocialProvider = "bitbucket"
+)
+
+func (e *SocialProvider) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = SocialProvider(s)
+	case string:
+		*e = SocialProvider(s)
+	default:
+		return fmt.Errorf("unsupported scan type for SocialProvider: %T", src)
+	}
+	return nil
+}
+
+type NullSocialProvider struct {
+	SocialProvider SocialProvider
+	Valid          bool // Valid is true if String is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullSocialProvider) Scan(value interface{}) error {
+	if value == nil {
+		ns.SocialProvider, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.SocialProvider.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullSocialProvider) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return ns.SocialProvider, nil
+}
 
 type ProfileHourlyViewsStat struct {
 	UserID int64
@@ -20,5 +65,13 @@ type ProfileTotalView struct {
 }
 
 type User struct {
-	ID int64
+	ID                   int64
+	SocialProvider       SocialProvider
+	SocialProviderUserID string
+	Username             string
+	Name                 string
+	CanonicalUsername    string
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	LastLoginAt          time.Time
 }

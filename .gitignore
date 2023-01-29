@@ -3,4 +3,5 @@ vendor
 u8views-server
 docker/volumes
 private
+.env
 .production.env

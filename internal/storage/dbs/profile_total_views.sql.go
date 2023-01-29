@@ -35,15 +35,11 @@ func (q *Queries) ProfileTotalViewsInc(ctx context.Context, userID int64) error 
 
 const profileTotalViewsNew = `-- name: ProfileTotalViewsNew :exec
 INSERT INTO profile_total_views (user_id, count)
-VALUES ($1, $2)
+VALUES ($1, 0)
+ON CONFLICT DO NOTHING
 `
 
-type ProfileTotalViewsNewParams struct {
-	UserID int64
-	Count  int64
-}
-
-func (q *Queries) ProfileTotalViewsNew(ctx context.Context, arg ProfileTotalViewsNewParams) error {
-	_, err := q.exec(ctx, q.profileTotalViewsNewStmt, profileTotalViewsNew, arg.UserID, arg.Count)
+func (q *Queries) ProfileTotalViewsNew(ctx context.Context, userID int64) error {
+	_, err := q.exec(ctx, q.profileTotalViewsNewStmt, profileTotalViewsNew, userID)
 	return err
 }

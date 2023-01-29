@@ -22,10 +22,11 @@ services:
       - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
     command: "go run ./cmd/v3/main.go"
     environment:
-      PORT: ${PORT}
       GIN_MODE: release
       POSTGRES_DSN: ${POSTGRES_DSN}
       GOOSE_DBSTRING: ${POSTGRES_DSN}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       TLS_CERTIFICATES_DIR: /var/lib/tls-certificates/data/
     ports:
       - "80:80"

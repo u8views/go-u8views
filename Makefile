@@ -3,16 +3,16 @@ POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 include Makefile.ansible
 
 env-local-up:
-	docker-compose -f docker-compose.local.yml --env-file .local.env up -d
+	docker-compose -f docker-compose.local.yml --env-file .env up -d
 
 pg:
 	docker exec -it go_u8views_postgres bash
 
 env-local-down:
-	docker-compose -f docker-compose.local.yml --env-file .local.env down
+	docker-compose -f docker-compose.local.yml --env-file .env down
 
 env-local-down-with-clear:
-	docker-compose -f docker-compose.local.yml --env-file .local.env down --remove-orphans -v # --rmi=all
+	docker-compose -f docker-compose.local.yml --env-file .env down --remove-orphans -v # --rmi=all
 
 # make migrate-pgsql-create NAME=init
 migrate-pgsql-create:
@@ -38,6 +38,11 @@ migrate-all-reset:
 
 generate-dbs:
 	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
+
+generate-template:
+	# go install github.com/valyala/quicktemplate/qtc
+	qtc -dir=./internal/templates -skipLineComments
+	git add .
 
 # BENCHTIME=100x make bench
 # BENCHTIME=1000x make bench
@@ -98,6 +103,5 @@ generate-production-environment-file:
 	# OAuth 2.0
 	grep -qF 'GITHUB_CLIENT_ID=' .production.env || echo 'GITHUB_CLIENT_ID=' >> .production.env
 	grep -qF 'GITHUB_CLIENT_SECRET=' .production.env || echo 'GITHUB_CLIENT_SECRET=' >> .production.env
-	grep -qF 'GITHUB_SCOPE=' .production.env || echo 'GITHUB_SCOPE=' >> .production.env
 
 	cat .production.env

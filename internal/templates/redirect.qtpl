@@ -1,0 +1,12 @@
+{% func RawRedirect(url string) %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+	Redirect...
+	<script>window.location.replace("{%s url %}")</script>
+</body>
+</html>
+{% endfunc %}

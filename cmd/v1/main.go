@@ -29,14 +29,16 @@ func main() {
 	defer repository.Close()
 
 	var (
-		profileStatsController = controllers.NewProfileStatsController(services.NewProfileStatsService(repository))
+		userService            = services.NewUserService(repository)
+		profileStatsService    = services.NewProfileStatsService(repository)
+		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
 	)
 
 	var r = gin.New()
 
-	r.GET("/:user_id/count", profileStatsController.Count)
-	r.GET("/:user_id/count.svg", profileStatsController.CountBadge)
-	r.GET("/:user_id/count-only-total.svg", profileStatsController.CountOnlyTotalBadge)
+	r.GET("/:user_id/count", profileStatsController.GitHubDayWeekMonthTotalCount)
+	r.GET("/:user_id/count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
+	r.GET("/:user_id/count-only-total.svg", profileStatsController.TotalCountBadge)
 
 	r.Static("/assets/files", "./public/assets/files")
 

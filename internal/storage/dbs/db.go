@@ -39,6 +39,21 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
 	}
+	if q.usersGetByIDStmt, err = db.PrepareContext(ctx, usersGetByID); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetByID: %w", err)
+	}
+	if q.usersGetBySocialProviderStmt, err = db.PrepareContext(ctx, usersGetBySocialProvider); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetBySocialProvider: %w", err)
+	}
+	if q.usersGetBySocialProviderUsernameStmt, err = db.PrepareContext(ctx, usersGetBySocialProviderUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetBySocialProviderUsername: %w", err)
+	}
+	if q.usersNewStmt, err = db.PrepareContext(ctx, usersNew); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersNew: %w", err)
+	}
+	if q.usersUpdateUsernameStmt, err = db.PrepareContext(ctx, usersUpdateUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersUpdateUsername: %w", err)
+	}
 	return &q, nil
 }
 
@@ -67,6 +82,31 @@ func (q *Queries) Close() error {
 	if q.profileTotalViewsNewStmt != nil {
 		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersGetByIDStmt != nil {
+		if cerr := q.usersGetByIDStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetByIDStmt: %w", cerr)
+		}
+	}
+	if q.usersGetBySocialProviderStmt != nil {
+		if cerr := q.usersGetBySocialProviderStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetBySocialProviderStmt: %w", cerr)
+		}
+	}
+	if q.usersGetBySocialProviderUsernameStmt != nil {
+		if cerr := q.usersGetBySocialProviderUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetBySocialProviderUsernameStmt: %w", cerr)
+		}
+	}
+	if q.usersNewStmt != nil {
+		if cerr := q.usersNewStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersNewStmt: %w", cerr)
+		}
+	}
+	if q.usersUpdateUsernameStmt != nil {
+		if cerr := q.usersUpdateUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersUpdateUsernameStmt: %w", cerr)
 		}
 	}
 	return err
@@ -106,23 +146,33 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                                DBTX
-	tx                                *sql.Tx
-	profileHourlyViewsStatsStmt       *sql.Stmt
-	profileHourlyViewsStatsUpsertStmt *sql.Stmt
-	profileTotalViewsStmt             *sql.Stmt
-	profileTotalViewsIncStmt          *sql.Stmt
-	profileTotalViewsNewStmt          *sql.Stmt
+	db                                   DBTX
+	tx                                   *sql.Tx
+	profileHourlyViewsStatsStmt          *sql.Stmt
+	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
+	profileTotalViewsStmt                *sql.Stmt
+	profileTotalViewsIncStmt             *sql.Stmt
+	profileTotalViewsNewStmt             *sql.Stmt
+	usersGetByIDStmt                     *sql.Stmt
+	usersGetBySocialProviderStmt         *sql.Stmt
+	usersGetBySocialProviderUsernameStmt *sql.Stmt
+	usersNewStmt                         *sql.Stmt
+	usersUpdateUsernameStmt              *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                                tx,
-		tx:                                tx,
-		profileHourlyViewsStatsStmt:       q.profileHourlyViewsStatsStmt,
-		profileHourlyViewsStatsUpsertStmt: q.profileHourlyViewsStatsUpsertStmt,
-		profileTotalViewsStmt:             q.profileTotalViewsStmt,
-		profileTotalViewsIncStmt:          q.profileTotalViewsIncStmt,
-		profileTotalViewsNewStmt:          q.profileTotalViewsNewStmt,
+		db:                                   tx,
+		tx:                                   tx,
+		profileHourlyViewsStatsStmt:          q.profileHourlyViewsStatsStmt,
+		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
+		profileTotalViewsStmt:                q.profileTotalViewsStmt,
+		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
+		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
+		usersGetByIDStmt:                     q.usersGetByIDStmt,
+		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,
+		usersGetBySocialProviderUsernameStmt: q.usersGetBySocialProviderUsernameStmt,
+		usersNewStmt:                         q.usersNewStmt,
+		usersUpdateUsernameStmt:              q.usersUpdateUsernameStmt,
 	}
 }

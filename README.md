@@ -6,6 +6,7 @@ Profile views counter
 
 ##### Start local development session
 ```bash
+cp .local.env .env
 make env-local-up
 make migrate-all-reset
 make postgres-fixtures
