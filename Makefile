@@ -39,6 +39,11 @@ migrate-all-reset:
 generate-dbs:
 	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
 
+generate-template:
+	# go install github.com/valyala/quicktemplate/qtc
+	qtc -dir=./internal/templates -skipLineComments
+	git add .
+
 # BENCHTIME=100x make bench
 # BENCHTIME=1000x make bench
 # BENCHTIME=10000x make bench

@@ -39,6 +39,12 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
 	}
+	if q.usersGetBySocialProviderStmt, err = db.PrepareContext(ctx, usersGetBySocialProvider); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetBySocialProvider: %w", err)
+	}
+	if q.usersGetBySocialProviderUsernameStmt, err = db.PrepareContext(ctx, usersGetBySocialProviderUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetBySocialProviderUsername: %w", err)
+	}
 	if q.usersNewStmt, err = db.PrepareContext(ctx, usersNew); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersNew: %w", err)
 	}
@@ -73,6 +79,16 @@ func (q *Queries) Close() error {
 	if q.profileTotalViewsNewStmt != nil {
 		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersGetBySocialProviderStmt != nil {
+		if cerr := q.usersGetBySocialProviderStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetBySocialProviderStmt: %w", cerr)
+		}
+	}
+	if q.usersGetBySocialProviderUsernameStmt != nil {
+		if cerr := q.usersGetBySocialProviderUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetBySocialProviderUsernameStmt: %w", cerr)
 		}
 	}
 	if q.usersNewStmt != nil {
@@ -122,27 +138,31 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                                DBTX
-	tx                                *sql.Tx
-	profileHourlyViewsStatsStmt       *sql.Stmt
-	profileHourlyViewsStatsUpsertStmt *sql.Stmt
-	profileTotalViewsStmt             *sql.Stmt
-	profileTotalViewsIncStmt          *sql.Stmt
-	profileTotalViewsNewStmt          *sql.Stmt
-	usersNewStmt                      *sql.Stmt
-	usersUpdateUsernameStmt           *sql.Stmt
+	db                                   DBTX
+	tx                                   *sql.Tx
+	profileHourlyViewsStatsStmt          *sql.Stmt
+	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
+	profileTotalViewsStmt                *sql.Stmt
+	profileTotalViewsIncStmt             *sql.Stmt
+	profileTotalViewsNewStmt             *sql.Stmt
+	usersGetBySocialProviderStmt         *sql.Stmt
+	usersGetBySocialProviderUsernameStmt *sql.Stmt
+	usersNewStmt                         *sql.Stmt
+	usersUpdateUsernameStmt              *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                                tx,
-		tx:                                tx,
-		profileHourlyViewsStatsStmt:       q.profileHourlyViewsStatsStmt,
-		profileHourlyViewsStatsUpsertStmt: q.profileHourlyViewsStatsUpsertStmt,
-		profileTotalViewsStmt:             q.profileTotalViewsStmt,
-		profileTotalViewsIncStmt:          q.profileTotalViewsIncStmt,
-		profileTotalViewsNewStmt:          q.profileTotalViewsNewStmt,
-		usersNewStmt:                      q.usersNewStmt,
-		usersUpdateUsernameStmt:           q.usersUpdateUsernameStmt,
+		db:                                   tx,
+		tx:                                   tx,
+		profileHourlyViewsStatsStmt:          q.profileHourlyViewsStatsStmt,
+		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
+		profileTotalViewsStmt:                q.profileTotalViewsStmt,
+		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
+		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
+		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,
+		usersGetBySocialProviderUsernameStmt: q.usersGetBySocialProviderUsernameStmt,
+		usersNewStmt:                         q.usersNewStmt,
+		usersUpdateUsernameStmt:              q.usersUpdateUsernameStmt,
 	}
 }

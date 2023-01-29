@@ -12,13 +12,15 @@ CREATE TABLE users
     social_provider         SOCIAL_PROVIDER          NOT NULL,
     social_provider_user_id VARCHAR                  NOT NULL,
     username                VARCHAR                  NOT NULL,
+    canonical_username      VARCHAR                  NOT NULL,
     created_at              TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at              TIMESTAMP WITH TIME ZONE NOT NULL,
     last_login_at           TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (social_provider, social_provider_user_id)
 );
 
-CREATE INDEX SOCIAL_PROVIDER_USERNAME ON users (social_provider, username);
+-- Duplicates allowed because username can be changed
+CREATE INDEX SOCIAL_PROVIDER_USERNAME ON users (social_provider, canonical_username);
 
 CREATE TABLE profile_total_views
 (
