@@ -1,6 +1,6 @@
 -- name: UsersNew :one
 INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, created_at, updated_at, last_login_at)
-VALUES (@social_provider, @social_provider_user_id, @username, LOWER(@username), @created_at, @updated_at, @last_login_at)
+VALUES (@social_provider, @social_provider_user_id, @username, LOWER(@username::VARCHAR), @created_at, @updated_at, @last_login_at)
 ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
     SET last_login_at = excluded.last_login_at
 RETURNING id;

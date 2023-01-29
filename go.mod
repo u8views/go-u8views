@@ -10,6 +10,7 @@ require (
 	github.com/pressly/goose/v3 v3.8.0
 	github.com/stretchr/testify v1.8.1
 	github.com/valyala/fasthttp v1.44.0
+	github.com/valyala/quicktemplate v1.7.0
 	golang.org/x/crypto v0.5.0
 	golang.org/x/image v0.3.0
 )

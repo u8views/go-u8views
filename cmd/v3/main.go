@@ -66,7 +66,7 @@ func main() {
 
 	r.
 		GET("/login/github", oauth2Controller.RedirectGitHubLogin).
-		GET("/callback/github", oauth2Controller.CallbackGitHubLogin).
+		GET("/oauth/callback/github", oauth2Controller.CallbackGitHubLogin).
 		GET("/logout", oauth2Controller.Logout)
 
 	r.GET("/github/:username", profileController.GitHubProfile)

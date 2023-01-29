@@ -58,7 +58,7 @@ func (q *Queries) UsersGetBySocialProviderUsername(ctx context.Context, arg User
 
 const usersNew = `-- name: UsersNew :one
 INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, created_at, updated_at, last_login_at)
-VALUES ($1, $2, $3, LOWER($3), $4, $5, $6)
+VALUES ($1, $2, $3, LOWER($3::VARCHAR), $4, $5, $6)
 ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
     SET last_login_at = excluded.last_login_at
 RETURNING id
