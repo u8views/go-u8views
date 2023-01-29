@@ -26,6 +26,7 @@ func User(secret oauth2.Secret, code string) (result oauth2.SocialProviderUser, 
 	return oauth2.SocialProviderUser{
 		ID:       strconv.FormatUint(userResponse.ID, 10),
 		Username: userResponse.Login,
+		Name:     userResponse.Name,
 	}, nil
 }
 

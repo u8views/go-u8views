@@ -5,15 +5,11 @@ import (
 	"time"
 
 	"github.com/u8views/go-u8views/internal/db"
+	"github.com/u8views/go-u8views/internal/models"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
 )
 
-type ProfileStatsCount struct {
-	DayCount   int64
-	WeekCount  int64
-	MonthCount int64
-	TotalCount int64
-}
+type ProfileViewsStats = models.ProfileViewsStats
 
 type ProfileStatsService struct {
 	repository *db.Repository
@@ -23,10 +19,10 @@ func NewProfileStatsService(repository *db.Repository) *ProfileStatsService {
 	return &ProfileStatsService{repository: repository}
 }
 
-func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, increment bool) (ProfileStatsCount, error) {
+func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
 	totalCount, err := s.repository.Queries().ProfileTotalViews(ctx, userID)
 	if err != nil {
-		return ProfileStatsCount{}, err
+		return result, err
 	}
 
 	now := time.Now().UTC().Truncate(time.Hour)
@@ -37,7 +33,7 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 		UserID: userID,
 	})
 	if err != nil {
-		return ProfileStatsCount{}, err
+		return result, err
 	}
 
 	if increment {
@@ -59,11 +55,11 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 			return nil
 		})
 		if txErr != nil {
-			return ProfileStatsCount{}, txErr
+			return result, txErr
 		}
 	}
 
-	return ProfileStatsCount{
+	return ProfileViewsStats{
 		DayCount:   stats.DayCount,
 		WeekCount:  stats.WeekCount,
 		MonthCount: stats.MonthCount,

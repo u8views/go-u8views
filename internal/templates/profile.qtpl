@@ -1,9 +1,10 @@
+{% func Profile(profile ProfileView, currentUser CurrentUserView, stats ProfileViewsStats) %}
 <!DOCTYPE html>
 <html class="page-root" lang="uk">
 
 <head>
-    <title>Registration statistics</title>
-    <meta name="description" content="Statistics views profile github">
+    <title>{%s profile.GetName() %} profile views statistic</title>
+    <meta name="description" content="{%s profile.GetName() %} profile views statistic">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -21,26 +22,75 @@
 </head>
 
 <body>
-    <header class="header">
-	<div class="header__wrapper wrapper-u8">
+    <header class="header ">
+	<div class="header__wrapper auth wrapper-u8">
 		<a href="/" class="header__logo">
 			<img class="header__logo-img" src="/assets/files/logo.svg" alt=""></a>
 		<div class="header__stars">
 			<iframe src="https://ghbtns.com/github-btn.html?user=u8views&repo=go-u8views&type=star&count=true&size=large"
 				frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
 		</div>
+		<div class="header__profile">
+			<button class="header__profile-button">
+				<img src="https://avatars.githubusercontent.com/u/{%s currentUser.SocialProviderUserID %}?v=4&s=48" alt="photo-profile">
+			</button>
+			<div class="header__modal modal">
+				<div class="modal__profile">
+					<img src="https://avatars.githubusercontent.com/u/{%s currentUser.SocialProviderUserID %}?v=4&s=48" width="32" height="32" alt="photo-profile">
+					<div class="modal__profile-info">
+						<div class="modal__profile-name">{%s currentUser.GetName() %}</div>
+						<a href="https://github.com/{%s currentUser.Username %}" class="modal__link">
+							<img src="/assets/files/link.svg" width="16" height="16" alt="link">
+							<span class="modal__profile-github">https://github.com/{%s currentUser.Username %}</span>
+						</a>
+					</div>
+
+				</div>
+				<div class="modal__log-out">
+					<a href="/logout" class="modal__button">
+						<img src="/assets/files/log-out.svg" alt="log-out">
+						<span>Log out</span>
+					</a>
+				</div>
+			</div>
+		</div>
 	</div>
 </header>
-    <main class="main">
 
+<main class="main">
 <div class="wrapper-u8">
-    <section class="stat-reg">
-        <h2 class="stat-reg__title">Registration statistics</h2>
-        <p class="stat-reg__subtitle">Here you can find out the statistics of registrations on "u8views" for
-            different periods of time</p>
+    <section class="profile">
+        <div class="profile__card">
+            <img class="profile__photo" src="https://avatars.githubusercontent.com/u/{%s profile.SocialProviderUserID %}?v=4&s=176" alt="profile">
+            <div class="profile__info">
+                <span class="profile__name">{%s profile.GetName() %}</span>
+                <a href="" class="profile__link">
+                    <img src="/assets/files/link.svg" width="16" height="16" alt="link">
+                    <span class="profile__github">https://github.com/{%s profile.Username %}</span>
+                </a>
+                <div class="history__badges">
+                    <div class="history__badge">
+                        <span class="history__badge-title">Views per day</span>
+                        <span class="history__badge-count">{%dl stats.DayCount %}</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title">Views per week</span>
+                        <span class="history__badge-count">{%dl stats.WeekCount %}</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title">Views per month</span>
+                        <span class="history__badge-count">{%dl stats.MonthCount %}</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title">Total views</span>
+                        <span class="history__badge-count">{%dl stats.TotalCount %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="profile__statistics">
             <div class="profile__header">
-                <h3 class="profile__title">Registration statistics on u8views</h3>
+                <h3 class="profile__title">Your GitHub profile views statistic</h3>
                 <div class="profile__view-count">
                     <span class="profile__circle"></span>View count
                 </div>
@@ -64,6 +114,27 @@
             </div>
         </div>
     </section>
+    {% if profile.ID == currentUser.ID %}
+    <section class="badge">
+        <h2 class="badge__title">Profile badge</h2>
+        <p class="badge__subtitle">Copy the badge and place it on your GitHub profile</p>
+        <div class="badge__example">
+            <p class="badge__code">
+                [![Hits](https://u8views.com/api/v1/github/profiles/{%s profile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s profile.Username %})
+            </p>
+            <div class="badge__copy">
+                <button class="badge__copy-button button-copy-code-js">
+                    <img class="badge__copy-icon" src="/assets/files/copy.svg" alt="copy">
+                    <span>Copy</span>
+                </button>
+                <div class="badge__copy-info copy-notification-js">
+                    <img src="/assets/files/check.svg" alt="check">
+                    <span> Copied to clipboard </span>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
 </div>
 
 </main>
@@ -76,7 +147,7 @@
 				<img class="footer__map-Ukraine" src="/assets/files/map-of-ukraine.png" alt="Map of Ukraine">
 			</div>
 			<div class="footer__copyrights">
-				<span>© 2022 Yaroslav Podorvanov</span>
+				<span>© 2023 Yaroslav Podorvanov</span>
 				<img class="footer__flag-of-ukraine" src="/assets/files/flag-of-ukraine.svg" alt="Flag Of Ukraine">
 			</div>
 		</div>
@@ -111,3 +182,4 @@
 </body>
 
 </html>
+{% endfunc %}

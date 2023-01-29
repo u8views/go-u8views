@@ -69,6 +69,7 @@ type User struct {
 	SocialProvider       SocialProvider
 	SocialProviderUserID string
 	Username             string
+	Name                 string
 	CanonicalUsername    string
 	CreatedAt            time.Time
 	UpdatedAt            time.Time

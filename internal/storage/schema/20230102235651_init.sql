@@ -12,6 +12,7 @@ CREATE TABLE users
     social_provider         SOCIAL_PROVIDER          NOT NULL,
     social_provider_user_id VARCHAR                  NOT NULL,
     username                VARCHAR                  NOT NULL,
+    name                    VARCHAR                  NOT NULL,
     canonical_username      VARCHAR                  NOT NULL,
     created_at              TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at              TIMESTAMP WITH TIME ZONE NOT NULL,

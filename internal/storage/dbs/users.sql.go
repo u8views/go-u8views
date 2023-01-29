@@ -10,6 +10,31 @@ import (
 	"time"
 )
 
+const usersGetByID = `-- name: UsersGetByID :one
+SELECT id, social_provider_user_id, username, name
+FROM users
+WHERE id = $1
+`
+
+type UsersGetByIDRow struct {
+	ID                   int64
+	SocialProviderUserID string
+	Username             string
+	Name                 string
+}
+
+func (q *Queries) UsersGetByID(ctx context.Context, id int64) (UsersGetByIDRow, error) {
+	row := q.queryRow(ctx, q.usersGetByIDStmt, usersGetByID, id)
+	var i UsersGetByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.SocialProviderUserID,
+		&i.Username,
+		&i.Name,
+	)
+	return i, err
+}
+
 const usersGetBySocialProvider = `-- name: UsersGetBySocialProvider :one
 SELECT id
 FROM users
@@ -30,7 +55,7 @@ func (q *Queries) UsersGetBySocialProvider(ctx context.Context, arg UsersGetBySo
 }
 
 const usersGetBySocialProviderUsername = `-- name: UsersGetBySocialProviderUsername :one
-SELECT id, social_provider_user_id, username
+SELECT id, social_provider_user_id, username, name
 FROM users
 WHERE social_provider = $1
   AND canonical_username = LOWER($2)
@@ -47,18 +72,26 @@ type UsersGetBySocialProviderUsernameRow struct {
 	ID                   int64
 	SocialProviderUserID string
 	Username             string
+	Name                 string
 }
 
 func (q *Queries) UsersGetBySocialProviderUsername(ctx context.Context, arg UsersGetBySocialProviderUsernameParams) (UsersGetBySocialProviderUsernameRow, error) {
 	row := q.queryRow(ctx, q.usersGetBySocialProviderUsernameStmt, usersGetBySocialProviderUsername, arg.SocialProvider, arg.Username)
 	var i UsersGetBySocialProviderUsernameRow
-	err := row.Scan(&i.ID, &i.SocialProviderUserID, &i.Username)
+	err := row.Scan(
+		&i.ID,
+		&i.SocialProviderUserID,
+		&i.Username,
+		&i.Name,
+	)
 	return i, err
 }
 
 const usersNew = `-- name: UsersNew :one
-INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, created_at, updated_at, last_login_at)
-VALUES ($1, $2, $3, LOWER($3::VARCHAR), $4, $5, $6)
+INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, name, created_at, updated_at,
+                   last_login_at)
+VALUES ($1, $2, $3, LOWER($3::VARCHAR), $4, $5,
+        $6, $7)
 ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
     SET last_login_at = excluded.last_login_at
 RETURNING id
@@ -68,6 +101,7 @@ type UsersNewParams struct {
 	SocialProvider       SocialProvider
 	SocialProviderUserID string
 	Username             string
+	Name                 string
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 	LastLoginAt          time.Time
@@ -78,6 +112,7 @@ func (q *Queries) UsersNew(ctx context.Context, arg UsersNewParams) (int64, erro
 		arg.SocialProvider,
 		arg.SocialProviderUserID,
 		arg.Username,
+		arg.Name,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 		arg.LastLoginAt,
@@ -91,18 +126,25 @@ const usersUpdateUsername = `-- name: UsersUpdateUsername :exec
 UPDATE users
 SET username           = $1,
     canonical_username = LOWER($1),
-    updated_at         = $2
-WHERE id = $3
-  AND username <> $1
+    name               = $2,
+    updated_at         = $3
+WHERE id = $4
+  AND (username <> $1 OR name <> $2)
 `
 
 type UsersUpdateUsernameParams struct {
 	Username  string
+	Name      string
 	UpdatedAt time.Time
 	ID        int64
 }
 
 func (q *Queries) UsersUpdateUsername(ctx context.Context, arg UsersUpdateUsernameParams) error {
-	_, err := q.exec(ctx, q.usersUpdateUsernameStmt, usersUpdateUsername, arg.Username, arg.UpdatedAt, arg.ID)
+	_, err := q.exec(ctx, q.usersUpdateUsernameStmt, usersUpdateUsername,
+		arg.Username,
+		arg.Name,
+		arg.UpdatedAt,
+		arg.ID,
+	)
 	return err
 }

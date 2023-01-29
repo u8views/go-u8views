@@ -7,4 +7,5 @@ type AccessTokenResponse struct {
 type User struct {
 	ID    uint64 `json:"id"`
 	Login string `json:"login"`
+	Name  string `json:"name"`
 }

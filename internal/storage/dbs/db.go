@@ -39,6 +39,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
 	}
+	if q.usersGetByIDStmt, err = db.PrepareContext(ctx, usersGetByID); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetByID: %w", err)
+	}
 	if q.usersGetBySocialProviderStmt, err = db.PrepareContext(ctx, usersGetBySocialProvider); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersGetBySocialProvider: %w", err)
 	}
@@ -79,6 +82,11 @@ func (q *Queries) Close() error {
 	if q.profileTotalViewsNewStmt != nil {
 		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersGetByIDStmt != nil {
+		if cerr := q.usersGetByIDStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersGetByIDStmt: %w", cerr)
 		}
 	}
 	if q.usersGetBySocialProviderStmt != nil {
@@ -145,6 +153,7 @@ type Queries struct {
 	profileTotalViewsStmt                *sql.Stmt
 	profileTotalViewsIncStmt             *sql.Stmt
 	profileTotalViewsNewStmt             *sql.Stmt
+	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt
 	usersGetBySocialProviderUsernameStmt *sql.Stmt
 	usersNewStmt                         *sql.Stmt
@@ -160,6 +169,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
 		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
+		usersGetByIDStmt:                     q.usersGetByIDStmt,
 		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,
 		usersGetBySocialProviderUsernameStmt: q.usersGetBySocialProviderUsernameStmt,
 		usersNewStmt:                         q.usersNewStmt,

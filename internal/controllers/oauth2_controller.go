@@ -64,7 +64,13 @@ func (s *OAuth2Controller) callbackLogin(ctx *gin.Context, secret oauth2.Secret,
 		return
 	}
 
-	userID, err := s.userService.Upsert(ctx, dbs.SocialProviderGithub, socialProviderUser.ID, socialProviderUser.Username)
+	userID, err := s.userService.Upsert(
+		ctx,
+		dbs.SocialProviderGithub,
+		socialProviderUser.ID,
+		socialProviderUser.Username,
+		socialProviderUser.Name,
+	)
 	if err != nil {
 		ctx.Data(http.StatusInternalServerError, "text/html; charset=utf-8", []byte(err.Error()))
 

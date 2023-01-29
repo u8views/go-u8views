@@ -24,10 +24,10 @@ func NewProfileStatsController(userService *services.UserService, profileStatsSe
 }
 
 type ProfileCountURI struct {
-	UserID string `uri:"user_id" binding:"required"`
+	SocialProviderUserID string `uri:"social_provider_user_id" binding:"required"`
 }
 
-type ProfileCountResponse struct {
+type ProfileViewsStatsResponse struct {
 	DayCount   int64 `json:"day_count"`
 	WeekCount  int64 `json:"week_count"`
 	MonthCount int64 `json:"month_count"`
@@ -44,7 +44,7 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) 
 		return
 	}
 
-	ctx.JSON(http.StatusOK, &ProfileCountResponse{
+	ctx.JSON(http.StatusOK, &ProfileViewsStatsResponse{
 		DayCount:   statsCount.DayCount,
 		WeekCount:  statsCount.WeekCount,
 		MonthCount: statsCount.MonthCount,
@@ -103,21 +103,21 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Cont
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(statsBadge))
 }
 
-func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileStatsCount, done bool) {
+func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
 	var uri ProfileCountURI
 
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
-		log.Printf("Cannot parse UserID from URI %s\n", err)
+		log.Printf("Cannot parse SocialProviderUserID from URI %s\n", err)
 
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
-			ErrorMessage: "Cannot parse UserID from URI",
+			ErrorMessage: "Cannot parse SocialProviderUserID from URI",
 		})
 
 		return statsCount, true
 	}
 
-	userID, err := c.userService.GetBySocialProvider(ctx, provider, uri.UserID)
+	userID, err := c.userService.GetBySocialProvider(ctx, provider, uri.SocialProviderUserID)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
 			ErrorMessage: "User not found (social)",

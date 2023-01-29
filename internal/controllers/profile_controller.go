@@ -8,6 +8,7 @@ import (
 
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
+	"github.com/u8views/go-u8views/internal/templates"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,11 +18,12 @@ type ProfileURI struct {
 }
 
 type ProfileController struct {
-	userService *services.UserService
+	userService         *services.UserService
+	profileStatsService *services.ProfileStatsService
 }
 
-func NewProfileController(userService *services.UserService) *ProfileController {
-	return &ProfileController{userService: userService}
+func NewProfileController(userService *services.UserService, profileStatsService *services.ProfileStatsService) *ProfileController {
+	return &ProfileController{userService: userService, profileStatsService: profileStatsService}
 }
 
 func (c *ProfileController) GitHubProfile(ctx *gin.Context) {
@@ -42,18 +44,44 @@ func (c *ProfileController) GitHubProfile(ctx *gin.Context) {
 
 		return
 	}
-
 	if err != nil {
 		ctx.Data(http.StatusInternalServerError, "text/html; charset=utf-8", []byte(err.Error()))
 
 		return
 	}
 
-	if parseCookieUserID(ctx) == user.ID {
-		// current user so show "badge copy"
-	} else if user.ID == 0 {
-		// show GitHub signup proposal
+	stats, err := c.profileStatsService.StatsCount(ctx, user.ID, false)
+	if err != nil {
+		log.Printf("Cannot fetch views stats by id = %d err: %v", user.ID, err)
 	}
 
-	ctx.File("./public/profile.html")
+	var currentUserView templates.CurrentUserView
+
+	currentUserID := parseCookieUserID(ctx)
+	if currentUserID > 0 {
+		user, err := c.userService.GetByID(ctx, currentUserID)
+		if err != nil {
+			log.Printf("Cannot fetch user by id = %d err: %v", currentUserID, err)
+
+			// NOP
+		} else {
+			currentUserView = templates.CurrentUserView{
+				ID:                   user.ID,
+				SocialProviderUserID: user.SocialProviderUserID,
+				Username:             user.Username,
+				Name:                 user.Name,
+			}
+		}
+	}
+
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Profile(
+		templates.ProfileView{
+			ID:                   user.ID,
+			SocialProviderUserID: user.SocialProviderUserID,
+			Username:             user.Username,
+			Name:                 user.Name,
+		},
+		currentUserView,
+		stats,
+	)))
 }

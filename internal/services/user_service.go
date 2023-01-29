@@ -30,7 +30,17 @@ func (s *UserService) GetBySocialProviderUsername(ctx context.Context, provider 
 	})
 }
 
-func (s *UserService) Upsert(ctx context.Context, provider dbs.SocialProvider, socialProviderUserID string, username string) (id int64, err error) {
+func (s *UserService) GetByID(ctx context.Context, id int64) (dbs.UsersGetByIDRow, error) {
+	return s.repository.Queries().UsersGetByID(ctx, id)
+}
+
+func (s *UserService) Upsert(
+	ctx context.Context,
+	provider dbs.SocialProvider,
+	socialProviderUserID string,
+	username string,
+	name string,
+) (id int64, err error) {
 	now := time.Now().UTC()
 
 	err = s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
@@ -38,6 +48,7 @@ func (s *UserService) Upsert(ctx context.Context, provider dbs.SocialProvider, s
 			SocialProvider:       provider,
 			SocialProviderUserID: socialProviderUserID,
 			Username:             username,
+			Name:                 name,
 			CreatedAt:            now,
 			UpdatedAt:            now,
 			LastLoginAt:          now,
@@ -48,6 +59,7 @@ func (s *UserService) Upsert(ctx context.Context, provider dbs.SocialProvider, s
 
 		err = queries.UsersUpdateUsername(ctx, dbs.UsersUpdateUsernameParams{
 			Username:  username,
+			Name:      name,
 			UpdatedAt: now,
 			ID:        txID,
 		})

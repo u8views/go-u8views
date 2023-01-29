@@ -39,7 +39,7 @@ func main() {
 			RedirectURI:  "",
 			Scope:        "",
 		})
-		profileController      = controllers.NewProfileController(userService)
+		profileController      = controllers.NewProfileController(userService, profileStatsService)
 		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
 	)
 
