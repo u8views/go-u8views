@@ -40,6 +40,7 @@ SELECT u.id,
        u.social_provider_user_id,
        u.username,
        u.name,
+       u.created_at,
        ptv.count
 FROM users u
          INNER JOIN profile_total_views ptv ON u.id = ptv.user_id

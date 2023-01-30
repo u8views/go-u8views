@@ -55,7 +55,7 @@ func (c *ProfileController) GitHubProfile(ctx *gin.Context) {
 		log.Printf("Cannot fetch views stats by id = %d err: %v", user.ID, err)
 	}
 
-	var currentUserView templates.CurrentUserView
+	var currentUserView templates.ProfileView
 
 	currentUserID := parseCookieUserID(ctx)
 	if currentUserID > 0 {
@@ -65,7 +65,7 @@ func (c *ProfileController) GitHubProfile(ctx *gin.Context) {
 
 			// NOP
 		} else {
-			currentUserView = templates.CurrentUserView{
+			currentUserView = templates.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,

@@ -1,13 +1,10 @@
 package templates
 
-import "github.com/u8views/go-u8views/internal/models"
+import (
+	"time"
 
-type CurrentUserView struct {
-	ID                   int64
-	SocialProviderUserID string
-	Username             string
-	Name                 string
-}
+	"github.com/u8views/go-u8views/internal/models"
+)
 
 type ProfileView struct {
 	ID                   int64
@@ -18,12 +15,10 @@ type ProfileView struct {
 
 type ProfileViewsStats = models.ProfileViewsStats
 
-func (v CurrentUserView) GetName() string {
-	if v.Name == "" {
-		return v.Username
-	}
-
-	return v.Name
+type FullProfileView struct {
+	ProfileView
+	ProfileViewsStats
+	CreatedAt time.Time
 }
 
 func (v ProfileView) GetName() string {

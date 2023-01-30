@@ -14,7 +14,7 @@ var (
 	_ = qt422016.AcquireByteBuffer
 )
 
-func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser CurrentUserView, stats ProfileViewsStats) {
+func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser ProfileView, stats ProfileViewsStats) {
 	qw422016.N().S(`
 <!DOCTYPE html>
 <html class="page-root" lang="uk">
@@ -70,7 +70,7 @@ func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser C
 	qw422016.E().S(currentUser.Username)
 	qw422016.N().S(`" class="modal__link">
 							<img src="/assets/files/link.svg" width="16" height="16" alt="link">
-							<span class="modal__profile-github">https://github.com/`)
+							<span class="modal__profile-github">github.com/`)
 	qw422016.E().S(currentUser.Username)
 	qw422016.N().S(`</span>
 						</a>
@@ -200,13 +200,13 @@ func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser C
 `)
 }
 
-func WriteProfile(qq422016 qtio422016.Writer, profile ProfileView, currentUser CurrentUserView, stats ProfileViewsStats) {
+func WriteProfile(qq422016 qtio422016.Writer, profile ProfileView, currentUser ProfileView, stats ProfileViewsStats) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
 	StreamProfile(qw422016, profile, currentUser, stats)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func Profile(profile ProfileView, currentUser CurrentUserView, stats ProfileViewsStats) string {
+func Profile(profile ProfileView, currentUser ProfileView, stats ProfileViewsStats) string {
 	qb422016 := qt422016.AcquireByteBuffer()
 	WriteProfile(qb422016, profile, currentUser, stats)
 	qs422016 := string(qb422016.B)

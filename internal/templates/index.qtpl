@@ -1,4 +1,4 @@
-{% func Index() %}
+{% func Index(profiles []FullProfileView) %}
 <!DOCTYPE html>
 <html class="page-root" lang="uk">
 
@@ -53,7 +53,6 @@
                 <figcaption class="hero__figcaption">Sign up with GitHub</figcaption>
             </figure>
         </a>
-        </button>
     </section>
 
     <section class="history">
@@ -65,267 +64,37 @@
                 <span>Time, data:</span>
             </div>
             <ul class="history__list">
+                {% for _, profile := range profiles %}
                 <li class="history__card">
                     <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
+                        <img src="https://avatars.githubusercontent.com/u/{%s profile.SocialProviderUserID %}?v=4&s=56" alt="{%s profile.Username %}" class="history__user-picture">
                         <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
+                            <div class="history__user-name">{%s profile.GetName() %}</div>
+                            <a href="https://github.com/{%s profile.Username %}" class="history__link">
                                 <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
+                                <span class="history__user-github">github.com/{%s profile.Username %}</span>
                             </a>
                         </div>
                     </div>
                     <div class="history__badges">
                         <div class="history__badge">
                             <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
+                            <span class="history__badge-count">{%dl profile.DayCount %}</span>
                         </div>
                         <div class="history__badge">
                             <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
+                            <span class="history__badge-count">{%dl profile.WeekCount %}</span>
                         </div>
                         <div class="history__badge">
                             <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
+                            <span class="history__badge-count">{%dl profile.MonthCount %}</span>
                         </div>
                     </div>
                     <div class="history__user-time">
-                        20:02, January 17
+                        {%s profile.CreatedAt.Format("15:04, Jan _2 2006") %}
                     </div>
                 </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">1722</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17222</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">1722</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvano222222v</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
-                <li class="history__card">
-                    <div class="history__user">
-                        <img src="/assets/files/profile-picture.svg" alt="" class="history__user-picture">
-                        <div class="history__user-info">
-                            <div class="history__user-name">Yaroslav Podorvanov</div>
-                            <a href="#" class="history__link">
-                                <img src="/assets/files/link.svg" width="16" height="16" alt="link">
-                                <span class="history__user-github">github.com/YaroslavPodorvanov</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="history__badges">
-                        <div class="history__badge">
-                            <span class="history__badge-title">Views per day</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per week</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                        <div class="history__badge">
-                            <span class="history__badge-title">per month</span>
-                            <span class="history__badge-count">17</span>
-                        </div>
-                    </div>
-                    <div class="history__user-time">
-                        20:02, January 17
-                    </div>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </section>

@@ -1,4 +1,4 @@
-{% func Profile(profile ProfileView, currentUser CurrentUserView, stats ProfileViewsStats) %}
+{% func Profile(profile ProfileView, currentUser ProfileView, stats ProfileViewsStats) %}
 <!DOCTYPE html>
 <html class="page-root" lang="uk">
 
@@ -41,7 +41,7 @@
 						<div class="modal__profile-name">{%s currentUser.GetName() %}</div>
 						<a href="https://github.com/{%s currentUser.Username %}" class="modal__link">
 							<img src="/assets/files/link.svg" width="16" height="16" alt="link">
-							<span class="modal__profile-github">https://github.com/{%s currentUser.Username %}</span>
+							<span class="modal__profile-github">github.com/{%s currentUser.Username %}</span>
 						</a>
 					</div>
 
