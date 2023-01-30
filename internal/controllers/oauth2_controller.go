@@ -85,7 +85,7 @@ func (s *OAuth2Controller) callbackLogin(ctx *gin.Context, secret oauth2.Secret,
 }
 
 func setCookieUserID(ctx *gin.Context, userID int64) {
-	ctx.SetSameSite(http.SameSiteStrictMode)
+	ctx.SetSameSite(http.SameSiteLaxMode)
 	ctx.SetCookie(
 		userCookieKey,
 		strconv.FormatInt(userID, 10),
@@ -98,7 +98,7 @@ func setCookieUserID(ctx *gin.Context, userID int64) {
 }
 
 func delCookieUserID(ctx *gin.Context) {
-	ctx.SetSameSite(http.SameSiteStrictMode)
+	ctx.SetSameSite(http.SameSiteLaxMode)
 	ctx.SetCookie(
 		userCookieKey,
 		"",
