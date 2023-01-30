@@ -191,49 +191,11 @@ func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser C
 </div>
 
 </main>
-<footer class="footer">
-	<div class="footer__wrapper wrapper-u8">
-		<div class="footer__info">
-			<a href="/" class="footer__title">u8views</a>
-			<p class="footer__subtitle">Registration statistics on u8views</p>
-			<div class="footer__map">
-				<img class="footer__map-Ukraine" src="/assets/files/map-of-ukraine.png" alt="Map of Ukraine">
-			</div>
-			<div class="footer__copyrights">
-				<span>© 2023 Yaroslav Podorvanov</span>
-				<img class="footer__flag-of-ukraine" src="/assets/files/flag-of-ukraine.svg" alt="Flag Of Ukraine">
-			</div>
-		</div>
-		<div class="footer__support">
-			<a href="" class="footer__link">
-				<figure class="footer__figure">
-					<img class="footer__img" width="93" height="24" src="/assets/files/national-bank-of-ukraine.png" alt="support">
-					<figcaption class="footer__caption">Support</figcaption>
-					<img src="/assets/files/arrow.svg" alt="arrow">
-
-				</figure>
-			</a>
-			<a href="" class="footer__link">
-				<figure class="footer__figure">
-					<img class="" width="60" height="24" src="/assets/files/come-back-alive-ukraine.png" alt="support">
-					<figcaption class="footer__caption">Support</figcaption>
-					<img src="/assets/files/arrow.svg" alt="arrow">
-
-				</figure>
-			</a>
-			<a href="" class="footer__link">
-				<figure class="footer__figure">
-					<figcaption class="footer__caption">war.ukraine.ua</figcaption>
-					<img src="/assets/files/arrow.svg" alt="arrow">
-				</figure>
-			</a>
-		</div>
-	</div>
-</footer>
+`)
+	streamfooter(qw422016)
+	qw422016.N().S(`
 <script src="/assets/files/u8views_2a3df2711b2de3d1342dd49415ddd24f.js"></script>
-
 </body>
-
 </html>
 `)
 }
