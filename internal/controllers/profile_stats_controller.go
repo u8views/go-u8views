@@ -10,6 +10,7 @@ import (
 	"github.com/u8views/go-u8views/internal/badge"
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
+	"github.com/u8views/go-u8views/internal/templates"
 
 	"github.com/gin-gonic/gin"
 )
@@ -81,26 +82,10 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Cont
 		return
 	}
 
-	statsBadge, err := statsBadge(
-		statsCount.DayCount,
-		statsCount.WeekCount,
-		statsCount.MonthCount,
-		statsCount.TotalCount,
-	)
-	if err != nil {
-		log.Printf("Cannot generate badge %s\n", err)
-
-		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
-			ErrorMessage: "Cannot generate badge",
-		})
-
-		return
-	}
-
 	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	ctx.Header("Pragma", "no-cache")
 	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(statsBadge))
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(templates.Badge(statsCount)))
 }
 
 func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {

@@ -18,9 +18,7 @@ func StreamRawRedirect(qw422016 *qt422016.Writer, url string) {
 	qw422016.N().S(`
 <!DOCTYPE html>
 <html lang="en">
-<head>
-
-</head>
+<head></head>
 <body>
 	Redirect...
 	<script>window.location.replace("`)
