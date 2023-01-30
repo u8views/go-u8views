@@ -8,40 +8,66 @@ package dbs
 import (
 	"context"
 	"time"
+
+	"github.com/lib/pq"
 )
 
-const profileHourlyViewsStats = `-- name: ProfileHourlyViewsStats :one
-SELECT COALESCE(SUM(CASE WHEN time >= $1 THEN count ELSE 0 END), 0)::BIGINT  AS day_count,
-       COALESCE(SUM(CASE WHEN time >= $2 THEN count ELSE 0 END), 0)::BIGINT AS week_count,
-       COALESCE(SUM(count), 0)::BIGINT                                         AS month_count
+const profileHourlyViewsStats = `-- name: ProfileHourlyViewsStats :many
+SELECT user_id,
+       SUM(CASE WHEN time >= $1 THEN count ELSE 0 END)::BIGINT  AS day_count,
+       SUM(CASE WHEN time >= $2 THEN count ELSE 0 END)::BIGINT AS week_count,
+       SUM(count)::BIGINT                                         AS month_count
 FROM profile_hourly_views_stats
-WHERE user_id = $3
+WHERE user_id = ANY ($3::BIGINT[])
   AND time >= $4
+GROUP BY user_id
 `
 
 type ProfileHourlyViewsStatsParams struct {
-	Day    time.Time
-	Week   time.Time
-	UserID int64
-	Month  time.Time
+	Day     time.Time
+	Week    time.Time
+	UserIds []int64
+	Month   time.Time
 }
 
 type ProfileHourlyViewsStatsRow struct {
+	UserID     int64
 	DayCount   int64
 	WeekCount  int64
 	MonthCount int64
 }
 
-func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourlyViewsStatsParams) (ProfileHourlyViewsStatsRow, error) {
-	row := q.queryRow(ctx, q.profileHourlyViewsStatsStmt, profileHourlyViewsStats,
+func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourlyViewsStatsParams) ([]ProfileHourlyViewsStatsRow, error) {
+	rows, err := q.query(ctx, q.profileHourlyViewsStatsStmt, profileHourlyViewsStats,
 		arg.Day,
 		arg.Week,
-		arg.UserID,
+		pq.Array(arg.UserIds),
 		arg.Month,
 	)
-	var i ProfileHourlyViewsStatsRow
-	err := row.Scan(&i.DayCount, &i.WeekCount, &i.MonthCount)
-	return i, err
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ProfileHourlyViewsStatsRow
+	for rows.Next() {
+		var i ProfileHourlyViewsStatsRow
+		if err := rows.Scan(
+			&i.UserID,
+			&i.DayCount,
+			&i.WeekCount,
+			&i.MonthCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const profileHourlyViewsStatsUpsert = `-- name: ProfileHourlyViewsStatsUpsert :exec

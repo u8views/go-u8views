@@ -34,6 +34,10 @@ func (s *UserService) GetByID(ctx context.Context, id int64) (dbs.UsersGetByIDRo
 	return s.repository.Queries().UsersGetByID(ctx, id)
 }
 
+func (s *UserService) Users(ctx context.Context, limit int32) ([]dbs.UsersGetRow, error) {
+	return s.repository.Queries().UsersGet(ctx, limit)
+}
+
 func (s *UserService) Upsert(
 	ctx context.Context,
 	provider dbs.SocialProvider,

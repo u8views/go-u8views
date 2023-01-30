@@ -35,3 +35,15 @@ WHERE social_provider = @social_provider
 ORDER BY last_login_at DESC
 LIMIT 1;
 
+-- name: UsersGet :many
+SELECT u.id,
+       u.social_provider_user_id,
+       u.username,
+       u.name,
+       u.created_at,
+       ptv.count AS total_count
+FROM users u
+         INNER JOIN profile_total_views ptv ON u.id = ptv.user_id
+WHERE ptv.count > 0
+ORDER BY u.id DESC
+LIMIT sqlc.arg('limit');
