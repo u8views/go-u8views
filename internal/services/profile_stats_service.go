@@ -26,12 +26,7 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 	}
 
 	now := time.Now().UTC().Truncate(time.Hour)
-	stats, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
-		Day:    now.Add(-24 * time.Hour),
-		Week:   now.Add(-7 * 24 * time.Hour),
-		Month:  now.Add(-31 * 7 * 24 * time.Hour),
-		UserID: userID,
-	})
+	userViewsStatsMap, err := s.UserDayWeekMonthViewsStatsMap(ctx, []int64{userID}, now)
 	if err != nil {
 		return result, err
 	}
@@ -59,10 +54,34 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 		}
 	}
 
+	stats := userViewsStatsMap[userID]
 	return ProfileViewsStats{
 		DayCount:   stats.DayCount,
 		WeekCount:  stats.WeekCount,
 		MonthCount: stats.MonthCount,
 		TotalCount: totalCount,
 	}, nil
+}
+
+func (s *ProfileStatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userIDs []int64, now time.Time) (map[int64]models.DayWeekMonthViewsStats, error) {
+	rows, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
+		Day:     now.Add(-24 * time.Hour),
+		Week:    now.Add(-7 * 24 * time.Hour),
+		Month:   now.Add(-31 * 7 * 24 * time.Hour),
+		UserIds: userIDs,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := make(map[int64]models.DayWeekMonthViewsStats, len(rows))
+	for _, row := range rows {
+		result[row.UserID] = models.DayWeekMonthViewsStats{
+			DayCount:   row.DayCount,
+			WeekCount:  row.WeekCount,
+			MonthCount: row.MonthCount,
+		}
+	}
+
+	return result, nil
 }

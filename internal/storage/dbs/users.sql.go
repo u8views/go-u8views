@@ -10,6 +10,56 @@ import (
 	"time"
 )
 
+const usersGet = `-- name: UsersGet :many
+SELECT u.id,
+       u.social_provider_user_id,
+       u.username,
+       u.name,
+       ptv.count
+FROM users u
+         INNER JOIN profile_total_views ptv ON u.id = ptv.user_id
+WHERE ptv.count > 0
+ORDER BY u.id DESC
+LIMIT 32
+`
+
+type UsersGetRow struct {
+	ID                   int64
+	SocialProviderUserID string
+	Username             string
+	Name                 string
+	Count                int64
+}
+
+func (q *Queries) UsersGet(ctx context.Context) ([]UsersGetRow, error) {
+	rows, err := q.query(ctx, q.usersGetStmt, usersGet)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UsersGetRow
+	for rows.Next() {
+		var i UsersGetRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.SocialProviderUserID,
+			&i.Username,
+			&i.Name,
+			&i.Count,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const usersGetByID = `-- name: UsersGetByID :one
 SELECT id, social_provider_user_id, username, name
 FROM users
