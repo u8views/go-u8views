@@ -15,12 +15,13 @@ SELECT u.id,
        u.social_provider_user_id,
        u.username,
        u.name,
-       ptv.count
+       u.created_at,
+       ptv.count AS total_count
 FROM users u
          INNER JOIN profile_total_views ptv ON u.id = ptv.user_id
 WHERE ptv.count > 0
 ORDER BY u.id DESC
-LIMIT 32
+LIMIT $1
 `
 
 type UsersGetRow struct {
@@ -28,11 +29,12 @@ type UsersGetRow struct {
 	SocialProviderUserID string
 	Username             string
 	Name                 string
-	Count                int64
+	CreatedAt            time.Time
+	TotalCount           int64
 }
 
-func (q *Queries) UsersGet(ctx context.Context) ([]UsersGetRow, error) {
-	rows, err := q.query(ctx, q.usersGetStmt, usersGet)
+func (q *Queries) UsersGet(ctx context.Context, limit int32) ([]UsersGetRow, error) {
+	rows, err := q.query(ctx, q.usersGetStmt, usersGet, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +47,8 @@ func (q *Queries) UsersGet(ctx context.Context) ([]UsersGetRow, error) {
 			&i.SocialProviderUserID,
 			&i.Username,
 			&i.Name,
-			&i.Count,
+			&i.CreatedAt,
+			&i.TotalCount,
 		); err != nil {
 			return nil, err
 		}

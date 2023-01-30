@@ -39,6 +39,7 @@ func main() {
 			RedirectURI:  "",
 			Scope:        "",
 		})
+		indexController        = controllers.NewIndexController(userService, profileStatsService)
 		profileController      = controllers.NewProfileController(userService, profileStatsService)
 		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
 	)
@@ -52,9 +53,7 @@ func main() {
 	r.Static("/assets/files", "./public/assets/files")
 	r.StaticFile("/favicon.ico", "./public/assets/files/favicon.ico")
 
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.File("./public/index.html")
-	})
+	r.GET("/", indexController.Index)
 
 	r.GET("/profile", func(ctx *gin.Context) {
 		ctx.File("./public/profile.html")
