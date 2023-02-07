@@ -50,17 +50,10 @@ func main() {
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", profileStatsController.TotalCountBadge)
 
-	r.Static("/assets/files", "./public/assets/files")
-	r.StaticFile("/favicon.ico", "./public/assets/files/favicon.ico")
-
 	r.GET("/", indexController.Index)
 
-	r.GET("/profile", func(ctx *gin.Context) {
-		ctx.File("./public/profile.html")
-	})
-
 	r.GET("/stats", func(ctx *gin.Context) {
-		ctx.File("./public/stats.html")
+		ctx.File("./public/design/stats.html")
 	})
 
 	r.
@@ -69,6 +62,48 @@ func main() {
 		GET("/logout", oauth2Controller.Logout)
 
 	r.GET("/github/:username", profileController.GitHubProfile)
+	r.GET("/design/github/:username", func(ctx *gin.Context) {
+		ctx.File("./public/design/profile.html")
+	})
+
+	r.Static("/assets/images", "./public/assets/images")
+	r.Static("/assets/js", "./public/assets/js")
+
+	r.StaticFile("/android-icon-144x144.png", "./public/android-icon-144x144.png")
+	r.StaticFile("/android-icon-192x192.png", "./public/android-icon-192x192.png")
+	r.StaticFile("/android-icon-36x36.png", "./public/android-icon-36x36.png")
+	r.StaticFile("/android-icon-48x48.png", "./public/android-icon-48x48.png")
+	r.StaticFile("/android-icon-72x72.png", "./public/android-icon-72x72.png")
+	r.StaticFile("/android-icon-96x96.png", "./public/android-icon-96x96.png")
+	r.StaticFile("/apple-icon-114x114.png", "./public/apple-icon-114x114.png")
+	r.StaticFile("/apple-icon-120x120.png", "./public/apple-icon-120x120.png")
+	r.StaticFile("/apple-icon-144x144.png", "./public/apple-icon-144x144.png")
+	r.StaticFile("/apple-icon-152x152.png", "./public/apple-icon-152x152.png")
+	r.StaticFile("/apple-icon-180x180.png", "./public/apple-icon-180x180.png")
+	r.StaticFile("/apple-icon-57x57.png", "./public/apple-icon-57x57.png")
+	r.StaticFile("/apple-icon-60x60.png", "./public/apple-icon-60x60.png")
+	r.StaticFile("/apple-icon-72x72.png", "./public/apple-icon-72x72.png")
+	r.StaticFile("/apple-icon-76x76.png", "./public/apple-icon-76x76.png")
+	r.StaticFile("/apple-icon.png", "./public/apple-icon.png")
+	r.StaticFile("/apple-icon-precomposed.png", "./public/apple-icon-precomposed.png")
+	r.StaticFile("/favicon-16x16.png", "./public/favicon-16x16.png")
+	r.StaticFile("/favicon-32x32.png", "./public/favicon-32x32.png")
+	r.StaticFile("/favicon-96x96.png", "./public/favicon-96x96.png")
+	r.StaticFile("/favicon.ico", "./public/favicon.ico")
+	r.StaticFile("/ms-icon-144x144.png", "./public/ms-icon-144x144.png")
+	r.StaticFile("/ms-icon-150x150.png", "./public/ms-icon-150x150.png")
+	r.StaticFile("/ms-icon-310x310.png", "./public/ms-icon-310x310.png")
+	r.StaticFile("/ms-icon-70x70.png", "./public/ms-icon-70x70.png")
+
+	r.StaticFile("/manifest.json", "./public/manifest.json")
+	r.StaticFile("/browserconfig.xml", "./public/browserconfig.xml")
+
+	r.StaticFile("/humans.txt", "./public/humans.txt")
+	r.StaticFile("/robots.txt", "./public/robots.txt")
+
+	r.StaticFile("/sitemap-github-profiles.xml", "./public/sitemap-github-profiles.xml")
+	r.StaticFile("/sitemap-main.xml", "./public/sitemap-main.xml")
+	r.StaticFile("/sitemap.xml", "./public/sitemap.xml")
 
 	server.Run(r.Handler())
 }

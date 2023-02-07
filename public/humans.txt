@@ -1,0 +1,9 @@
+Tools:
+    Back-end:
+        Go:
+            https://github.com/gin-gonic/gin
+            https://github.com/valyala/quicktemplate
+            https://github.com/valyala/fasthttp
+        PostgreSQL
+    Favicon:
+        https://www.favicon-generator.org/
