@@ -1,7 +1,23 @@
+# Goland
 .idea
+
+# Go
 vendor
-u8views-server
+
+# TypeScript
+client/node_modules
+client/package-lock.json
+
+# temporary solution
+public/assets/js/github-profile-app.js
+
+# Database volume
 docker/volumes
+
+# temporary scripts
 private
+
+u8views-server
+
 .env
 .production.env
