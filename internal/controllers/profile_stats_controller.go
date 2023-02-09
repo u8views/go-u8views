@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -88,6 +87,39 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Cont
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(templates.Badge(statsCount)))
 }
 
+func (c *ProfileStatsController) GitHubStats(ctx *gin.Context) {
+	var uri ProfileCountURI
+
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		log.Printf("Cannot parse SocialProviderUserID from URI %s\n", err)
+
+		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
+			ErrorMessage: "Cannot parse SocialProviderUserID from URI",
+		})
+
+		return
+	}
+
+	userID, done := c.toUserID(ctx, dbs.SocialProviderGithub, uri.SocialProviderUserID)
+	if done {
+		return
+	}
+
+	result, err := c.profileStatsService.Stats(ctx, userID)
+	if err != nil {
+		log.Printf("Database error (stats) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
 func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
 	var uri ProfileCountURI
 
@@ -102,22 +134,9 @@ func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.Socia
 		return statsCount, true
 	}
 
-	userID, err := c.userService.GetBySocialProvider(ctx, provider, uri.SocialProviderUserID)
-	if err == sql.ErrNoRows {
-		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
-			ErrorMessage: "User not found (social)",
-		})
-
-		return statsCount, true
-	}
-	if err != nil {
-		log.Printf("Database error (social) %s\n", err)
-
-		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
-			ErrorMessage: "Database error",
-		})
-
-		return statsCount, true
+	userID, done := c.toUserID(ctx, provider, uri.SocialProviderUserID)
+	if done {
+		return
 	}
 
 	statsCount, err = c.profileStatsService.StatsCount(ctx, userID, true)
@@ -142,25 +161,26 @@ func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.Socia
 	return statsCount, false
 }
 
-func statsBadge(day, week, month, total int64) (string, error) {
-	dayBadge, err := createBadge("Views per day", day)
-	if err != nil {
-		return "", err
+func (c *ProfileStatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider, socialProviderUserID string) (int64, bool) {
+	userID, err := c.userService.GetBySocialProvider(ctx, provider, socialProviderUserID)
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
+			ErrorMessage: "User not found (social)",
+		})
+
+		return 0, true
 	}
-	weekBadge, err := createBadge("Views per week", week)
 	if err != nil {
-		return "", err
-	}
-	monthBadge, err := createBadge("Views per month", month)
-	if err != nil {
-		return "", err
-	}
-	totalBadge, err := createBadge("Total views", total)
-	if err != nil {
-		return "", err
+		log.Printf("Database error (social) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return 0, true
 	}
 
-	return fmt.Sprintf(`<div style="display:flex; gap:10px"> %s %s %s %s</div>`, dayBadge, weekBadge, monthBadge, totalBadge), nil
+	return userID, false
 }
 
 func createBadge(subject string, count int64) (string, error) {
