@@ -15,14 +15,21 @@ WHERE user_id = ANY (@user_ids::BIGINT[])
 GROUP BY user_id;
 
 -- name: ProfileHourlyViewsStatsByDate :many
-SELECT time,
+SELECT g.time                          AS time,
        COALESCE(phvs.count, 0)::BIGINT AS count
-FROM generate_series(
-             sqlc.arg('from')::TIMESTAMP,
-             sqlc.arg('to')::TIMESTAMP,
-             '1 hour'::INTERVAL
-         ) AS time
-         LEFT JOIN profile_hourly_views_stats phvs USING (time)
-WHERE phvs.user_id = @user_id
-  AND phvs.time >= sqlc.arg('from')::TIMESTAMP
-ORDER BY time;
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        sqlc.arg('from')::TIMESTAMP,
+        sqlc.arg('to')::TIMESTAMP,
+        '1 HOUR'::INTERVAL
+    ) AS time
+) AS g
+    LEFT JOIN (
+        SELECT time,
+               count
+        FROM profile_hourly_views_stats
+        WHERE user_id = @user_id
+          AND time >= sqlc.arg('from')::TIMESTAMP
+    ) AS phvs ON (g.time = phvs.time)
+ORDER BY g.time;

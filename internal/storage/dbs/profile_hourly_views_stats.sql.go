@@ -71,17 +71,24 @@ func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourly
 }
 
 const profileHourlyViewsStatsByDate = `-- name: ProfileHourlyViewsStatsByDate :many
-SELECT time,
+SELECT g.time                          AS time,
        COALESCE(phvs.count, 0)::BIGINT AS count
-FROM generate_series(
-             $1::TIMESTAMP,
-             $2::TIMESTAMP,
-             '1 hour'::INTERVAL
-         ) AS time
-         LEFT JOIN profile_hourly_views_stats phvs USING (time)
-WHERE phvs.user_id = $3
-  AND phvs.time >= $1::TIMESTAMP
-ORDER BY time
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        $1::TIMESTAMP,
+        $2::TIMESTAMP,
+        '1 HOUR'::INTERVAL
+    ) AS time
+) AS g
+    LEFT JOIN (
+        SELECT time,
+               count
+        FROM profile_hourly_views_stats
+        WHERE user_id = $3
+          AND time >= $1::TIMESTAMP
+    ) AS phvs ON (g.time = phvs.time)
+ORDER BY g.time
 `
 
 type ProfileHourlyViewsStatsByDateParams struct {
