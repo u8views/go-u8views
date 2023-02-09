@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/u8views/go-u8views/internal/services"
-	"github.com/u8views/go-u8views/internal/templates"
+	templates "github.com/u8views/go-u8views/internal/templates/v1"
 
 	"github.com/gin-gonic/gin"
 )
