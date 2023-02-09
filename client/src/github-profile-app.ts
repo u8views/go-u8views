@@ -8,7 +8,9 @@ fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
     .catch(console.error);
 
 function render(stats) {
-    var options = {
+    stats = groupByDay(stats);
+
+    const options = {
         series: [{
             name: "Views",
             data: stats.map((item) => {
@@ -42,7 +44,7 @@ function render(stats) {
             curve: 'smooth'
         },
         labels: stats.map((item) => {
-            return new Date(item.time * 1000).toString();
+            return item.time;
         }),
         xaxis: {
             type: 'datey',
@@ -57,4 +59,23 @@ function render(stats) {
 
     const chartApex = new ApexCharts(document.querySelector(".chart-js"), options);
     chartApex.render();
+}
+
+function groupByDay(rows) {
+    const result = {};
+
+    for (const row of rows) {
+        const time = row.time - (row.time % 86400);
+
+        if (result.hasOwnProperty(time)) {
+            result[time].count += row.count;
+        } else {
+            result[time] = {
+                time: new Date(time * 1000).toLocaleDateString('en-us', {day: "2-digit", month: "long"}),
+                count: row.count,
+            };
+        }
+    }
+
+    return Object.values(result);
 }
