@@ -12,7 +12,7 @@ client/package-lock.json
 public/assets/js/github-profile-app.js
 
 # Database volume
-docker/volumes
+.docker/volumes
 
 # temporary scripts
 private
