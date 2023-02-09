@@ -30,7 +30,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
             </div>
         </div>
         <div class="footer__support">
-            <a href="" class="footer__link">
+            <a href="https://bank.gov.ua/en/about/support-the-armed-forces/" class="footer__link">
                 <figure class="footer__figure">
                     <img class="footer__img" width="93" height="24" src="/assets/images/national-bank-of-ukraine.png"
                          alt="support">
@@ -39,7 +39,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
 
                 </figure>
             </a>
-            <a href="" class="footer__link">
+            <a href="https://savelife.in.ua/en/" class="footer__link">
                 <figure class="footer__figure">
                     <img class="" width="60" height="24" src="/assets/images/come-back-alive-ukraine.png" alt="support">
                     <figcaption class="footer__caption">Support</figcaption>
@@ -47,7 +47,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
 
                 </figure>
             </a>
-            <a href="" class="footer__link">
+            <a href="https://war.ukraine.ua/" class="footer__link">
                 <figure class="footer__figure">
                     <figcaption class="footer__caption">war.ukraine.ua</figcaption>
                     <img src="/assets/images/arrow.svg" alt="arrow">

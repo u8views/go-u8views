@@ -100,7 +100,9 @@ func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser P
                 <span class="profile__name">`)
 	qw422016.E().S(profile.GetName())
 	qw422016.N().S(`</span>
-                <a href="" class="profile__link">
+                <a href="https://github.com/`)
+	qw422016.E().S(profile.Username)
+	qw422016.N().S(`" class="profile__link">
                     <img src="/assets/images/link.svg" width="16" height="16" alt="link">
                     <span class="profile__github">https://github.com/`)
 	qw422016.E().S(profile.Username)

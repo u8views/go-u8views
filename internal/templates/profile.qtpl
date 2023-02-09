@@ -61,7 +61,7 @@
             <img class="profile__photo" src="https://avatars.githubusercontent.com/u/{%s profile.SocialProviderUserID %}?v=4&s=176" alt="profile">
             <div class="profile__info">
                 <span class="profile__name">{%s profile.GetName() %}</span>
-                <a href="" class="profile__link">
+                <a href="https://github.com/{%s profile.Username %}" class="profile__link">
                     <img src="/assets/images/link.svg" width="16" height="16" alt="link">
                     <span class="profile__github">https://github.com/{%s profile.Username %}</span>
                 </a>
