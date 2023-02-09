@@ -47,6 +47,7 @@ func main() {
 	var r = gin.New()
 
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/count.json", profileStatsController.GitHubDayWeekMonthTotalCount)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", profileStatsController.GitHubStats)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", profileStatsController.TotalCountBadge)
 

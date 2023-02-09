@@ -72,6 +72,12 @@ go-mod-update:
 local-go-app-run:
 	POSTGRES_DSN=$(POSTGRES_DSN) PORT=:8080 go run ./cmd/v1/main.go
 
+esbuild-minify:
+	MINIFY=true npm run --prefix=client esbuild
+
+esbuild:
+	MINIFY=false npm run --prefix=client esbuild
+
 # BIGINT PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
 # BIGINT PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB
 # BIGINT PRIMARY KEY (user_id, time) 1 MONTH * 10 000 = 1.804GB

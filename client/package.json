@@ -1,0 +1,12 @@
+{
+  "name": "u8views",
+  "version": "0.1.0",
+  "description": "GitHub profile views statistic",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.17.6"
+  },
+  "scripts": {
+    "esbuild": "node esbuild.js"
+  }
+}
