@@ -10,6 +10,60 @@ import (
 	"time"
 )
 
+const usersCreatedAtStatsByHour = `-- name: UsersCreatedAtStatsByHour :many
+SELECT g.time                         AS time,
+       COALESCE(rcs.count, 0)::BIGINT AS count
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        $1::TIMESTAMP,
+        $2::TIMESTAMP,
+        '1 DAY'::INTERVAL
+    ) AS time
+) AS g
+    LEFT JOIN (
+        SELECT DATE_TRUNC('DAY', created_at) AS time,
+               COUNT(*)                      AS count
+        FROM users
+        WHERE created_at >= $1::TIMESTAMP
+        GROUP BY time
+    ) AS rcs ON (g.time = rcs.time)
+ORDER BY g.time
+`
+
+type UsersCreatedAtStatsByHourParams struct {
+	From time.Time
+	To   time.Time
+}
+
+type UsersCreatedAtStatsByHourRow struct {
+	Time  time.Time
+	Count int64
+}
+
+func (q *Queries) UsersCreatedAtStatsByHour(ctx context.Context, arg UsersCreatedAtStatsByHourParams) ([]UsersCreatedAtStatsByHourRow, error) {
+	rows, err := q.query(ctx, q.usersCreatedAtStatsByHourStmt, usersCreatedAtStatsByHour, arg.From, arg.To)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UsersCreatedAtStatsByHourRow
+	for rows.Next() {
+		var i UsersCreatedAtStatsByHourRow
+		if err := rows.Scan(&i.Time, &i.Count); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const usersGet = `-- name: UsersGet :many
 SELECT u.id,
        u.social_provider_user_id,

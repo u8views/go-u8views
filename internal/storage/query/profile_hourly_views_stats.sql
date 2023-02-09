@@ -14,7 +14,7 @@ WHERE user_id = ANY (@user_ids::BIGINT[])
   AND time >= @month
 GROUP BY user_id;
 
--- name: ProfileHourlyViewsStatsByDate :many
+-- name: ProfileHourlyViewsStatsByHour :many
 SELECT g.time                          AS time,
        COALESCE(phvs.count, 0)::BIGINT AS count
 FROM (

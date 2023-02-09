@@ -42,6 +42,7 @@ func main() {
 		indexController        = controllers.NewIndexController(userService, profileStatsService)
 		profileController      = controllers.NewProfileController(userService, profileStatsService)
 		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
+		userStatsController    = controllers.NewUserStatsController(userService)
 	)
 
 	var r = gin.New()
@@ -50,6 +51,7 @@ func main() {
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", profileStatsController.GitHubStats)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", profileStatsController.TotalCountBadge)
+	r.GET("/api/v1/users/stats.json", userStatsController.UsersCreatedAtStatsByHour)
 
 	r.GET("/", indexController.Index)
 
