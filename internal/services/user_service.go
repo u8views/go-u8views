@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/u8views/go-u8views/internal/db"
+	"github.com/u8views/go-u8views/internal/models"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
 )
 
@@ -36,6 +37,28 @@ func (s *UserService) GetByID(ctx context.Context, id int64) (dbs.UsersGetByIDRo
 
 func (s *UserService) Users(ctx context.Context, limit int32) ([]dbs.UsersGetRow, error) {
 	return s.repository.Queries().UsersGet(ctx, limit)
+}
+
+func (s *UserService) UsersCreatedAtStatsByHour(ctx context.Context) ([]models.TimeCount, error) {
+	to := time.Now().UTC().Truncate(24 * time.Hour)
+	from := to.AddDate(0, -1, 0)
+
+	rows, err := s.repository.Queries().UsersCreatedAtStatsByHour(ctx, dbs.UsersCreatedAtStatsByHourParams{
+		From: from,
+		To:   to,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]models.TimeCount, len(rows))
+	for i, row := range rows {
+		result[i] = models.TimeCount{
+			Time:  row.Time.Unix(),
+			Count: row.Count,
+		}
+	}
+	return result, nil
 }
 
 func (s *UserService) Upsert(

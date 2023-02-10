@@ -99,3 +99,14 @@ GROUP BY user_id
 ORDER BY SUM(count) DESC
 LIMIT 100;
 ```
+```sql
+SELECT g.time::TIMESTAMP
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        (DATE_TRUNC('day', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
+        (DATE_TRUNC('day', NOW()))::TIMESTAMP,
+        '1 day'::INTERVAL
+    ) AS time
+) AS g;
+```

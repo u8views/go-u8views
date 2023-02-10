@@ -1,8 +1,6 @@
 import {formatDay} from "./time";
 
-const socialProviderUserId = document.body.getAttribute("data-social-provider-user-id");
-
-fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
+fetch("/api/v1/users/stats.json")
     .then(function (response) {
         return response.json();
     })
@@ -10,11 +8,9 @@ fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
     .catch(console.error);
 
 function render(stats) {
-    stats = groupByDay(stats);
-
     const options = {
         series: [{
-            name: "Views",
+            name: "Users",
             data: stats.map((item) => {
                 return item.count;
             })
@@ -46,7 +42,7 @@ function render(stats) {
             curve: 'smooth'
         },
         labels: stats.map((item) => {
-            return item.time;
+            return formatDay(item.time);
         }),
         xaxis: {
             type: 'datey',
@@ -61,23 +57,4 @@ function render(stats) {
 
     const chartApex = new ApexCharts(document.querySelector(".chart-js"), options);
     chartApex.render();
-}
-
-function groupByDay(rows) {
-    const result = {};
-
-    for (const row of rows) {
-        const time = row.time - (row.time % 86400);
-
-        if (result.hasOwnProperty(time)) {
-            result[time].count += row.count;
-        } else {
-            result[time] = {
-                time: formatDay(time),
-                count: row.count,
-            };
-        }
-    }
-
-    return Object.values(result);
 }

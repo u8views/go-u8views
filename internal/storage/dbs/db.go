@@ -27,8 +27,8 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileHourlyViewsStatsStmt, err = db.PrepareContext(ctx, profileHourlyViewsStats); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStats: %w", err)
 	}
-	if q.profileHourlyViewsStatsByDateStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsByDate); err != nil {
-		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsByDate: %w", err)
+	if q.profileHourlyViewsStatsByHourStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsByHour); err != nil {
+		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsByHour: %w", err)
 	}
 	if q.profileHourlyViewsStatsUpsertStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsUpsert); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsUpsert: %w", err)
@@ -41,6 +41,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
+	}
+	if q.usersCreatedAtStatsByHourStmt, err = db.PrepareContext(ctx, usersCreatedAtStatsByHour); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersCreatedAtStatsByHour: %w", err)
 	}
 	if q.usersGetStmt, err = db.PrepareContext(ctx, usersGet); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersGet: %w", err)
@@ -70,9 +73,9 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing profileHourlyViewsStatsStmt: %w", cerr)
 		}
 	}
-	if q.profileHourlyViewsStatsByDateStmt != nil {
-		if cerr := q.profileHourlyViewsStatsByDateStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing profileHourlyViewsStatsByDateStmt: %w", cerr)
+	if q.profileHourlyViewsStatsByHourStmt != nil {
+		if cerr := q.profileHourlyViewsStatsByHourStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing profileHourlyViewsStatsByHourStmt: %w", cerr)
 		}
 	}
 	if q.profileHourlyViewsStatsUpsertStmt != nil {
@@ -93,6 +96,11 @@ func (q *Queries) Close() error {
 	if q.profileTotalViewsNewStmt != nil {
 		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersCreatedAtStatsByHourStmt != nil {
+		if cerr := q.usersCreatedAtStatsByHourStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersCreatedAtStatsByHourStmt: %w", cerr)
 		}
 	}
 	if q.usersGetStmt != nil {
@@ -165,11 +173,12 @@ type Queries struct {
 	db                                   DBTX
 	tx                                   *sql.Tx
 	profileHourlyViewsStatsStmt          *sql.Stmt
-	profileHourlyViewsStatsByDateStmt    *sql.Stmt
+	profileHourlyViewsStatsByHourStmt    *sql.Stmt
 	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
 	profileTotalViewsStmt                *sql.Stmt
 	profileTotalViewsIncStmt             *sql.Stmt
 	profileTotalViewsNewStmt             *sql.Stmt
+	usersCreatedAtStatsByHourStmt        *sql.Stmt
 	usersGetStmt                         *sql.Stmt
 	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt
@@ -183,11 +192,12 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		db:                                   tx,
 		tx:                                   tx,
 		profileHourlyViewsStatsStmt:          q.profileHourlyViewsStatsStmt,
-		profileHourlyViewsStatsByDateStmt:    q.profileHourlyViewsStatsByDateStmt,
+		profileHourlyViewsStatsByHourStmt:    q.profileHourlyViewsStatsByHourStmt,
 		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
 		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
+		usersCreatedAtStatsByHourStmt:        q.usersCreatedAtStatsByHourStmt,
 		usersGetStmt:                         q.usersGetStmt,
 		usersGetByIDStmt:                     q.usersGetByIDStmt,
 		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,

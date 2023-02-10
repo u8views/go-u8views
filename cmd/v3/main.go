@@ -39,9 +39,9 @@ func main() {
 			RedirectURI:  "",
 			Scope:        "",
 		})
-		indexController        = controllers.NewIndexController(userService, profileStatsService)
-		profileController      = controllers.NewProfileController(userService, profileStatsService)
+		webController          = controllers.NewWebController(userService, profileStatsService)
 		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
+		userStatsController    = controllers.NewUserStatsController(userService)
 	)
 
 	var r = gin.New()
@@ -50,21 +50,26 @@ func main() {
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", profileStatsController.GitHubStats)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", profileStatsController.TotalCountBadge)
-
-	r.GET("/", indexController.Index)
-
-	r.GET("/stats", func(ctx *gin.Context) {
-		ctx.File("./public/design/stats.html")
-	})
+	r.GET("/api/v1/users/stats.json", userStatsController.UsersCreatedAtStatsByHour)
 
 	r.
 		GET("/login/github", oauth2Controller.RedirectGitHubLogin).
 		GET("/oauth/callback/github", oauth2Controller.CallbackGitHubLogin).
 		GET("/logout", oauth2Controller.Logout)
 
-	r.GET("/github/:username", profileController.GitHubProfile)
+	r.GET("/", webController.Index)
+	r.GET("/design", func(ctx *gin.Context) {
+		ctx.File("./public/design/index.html")
+	})
+
+	r.GET("/github/:username", webController.GitHubProfile)
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
 		ctx.File("./public/design/profile.html")
+	})
+
+	r.GET("/stats", webController.Stats)
+	r.GET("/design/stats", func(ctx *gin.Context) {
+		ctx.File("./public/design/stats.html")
 	})
 
 	r.Static("/assets/images", "./public/assets/images")

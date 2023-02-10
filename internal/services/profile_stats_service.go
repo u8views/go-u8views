@@ -90,7 +90,7 @@ func (s *ProfileStatsService) Stats(ctx context.Context, userID int64) ([]models
 	to := time.Now().UTC().Truncate(time.Hour)
 	from := to.AddDate(0, -1, 0)
 
-	rows, err := s.repository.Queries().ProfileHourlyViewsStatsByDate(ctx, dbs.ProfileHourlyViewsStatsByDateParams{
+	rows, err := s.repository.Queries().ProfileHourlyViewsStatsByHour(ctx, dbs.ProfileHourlyViewsStatsByHourParams{
 		UserID: userID,
 		From:   from,
 		To:     to,

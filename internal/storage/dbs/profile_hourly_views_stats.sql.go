@@ -70,40 +70,47 @@ func (q *Queries) ProfileHourlyViewsStats(ctx context.Context, arg ProfileHourly
 	return items, nil
 }
 
-const profileHourlyViewsStatsByDate = `-- name: ProfileHourlyViewsStatsByDate :many
-SELECT time,
+const profileHourlyViewsStatsByHour = `-- name: ProfileHourlyViewsStatsByHour :many
+SELECT g.time                          AS time,
        COALESCE(phvs.count, 0)::BIGINT AS count
-FROM generate_series(
-             $1::TIMESTAMP,
-             $2::TIMESTAMP,
-             '1 hour'::INTERVAL
-         ) AS time
-         LEFT JOIN profile_hourly_views_stats phvs USING (time)
-WHERE phvs.user_id = $3
-  AND phvs.time >= $1::TIMESTAMP
-ORDER BY time
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        $1::TIMESTAMP,
+        $2::TIMESTAMP,
+        '1 HOUR'::INTERVAL
+    ) AS time
+) AS g
+    LEFT JOIN (
+        SELECT time,
+               count
+        FROM profile_hourly_views_stats
+        WHERE user_id = $3
+          AND time >= $1::TIMESTAMP
+    ) AS phvs ON (g.time = phvs.time)
+ORDER BY g.time
 `
 
-type ProfileHourlyViewsStatsByDateParams struct {
+type ProfileHourlyViewsStatsByHourParams struct {
 	From   time.Time
 	To     time.Time
 	UserID int64
 }
 
-type ProfileHourlyViewsStatsByDateRow struct {
+type ProfileHourlyViewsStatsByHourRow struct {
 	Time  time.Time
 	Count int64
 }
 
-func (q *Queries) ProfileHourlyViewsStatsByDate(ctx context.Context, arg ProfileHourlyViewsStatsByDateParams) ([]ProfileHourlyViewsStatsByDateRow, error) {
-	rows, err := q.query(ctx, q.profileHourlyViewsStatsByDateStmt, profileHourlyViewsStatsByDate, arg.From, arg.To, arg.UserID)
+func (q *Queries) ProfileHourlyViewsStatsByHour(ctx context.Context, arg ProfileHourlyViewsStatsByHourParams) ([]ProfileHourlyViewsStatsByHourRow, error) {
+	rows, err := q.query(ctx, q.profileHourlyViewsStatsByHourStmt, profileHourlyViewsStatsByHour, arg.From, arg.To, arg.UserID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ProfileHourlyViewsStatsByDateRow
+	var items []ProfileHourlyViewsStatsByHourRow
 	for rows.Next() {
-		var i ProfileHourlyViewsStatsByDateRow
+		var i ProfileHourlyViewsStatsByHourRow
 		if err := rows.Scan(&i.Time, &i.Count); err != nil {
 			return nil, err
 		}

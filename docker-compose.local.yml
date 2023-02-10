@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker/volumes/postgresql/data/:/var/lib/postgresql/data/
+      - ./.docker/volumes/postgresql/data/:/var/lib/postgresql/data/
 
   app:
     container_name: "go_u8views_app"
@@ -19,7 +19,7 @@ services:
     working_dir: /go/src/github.com/u8views/go-u8views
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
-      - ./docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
+      - ./.docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
     command: "go run ./cmd/v3/main.go"
     environment:
       GIN_MODE: release
