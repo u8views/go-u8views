@@ -20,7 +20,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
     <div class="footer__wrapper wrapper-u8">
         <div class="footer__info">
             <a href="/" class="footer__title">u8views</a>
-            <p class="footer__subtitle">Registration statistics on u8views</p>
+            <a href="/stats" class="footer__subtitle">Registration statistics on u8views</a>
             <div class="footer__map">
                 <img class="footer__map-Ukraine" src="/assets/images/map-of-ukraine.png" alt="Map of Ukraine">
             </div>

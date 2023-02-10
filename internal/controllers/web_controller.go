@@ -143,5 +143,5 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 }
 
 func (c *WebController) Stats(ctx *gin.Context) {
-
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Stats()))
 }

@@ -10,6 +10,7 @@ client/package-lock.json
 
 # temporary solution
 public/assets/js/github-profile-app.js
+public/assets/js/stats-app.js
 
 # Database volume
 .docker/volumes
