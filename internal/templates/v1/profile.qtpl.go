@@ -28,6 +28,7 @@ func StreamProfile(qw422016 *qt422016.Writer, profile ProfileView, currentUser P
 	qw422016.N().S(` profile views statistic">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="author" type="text/plain" href="https://u8views.com/humans.txt" />
 
     `)
 	streamfavicon(qw422016)
