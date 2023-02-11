@@ -59,17 +59,17 @@ func main() {
 
 	r.GET("/", webController.Index)
 	r.GET("/design", func(ctx *gin.Context) {
-		ctx.File("./public/design/index.html")
+		ctx.File("./public/design/v1/index.html")
 	})
 
 	r.GET("/github/:username", webController.GitHubProfile)
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
-		ctx.File("./public/design/profile.html")
+		ctx.File("./public/design/v1/profile.html")
 	})
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
-		ctx.File("./public/design/stats.html")
+		ctx.File("./public/design/v1/stats.html")
 	})
 
 	r.Static("/assets/images", "./public/assets/images")
