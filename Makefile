@@ -5,6 +5,12 @@ include Makefile.ansible
 env-local-up:
 	docker-compose -f docker-compose.local.yml --env-file .env up -d
 
+restart:
+	docker restart go_u8views_app
+
+logs:
+	docker logs go_u8views_app
+
 pg:
 	docker exec -it go_u8views_postgres bash
 
