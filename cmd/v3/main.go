@@ -30,8 +30,8 @@ func main() {
 	defer repository.Close()
 
 	var (
-		userService         = services.NewUserService(repository)
-		profileStatsService = services.NewProfileStatsService(repository)
+		userService  = services.NewUserService(repository)
+		statsService = services.NewStatsService(repository)
 
 		oauth2Controller = controllers.NewOAuth2Controller(userService, oauth2.Secret{
 			ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
@@ -39,18 +39,18 @@ func main() {
 			RedirectURI:  "",
 			Scope:        "",
 		})
-		webController          = controllers.NewWebController(userService, profileStatsService)
-		profileStatsController = controllers.NewProfileStatsController(userService, profileStatsService)
-		userStatsController    = controllers.NewUserStatsController(userService)
+		webController   = controllers.NewWebController(userService, statsService)
+		statsController = controllers.NewStatsController(userService, statsService)
 	)
 
 	var r = gin.New()
 
-	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/count.json", profileStatsController.GitHubDayWeekMonthTotalCount)
-	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", profileStatsController.GitHubStats)
-	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", profileStatsController.GitHubDayWeekMonthTotalCountBadge)
-	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", profileStatsController.TotalCountBadge)
-	r.GET("/api/v1/users/stats.json", userStatsController.UsersCreatedAtStatsByHour)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/count.json", statsController.GitHubDayWeekMonthTotalCount)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", statsController.GitHubStats)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", statsController.GitHubDayWeekMonthTotalCountBadge)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", statsController.TotalCountBadge)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/referrals/stats.json", statsController.ReferralsStats)
+	r.GET("/api/v1/users/stats.json", statsController.UsersCreatedAtStatsByDay)
 
 	r.
 		GET("/login/github", oauth2Controller.RedirectGitHubLogin).
@@ -59,17 +59,17 @@ func main() {
 
 	r.GET("/", webController.Index)
 	r.GET("/design", func(ctx *gin.Context) {
-		ctx.File("./public/design/index.html")
+		ctx.File("./public/design/v1/index.html")
 	})
 
 	r.GET("/github/:username", webController.GitHubProfile)
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
-		ctx.File("./public/design/profile.html")
+		ctx.File("./public/design/v1/profile.html")
 	})
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
-		ctx.File("./public/design/stats.html")
+		ctx.File("./public/design/v1/stats.html")
 	})
 
 	r.Static("/assets/images", "./public/assets/images")

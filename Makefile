@@ -5,6 +5,12 @@ include Makefile.ansible
 env-local-up:
 	docker-compose -f docker-compose.local.yml --env-file .env up -d
 
+restart:
+	docker restart go_u8views_app
+
+logs:
+	docker logs go_u8views_app
+
 pg:
 	docker exec -it go_u8views_postgres bash
 
@@ -74,9 +80,11 @@ local-go-app-run:
 
 esbuild-minify:
 	MINIFY=true npm run --prefix=client esbuild
+	tree -h ./public/assets/js
 
 esbuild:
 	MINIFY=false npm run --prefix=client esbuild
+	tree -h ./public/assets/js
 
 # BIGINT PRIMARY KEY (time, user_id) 1 MONTH * 10 000 = 1.735GB
 # BIGINT PRIMARY KEY (time, user_id) 1 YEAR  * 10 000 = 8.447GB

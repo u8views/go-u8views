@@ -9,6 +9,13 @@ fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
     .then(render)
     .catch(console.error);
 
+fetch(`/api/v1/github/profiles/${socialProviderUserId}/referrals/stats.json`)
+    .then(function (response) {
+        return response.json();
+    })
+    .then(console.log)
+    .catch(console.error);
+
 function render(stats) {
     stats = groupByDay(stats);
 

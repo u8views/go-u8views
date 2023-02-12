@@ -11,15 +11,15 @@ import (
 
 type ProfileViewsStats = models.ProfileViewsStats
 
-type ProfileStatsService struct {
+type StatsService struct {
 	repository *db.Repository
 }
 
-func NewProfileStatsService(repository *db.Repository) *ProfileStatsService {
-	return &ProfileStatsService{repository: repository}
+func NewStatsService(repository *db.Repository) *StatsService {
+	return &StatsService{repository: repository}
 }
 
-func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
+func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
 	totalCount, err := s.repository.Queries().ProfileTotalViews(ctx, userID)
 	if err != nil {
 		return result, err
@@ -63,7 +63,7 @@ func (s *ProfileStatsService) StatsCount(ctx context.Context, userID int64, incr
 	}, nil
 }
 
-func (s *ProfileStatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userIDs []int64, now time.Time) (map[int64]models.DayWeekMonthViewsStats, error) {
+func (s *StatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userIDs []int64, now time.Time) (map[int64]models.DayWeekMonthViewsStats, error) {
 	rows, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
 		Day:     now.AddDate(0, 0, -1),
 		Week:    now.AddDate(0, 0, -7),
@@ -86,7 +86,7 @@ func (s *ProfileStatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context,
 	return result, nil
 }
 
-func (s *ProfileStatsService) Stats(ctx context.Context, userID int64) ([]models.TimeCount, error) {
+func (s *StatsService) Stats(ctx context.Context, userID int64) ([]models.TimeCount, error) {
 	to := time.Now().UTC().Truncate(time.Hour)
 	from := to.AddDate(0, -1, 0)
 
@@ -94,6 +94,29 @@ func (s *ProfileStatsService) Stats(ctx context.Context, userID int64) ([]models
 		UserID: userID,
 		From:   from,
 		To:     to,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]models.TimeCount, len(rows))
+	for i, row := range rows {
+		result[i] = models.TimeCount{
+			Time:  row.Time.Unix(),
+			Count: row.Count,
+		}
+	}
+	return result, nil
+}
+
+func (s *StatsService) ReferralsStats(ctx context.Context, userID int64) ([]models.TimeCount, error) {
+	to := time.Now().UTC().Truncate(24 * time.Hour)
+	from := to.AddDate(0, -1, 0)
+
+	rows, err := s.repository.Queries().ReferralsCreatedAtStatsByDay(ctx, dbs.ReferralsCreatedAtStatsByDayParams{
+		ReferrerUserID: userID,
+		From:           from,
+		To:             to,
 	})
 	if err != nil {
 		return nil, err

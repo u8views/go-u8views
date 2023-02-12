@@ -89,7 +89,7 @@ ok  	github.com/u8views/go-u8views/internal/tests	21.566s
 * [DrawSQL](https://drawsql.app/templates)
 
 ### Database schema
-![Database schema](https://github.com/u8views/go-u8views/blob/main/database-schema/v001.png?raw=true)
+![Database schema](https://github.com/u8views/go-u8views/blob/main/database-schema/v002.png?raw=true)
 
 ### SQL
 ```sql
@@ -104,9 +104,9 @@ SELECT g.time::TIMESTAMP
 FROM (
     SELECT time::TIMESTAMP
     FROM generate_series(
-        (DATE_TRUNC('day', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
-        (DATE_TRUNC('day', NOW()))::TIMESTAMP,
-        '1 day'::INTERVAL
+        (DATE_TRUNC('DAY', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
+        (DATE_TRUNC('DAY', NOW()))::TIMESTAMP,
+        '1 DAY'::INTERVAL
     ) AS time
 ) AS g;
 ```

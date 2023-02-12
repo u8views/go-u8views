@@ -1,9 +1,31 @@
-Tools:
-    Back-end:
-        Go:
-            https://github.com/gin-gonic/gin
-            https://github.com/valyala/quicktemplate
-            https://github.com/valyala/fasthttp
-        PostgreSQL
-    Favicon:
-        https://www.favicon-generator.org/
+/* TEAM */
+    Name: Yaroslav Podorvanov
+    Role: Back-end Developer
+    Profile: https://github.com/YaroslavPodorvanov
+    From: Ukraine
+
+    Name: Victor Poprozhuk
+    Role: Front-end Developer
+    Profile: https://github.com/VictorPoprozhuk
+    From: Ukraine
+
+    Name: Anastasiia Sihetii
+    Role: Designer
+    Profile: https://github.com/AnastasiiaSihetii
+    From: Ukraine
+
+/* SITE */
+    Tools:
+        Back-end:
+            Go:
+                https://github.com/gin-gonic/gin
+                https://github.com/valyala/quicktemplate
+                https://github.com/valyala/fasthttp
+            PostgreSQL
+        Front-end:
+            TypeScript
+            ApexCharts https://github.com/apexcharts/apexcharts.js
+        Favicon:
+            https://www.favicon-generator.org/
+
+Inspired by https://humanstxt.org/humans.txt
