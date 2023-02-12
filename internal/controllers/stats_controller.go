@@ -14,13 +14,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ProfileStatsController struct {
-	userService         *services.UserService
-	profileStatsService *services.ProfileStatsService
+type StatsController struct {
+	userService  *services.UserService
+	statsService *services.StatsService
 }
 
-func NewProfileStatsController(userService *services.UserService, profileStatsService *services.ProfileStatsService) *ProfileStatsController {
-	return &ProfileStatsController{userService: userService, profileStatsService: profileStatsService}
+func NewStatsController(userService *services.UserService, statsService *services.StatsService) *StatsController {
+	return &StatsController{userService: userService, statsService: statsService}
 }
 
 type ProfileCountURI struct {
@@ -38,7 +38,7 @@ type ErrorResponse struct {
 	ErrorMessage string `json:"error_message"`
 }
 
-func (c *ProfileStatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
+func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 	statsCount, done := c.statsCount(ctx, dbs.SocialProviderGithub)
 	if done {
 		return
@@ -52,7 +52,7 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) 
 	})
 }
 
-func (c *ProfileStatsController) TotalCountBadge(ctx *gin.Context) {
+func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
 	statsCount, done := c.statsCount(ctx, dbs.SocialProviderGithub)
 	if done {
 		return
@@ -75,7 +75,7 @@ func (c *ProfileStatsController) TotalCountBadge(ctx *gin.Context) {
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(totalCountBadge))
 }
 
-func (c *ProfileStatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
+func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 	statsCount, done := c.statsCount(ctx, dbs.SocialProviderGithub)
 	if done {
 		return
@@ -87,26 +87,18 @@ func (c *ProfileStatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Cont
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(templates.Badge(statsCount)))
 }
 
-func (c *ProfileStatsController) GitHubStats(ctx *gin.Context) {
-	var uri ProfileCountURI
-
-	err := ctx.ShouldBindUri(&uri)
-	if err != nil {
-		log.Printf("Cannot parse SocialProviderUserID from URI %s\n", err)
-
-		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
-			ErrorMessage: "Cannot parse SocialProviderUserID from URI",
-		})
-
-		return
-	}
-
-	userID, done := c.toUserID(ctx, dbs.SocialProviderGithub, uri.SocialProviderUserID)
+func (c *StatsController) GitHubStats(ctx *gin.Context) {
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
 		return
 	}
 
-	result, err := c.profileStatsService.Stats(ctx, userID)
+	userID, done := c.toUserID(ctx, dbs.SocialProviderGithub, socialProviderUserID)
+	if done {
+		return
+	}
+
+	result, err := c.statsService.Stats(ctx, userID)
 	if err != nil {
 		log.Printf("Database error (stats) %s\n", err)
 
@@ -120,26 +112,58 @@ func (c *ProfileStatsController) GitHubStats(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
-	var uri ProfileCountURI
-
-	err := ctx.ShouldBindUri(&uri)
+func (c *StatsController) UsersCreatedAtStatsByDay(ctx *gin.Context) {
+	result, err := c.userService.UsersCreatedAtStatsByDay(ctx)
 	if err != nil {
-		log.Printf("Cannot parse SocialProviderUserID from URI %s\n", err)
+		log.Printf("Database error (stats) %s\n", err)
 
-		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
-			ErrorMessage: "Cannot parse SocialProviderUserID from URI",
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
 		})
 
-		return statsCount, true
+		return
 	}
 
-	userID, done := c.toUserID(ctx, provider, uri.SocialProviderUserID)
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (c *StatsController) ReferralsStats(ctx *gin.Context) {
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
 		return
 	}
 
-	statsCount, err = c.profileStatsService.StatsCount(ctx, userID, true)
+	userID, done := c.toUserID(ctx, dbs.SocialProviderGithub, socialProviderUserID)
+	if done {
+		return
+	}
+
+	result, err := c.statsService.ReferralsStats(ctx, userID)
+	if err != nil {
+		log.Printf("Database error (stats) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
+	if done {
+		return
+	}
+
+	userID, done := c.toUserID(ctx, provider, socialProviderUserID)
+	if done {
+		return
+	}
+
+	statsCount, err := c.statsService.StatsCount(ctx, userID, true)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
 			ErrorMessage: "User not found (stats)",
@@ -161,7 +185,24 @@ func (c *ProfileStatsController) statsCount(ctx *gin.Context, provider dbs.Socia
 	return statsCount, false
 }
 
-func (c *ProfileStatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider, socialProviderUserID string) (int64, bool) {
+func (c *StatsController) parseSocialProviderUserID(ctx *gin.Context) (string, bool) {
+	var uri ProfileCountURI
+
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		log.Printf("Cannot parse SocialProviderUserID from URI %s\n", err)
+
+		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
+			ErrorMessage: "Cannot parse SocialProviderUserID from URI",
+		})
+
+		return "", true
+	}
+
+	return uri.SocialProviderUserID, false
+}
+
+func (c *StatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider, socialProviderUserID string) (int64, bool) {
 	userID, err := c.userService.GetBySocialProvider(ctx, provider, socialProviderUserID)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{

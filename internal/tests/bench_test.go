@@ -23,7 +23,7 @@ func BenchmarkProfileStatsService(b *testing.B) {
 	var repository = db.MustRepository(pgConnection)
 	defer repository.Close()
 
-	var service = services.NewProfileStatsService(repository)
+	var service = services.NewStatsService(repository)
 
 	var count int64
 

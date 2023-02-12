@@ -104,9 +104,9 @@ SELECT g.time::TIMESTAMP
 FROM (
     SELECT time::TIMESTAMP
     FROM generate_series(
-        (DATE_TRUNC('day', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
-        (DATE_TRUNC('day', NOW()))::TIMESTAMP,
-        '1 day'::INTERVAL
+        (DATE_TRUNC('DAY', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
+        (DATE_TRUNC('DAY', NOW()))::TIMESTAMP,
+        '1 DAY'::INTERVAL
     ) AS time
 ) AS g;
 ```

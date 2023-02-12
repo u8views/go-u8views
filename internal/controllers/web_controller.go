@@ -19,12 +19,12 @@ type ProfileURI struct {
 }
 
 type WebController struct {
-	userService         *services.UserService
-	profileStatsService *services.ProfileStatsService
+	userService  *services.UserService
+	statsService *services.StatsService
 }
 
-func NewWebController(userService *services.UserService, profileStatsService *services.ProfileStatsService) *WebController {
-	return &WebController{userService: userService, profileStatsService: profileStatsService}
+func NewWebController(userService *services.UserService, statsService *services.StatsService) *WebController {
+	return &WebController{userService: userService, statsService: statsService}
 }
 
 func (c *WebController) Index(ctx *gin.Context) {
@@ -51,7 +51,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 	}
 
 	now := time.Now().UTC().Truncate(time.Hour)
-	userViewsStatsMap, err := c.profileStatsService.UserDayWeekMonthViewsStatsMap(ctx, userIDs, now)
+	userViewsStatsMap, err := c.statsService.UserDayWeekMonthViewsStatsMap(ctx, userIDs, now)
 	if err != nil {
 		log.Printf("Cannot fetch stats %s\n", err)
 
@@ -106,7 +106,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		return
 	}
 
-	stats, err := c.profileStatsService.StatsCount(ctx, user.ID, false)
+	stats, err := c.statsService.StatsCount(ctx, user.ID, false)
 	if err != nil {
 		log.Printf("Cannot fetch views stats by id = %d err: %v", user.ID, err)
 	}

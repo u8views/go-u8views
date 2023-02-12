@@ -7,7 +7,65 @@ package dbs
 
 import (
 	"context"
+	"time"
 )
+
+const referralsCreatedAtStatsByDay = `-- name: ReferralsCreatedAtStatsByDay :many
+SELECT g.time                        AS time,
+       COALESCE(rc.count, 0)::BIGINT AS count
+FROM (
+    SELECT time::TIMESTAMP
+    FROM generate_series(
+        $1::TIMESTAMP,
+        $2::TIMESTAMP,
+        '1 DAY'::INTERVAL
+    ) AS time
+) AS g
+    LEFT JOIN (
+        SELECT DATE_TRUNC('DAY', u.created_at) AS time,
+               COUNT(*)                        AS count
+        FROM referrals r
+                 INNER JOIN users u ON (r.referee_user_id = u.id)
+        WHERE r.referrer_user_id = $3
+          AND u.created_at >= $1::TIMESTAMP
+        GROUP BY DATE_TRUNC('DAY', u.created_at)
+    ) AS rc ON (g.time = rc.time)
+ORDER BY g.time
+`
+
+type ReferralsCreatedAtStatsByDayParams struct {
+	From           time.Time
+	To             time.Time
+	ReferrerUserID int64
+}
+
+type ReferralsCreatedAtStatsByDayRow struct {
+	Time  time.Time
+	Count int64
+}
+
+func (q *Queries) ReferralsCreatedAtStatsByDay(ctx context.Context, arg ReferralsCreatedAtStatsByDayParams) ([]ReferralsCreatedAtStatsByDayRow, error) {
+	rows, err := q.query(ctx, q.referralsCreatedAtStatsByDayStmt, referralsCreatedAtStatsByDay, arg.From, arg.To, arg.ReferrerUserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReferralsCreatedAtStatsByDayRow
+	for rows.Next() {
+		var i ReferralsCreatedAtStatsByDayRow
+		if err := rows.Scan(&i.Time, &i.Count); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
 
 const referralsNew = `-- name: ReferralsNew :exec
 INSERT INTO referrals (referee_user_id, referrer_user_id)
