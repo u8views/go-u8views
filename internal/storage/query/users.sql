@@ -48,7 +48,7 @@ WHERE ptv.count > 0
 ORDER BY u.id DESC
 LIMIT sqlc.arg('limit');
 
--- name: UsersCreatedAtStatsByHour :many
+-- name: UsersCreatedAtStatsByDay :many
 SELECT g.time                         AS time,
        COALESCE(rcs.count, 0)::BIGINT AS count
 FROM (

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -15,11 +16,16 @@ import (
 )
 
 const (
-	userCookieKey = "u8views_user_id"
+	userCookieKey     = "u8views_user_id"
+	referrerCookieKey = "u8views_referrer_user_id"
 )
 
 type SocialProviderQuery struct {
 	Code string `form:"code" binding:"required"`
+}
+
+type ReferrerQuery struct {
+	Referrer int64 `form:"referrer"`
 }
 
 type OAuth2Controller struct {
@@ -32,6 +38,19 @@ func NewOAuth2Controller(userService *services.UserService, github oauth2.Secret
 }
 
 func (s *OAuth2Controller) RedirectGitHubLogin(ctx *gin.Context) {
+	var query ReferrerQuery
+
+	err := ctx.ShouldBindQuery(&query)
+	if err != nil {
+		log.Printf("Cannot parse referrer from URI %s\n", err)
+
+		// NOP
+	}
+
+	if query.Referrer > 0 {
+		setCookieReferrerUserID(ctx, query.Referrer)
+	}
+
 	ctx.Redirect(http.StatusTemporaryRedirect, github.Redirect(s.github))
 }
 
@@ -64,12 +83,14 @@ func (s *OAuth2Controller) callbackLogin(ctx *gin.Context, secret oauth2.Secret,
 		return
 	}
 
+	referrerUserID := parseCookieUserID(ctx, referrerCookieKey)
 	userID, err := s.userService.Upsert(
 		ctx,
 		dbs.SocialProviderGithub,
 		socialProviderUser.ID,
 		socialProviderUser.Username,
 		socialProviderUser.Name,
+		referrerUserID,
 	)
 	if err != nil {
 		ctx.Data(http.StatusInternalServerError, "text/html; charset=utf-8", []byte(err.Error()))
@@ -89,7 +110,20 @@ func setCookieUserID(ctx *gin.Context, userID int64) {
 	ctx.SetCookie(
 		userCookieKey,
 		strconv.FormatInt(userID, 10),
-		14*86400,
+		365*86400,
+		"/",
+		ctx.Request.Host,
+		true,
+		true,
+	)
+}
+
+func setCookieReferrerUserID(ctx *gin.Context, userID int64) {
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie(
+		referrerCookieKey,
+		strconv.FormatInt(userID, 10),
+		3600,
 		"/",
 		ctx.Request.Host,
 		true,
@@ -110,8 +144,8 @@ func delCookieUserID(ctx *gin.Context) {
 	)
 }
 
-func parseCookieUserID(r *gin.Context) int64 {
-	cookie, err := r.Cookie(userCookieKey)
+func parseCookieUserID(r *gin.Context, name string) int64 {
+	cookie, err := r.Cookie(name)
 	if err == http.ErrNoCookie {
 		return 0
 	}

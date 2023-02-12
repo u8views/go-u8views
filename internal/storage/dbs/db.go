@@ -42,8 +42,11 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
 	}
-	if q.usersCreatedAtStatsByHourStmt, err = db.PrepareContext(ctx, usersCreatedAtStatsByHour); err != nil {
-		return nil, fmt.Errorf("error preparing query UsersCreatedAtStatsByHour: %w", err)
+	if q.referralsNewStmt, err = db.PrepareContext(ctx, referralsNew); err != nil {
+		return nil, fmt.Errorf("error preparing query ReferralsNew: %w", err)
+	}
+	if q.usersCreatedAtStatsByDayStmt, err = db.PrepareContext(ctx, usersCreatedAtStatsByDay); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersCreatedAtStatsByDay: %w", err)
 	}
 	if q.usersGetStmt, err = db.PrepareContext(ctx, usersGet); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersGet: %w", err)
@@ -98,9 +101,14 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
 		}
 	}
-	if q.usersCreatedAtStatsByHourStmt != nil {
-		if cerr := q.usersCreatedAtStatsByHourStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing usersCreatedAtStatsByHourStmt: %w", cerr)
+	if q.referralsNewStmt != nil {
+		if cerr := q.referralsNewStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing referralsNewStmt: %w", cerr)
+		}
+	}
+	if q.usersCreatedAtStatsByDayStmt != nil {
+		if cerr := q.usersCreatedAtStatsByDayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersCreatedAtStatsByDayStmt: %w", cerr)
 		}
 	}
 	if q.usersGetStmt != nil {
@@ -178,7 +186,8 @@ type Queries struct {
 	profileTotalViewsStmt                *sql.Stmt
 	profileTotalViewsIncStmt             *sql.Stmt
 	profileTotalViewsNewStmt             *sql.Stmt
-	usersCreatedAtStatsByHourStmt        *sql.Stmt
+	referralsNewStmt                     *sql.Stmt
+	usersCreatedAtStatsByDayStmt         *sql.Stmt
 	usersGetStmt                         *sql.Stmt
 	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt
@@ -197,7 +206,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
 		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
-		usersCreatedAtStatsByHourStmt:        q.usersCreatedAtStatsByHourStmt,
+		referralsNewStmt:                     q.referralsNewStmt,
+		usersCreatedAtStatsByDayStmt:         q.usersCreatedAtStatsByDayStmt,
 		usersGetStmt:                         q.usersGetStmt,
 		usersGetByIDStmt:                     q.usersGetByIDStmt,
 		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,

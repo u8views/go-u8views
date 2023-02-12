@@ -17,8 +17,8 @@ func NewUserStatsController(userService *services.UserService) *UserStatsControl
 	return &UserStatsController{userService: userService}
 }
 
-func (c *UserStatsController) UsersCreatedAtStatsByHour(ctx *gin.Context) {
-	result, err := c.userService.UsersCreatedAtStatsByHour(ctx)
+func (c *UserStatsController) UsersCreatedAtStatsByDay(ctx *gin.Context) {
+	result, err := c.userService.UsersCreatedAtStatsByDay(ctx)
 	if err != nil {
 		log.Printf("Database error (stats) %s\n", err)
 

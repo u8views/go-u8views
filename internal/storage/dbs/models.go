@@ -64,6 +64,11 @@ type ProfileTotalView struct {
 	Count  int64
 }
 
+type Referral struct {
+	RefereeUserID  int64
+	ReferrerUserID int64
+}
+
 type User struct {
 	ID                   int64
 	SocialProvider       SocialProvider

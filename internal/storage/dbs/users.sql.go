@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const usersCreatedAtStatsByHour = `-- name: UsersCreatedAtStatsByHour :many
+const usersCreatedAtStatsByDay = `-- name: UsersCreatedAtStatsByDay :many
 SELECT g.time                         AS time,
        COALESCE(rcs.count, 0)::BIGINT AS count
 FROM (
@@ -31,25 +31,25 @@ FROM (
 ORDER BY g.time
 `
 
-type UsersCreatedAtStatsByHourParams struct {
+type UsersCreatedAtStatsByDayParams struct {
 	From time.Time
 	To   time.Time
 }
 
-type UsersCreatedAtStatsByHourRow struct {
+type UsersCreatedAtStatsByDayRow struct {
 	Time  time.Time
 	Count int64
 }
 
-func (q *Queries) UsersCreatedAtStatsByHour(ctx context.Context, arg UsersCreatedAtStatsByHourParams) ([]UsersCreatedAtStatsByHourRow, error) {
-	rows, err := q.query(ctx, q.usersCreatedAtStatsByHourStmt, usersCreatedAtStatsByHour, arg.From, arg.To)
+func (q *Queries) UsersCreatedAtStatsByDay(ctx context.Context, arg UsersCreatedAtStatsByDayParams) ([]UsersCreatedAtStatsByDayRow, error) {
+	rows, err := q.query(ctx, q.usersCreatedAtStatsByDayStmt, usersCreatedAtStatsByDay, arg.From, arg.To)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []UsersCreatedAtStatsByHourRow
+	var items []UsersCreatedAtStatsByDayRow
 	for rows.Next() {
-		var i UsersCreatedAtStatsByHourRow
+		var i UsersCreatedAtStatsByDayRow
 		if err := rows.Scan(&i.Time, &i.Count); err != nil {
 			return nil, err
 		}

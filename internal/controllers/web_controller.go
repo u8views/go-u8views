@@ -113,7 +113,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 	var currentUserView templates.ProfileView
 
-	currentUserID := parseCookieUserID(ctx)
+	currentUserID := parseCookieUserID(ctx, userCookieKey)
 	if currentUserID > 0 {
 		user, err := c.userService.GetByID(ctx, currentUserID)
 		if err != nil {
