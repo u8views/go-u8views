@@ -39,8 +39,9 @@ func main() {
 			RedirectURI:  "",
 			Scope:        "",
 		})
-		webController   = controllers.NewWebController(userService, statsService)
-		statsController = controllers.NewStatsController(userService, statsService)
+		webController     = controllers.NewWebController(userService, statsService)
+		statsController   = controllers.NewStatsController(userService, statsService)
+		sitemapController = controllers.NewSitemapController(userService)
 	)
 
 	var r = gin.New()
@@ -66,6 +67,8 @@ func main() {
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
 		ctx.File("./public/design/v1/profile.html")
 	})
+
+	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
@@ -107,7 +110,6 @@ func main() {
 	r.StaticFile("/humans.txt", "./public/humans.txt")
 	r.StaticFile("/robots.txt", "./public/robots.txt")
 
-	r.StaticFile("/sitemap-github-profiles.xml", "./public/sitemap-github-profiles.xml")
 	r.StaticFile("/sitemap-main.xml", "./public/sitemap-main.xml")
 	r.StaticFile("/sitemap.xml", "./public/sitemap.xml")
 

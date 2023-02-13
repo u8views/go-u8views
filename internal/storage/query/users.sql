@@ -67,3 +67,8 @@ FROM (
         GROUP BY time
     ) AS rcs ON (g.time = rcs.time)
 ORDER BY g.time;
+
+-- name: UsersGetAllUsernames :many
+SELECT u.username
+FROM users u
+ORDER BY u.id DESC;

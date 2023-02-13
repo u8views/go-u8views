@@ -1,0 +1,10 @@
+{%- func SitemapGithubProfiles(usernames []string) -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    {%- for _, username := range usernames -%}
+        <url>
+            <loc>https://u8views.com/github/{%s username %}</loc>
+        </url>
+    {%- endfor -%}
+</urlset>
+{%- endfunc -%}

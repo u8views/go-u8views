@@ -51,6 +51,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.usersCreatedAtStatsByDayStmt, err = db.PrepareContext(ctx, usersCreatedAtStatsByDay); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersCreatedAtStatsByDay: %w", err)
 	}
+	if q.usersGetAllUsernamesStmt, err = db.PrepareContext(ctx, UsersGetAllUsernames); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersGetAllUsernames: %w", err)
+	}
 	if q.usersGetStmt, err = db.PrepareContext(ctx, usersGet); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersGet: %w", err)
 	}
@@ -197,6 +200,7 @@ type Queries struct {
 	referralsCreatedAtStatsByDayStmt     *sql.Stmt
 	referralsNewStmt                     *sql.Stmt
 	usersCreatedAtStatsByDayStmt         *sql.Stmt
+	usersGetAllUsernamesStmt             *sql.Stmt
 	usersGetStmt                         *sql.Stmt
 	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt
