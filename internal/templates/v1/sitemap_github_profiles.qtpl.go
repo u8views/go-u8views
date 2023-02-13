@@ -14,34 +14,31 @@ var (
 	_ = qt422016.AcquireByteBuffer
 )
 
-func StreamSitemapGithubProfile(qw422016 *qt422016.Writer, users []ProfileView) {
-	qw422016.N().S(`
-<?xml version="1.0" encoding="UTF-8"?>
+func StreamSitemapGithubProfiles(qw422016 *qt422016.Writer, usernames []string) {
+	qw422016.N().S(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-    `)
-	for _, user := range users {
-		qw422016.N().S(`
-        <url>
-            <loc>`)
-		qw422016.E().S(user.Username)
+`)
+	for _, username := range usernames {
+		qw422016.N().S(`        <url>
+            <loc>https://u8views.com/github/`)
+		qw422016.E().S(username)
 		qw422016.N().S(`</loc>
         </url>
-    `)
+`)
 	}
-	qw422016.N().S(`
-</urlset>
+	qw422016.N().S(`</urlset>
 `)
 }
 
-func WriteSitemapGithubProfile(qq422016 qtio422016.Writer, users []ProfileView) {
+func WriteSitemapGithubProfiles(qq422016 qtio422016.Writer, usernames []string) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	StreamSitemapGithubProfile(qw422016, users)
+	StreamSitemapGithubProfiles(qw422016, usernames)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func SitemapGithubProfile(users []ProfileView) string {
+func SitemapGithubProfiles(usernames []string) string {
 	qb422016 := qt422016.AcquireByteBuffer()
-	WriteSitemapGithubProfile(qb422016, users)
+	WriteSitemapGithubProfiles(qb422016, usernames)
 	qs422016 := string(qb422016.B)
 	qt422016.ReleaseByteBuffer(qb422016)
 	return qs422016

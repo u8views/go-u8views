@@ -200,7 +200,7 @@ type Queries struct {
 	referralsCreatedAtStatsByDayStmt     *sql.Stmt
 	referralsNewStmt                     *sql.Stmt
 	usersCreatedAtStatsByDayStmt         *sql.Stmt
-	usersGetAllUsernamesStmt         	 *sql.Stmt
+	usersGetAllUsernamesStmt             *sql.Stmt
 	usersGetStmt                         *sql.Stmt
 	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt

@@ -1,38 +1,41 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/u8views/go-u8views/internal/services"
-	templates "github.com/u8views/go-u8views/internal/templates/v1"
 	"log"
 	"net/http"
+
+	"github.com/u8views/go-u8views/internal/services"
+	templates "github.com/u8views/go-u8views/internal/templates/v1"
+
+	"github.com/gin-gonic/gin"
 )
 
-type SiteMapController struct {
+type SitemapController struct {
 	userService *services.UserService
 }
 
-func NewSiteMapController(userService *services.UserService) *SiteMapController {
-	return &SiteMapController{userService: userService}
+func NewSitemapController(userService *services.UserService) *SitemapController {
+	return &SitemapController{userService: userService}
 }
 
-func (c *SiteMapController) GetSiteMap(ctx *gin.Context) {
+func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
 	users, err := c.userService.GetAllUsernames(ctx)
 	if err != nil {
-		log.Printf("Database error (stats) %s\n", err)
+		log.Printf("Database error (sitemap) %s\n", err)
 
-		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
-			ErrorMessage: "Database error",
-		})
+		// language=XML
+		const errorMessage = `<?xml version="1.0" encoding="UTF-8"?>
+<error>
+	<message>Database error</message>
+</error>`
+		ctx.Data(http.StatusInternalServerError, "text/xml", []byte(errorMessage))
 
 		return
 	}
 
-	profiles := make([]templates.ProfileView, len(users))
+	usernames := make([]string, len(users))
 	for i, user := range users {
-		profiles[i] = templates.ProfileView{
-			Username: user.Username,
-		}
+		usernames[i] = user.Username
 	}
-	ctx.Data(http.StatusOK, "text/xml; charset=utf-8", []byte(templates.SitemapGithubProfile(profiles)))
+	ctx.Data(http.StatusOK, "application/xml", []byte(templates.SitemapGithubProfiles(usernames)))
 }

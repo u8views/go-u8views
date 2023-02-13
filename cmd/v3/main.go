@@ -41,7 +41,7 @@ func main() {
 		})
 		webController     = controllers.NewWebController(userService, statsService)
 		statsController   = controllers.NewStatsController(userService, statsService)
-		siteMapController = controllers.NewSiteMapController(userService)
+		sitemapController = controllers.NewSitemapController(userService)
 	)
 
 	var r = gin.New()
@@ -68,7 +68,7 @@ func main() {
 		ctx.File("./public/design/v1/profile.html")
 	})
 
-	r.GET("/sitemap-github-profiles.xml", siteMapController.GetSiteMap)
+	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
