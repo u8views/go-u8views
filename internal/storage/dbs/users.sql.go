@@ -118,7 +118,8 @@ func (q *Queries) UsersGet(ctx context.Context, limit int32) ([]UsersGetRow, err
 }
 
 const UsersGetAllUsernames = `-- name: UsersGetAllUsernames :many
-SELECT u.username FROM users u 
+SELECT u.username 
+FROM users u 
 ORDER BY u.id DESC;
 `
 
