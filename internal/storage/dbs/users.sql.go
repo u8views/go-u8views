@@ -117,6 +117,36 @@ func (q *Queries) UsersGet(ctx context.Context, limit int32) ([]UsersGetRow, err
 	return items, nil
 }
 
+const UsersGetAllUsernames = `-- name: UsersGetAllUsernames :many
+SELECT u.username FROM users u 
+ORDER BY u.id DESC;
+`
+
+func (q *Queries) GetAllUsernames(ctx context.Context) ([]UsersGetRow, error) {
+	rows, err := q.query(ctx, q.usersGetAllUsernamesStmt, UsersGetAllUsernames)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UsersGetRow
+	for rows.Next() {
+		var i UsersGetRow
+		if err := rows.Scan(
+			&i.Username,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const usersGetByID = `-- name: UsersGetByID :one
 SELECT id, social_provider_user_id, username, name
 FROM users

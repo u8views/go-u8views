@@ -42,7 +42,7 @@ func (s *UserService) Users(ctx context.Context, limit int32) ([]dbs.UsersGetRow
 }
 
 func (s *UserService) GetAllUsernames(ctx context.Context) ([]dbs.UsersGetRow, error) {
-	return s.repository.Queries().UsersGet(ctx, 100)
+	return s.repository.Queries().GetAllUsernames(ctx)
 }
 
 func (s *UserService) UsersCreatedAtStatsByDay(ctx context.Context) ([]models.TimeCount, error) {
