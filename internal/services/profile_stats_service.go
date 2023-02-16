@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/u8views/go-u8views/internal/db"
@@ -31,30 +32,20 @@ func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment b
 		return result, err
 	}
 
+	stats := userViewsStatsMap[userID]
+
 	if increment {
-		txErr := s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
-			err := queries.ProfileTotalViewsInc(ctx, userID)
-			if err != nil {
-				return err
-			}
+		stats.Inc()
+		totalCount += 1
 
-			err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
-				UserID: userID,
-				Time:   now,
-				Count:  1,
-			})
+		go func() {
+			err := s.increment(context.Background(), userID, now)
 			if err != nil {
-				return err
+				log.Printf("Database err %s\n", err)
 			}
-
-			return nil
-		})
-		if txErr != nil {
-			return result, txErr
-		}
+		}()
 	}
 
-	stats := userViewsStatsMap[userID]
 	return ProfileViewsStats{
 		DayCount:   stats.DayCount,
 		WeekCount:  stats.WeekCount,
@@ -130,4 +121,30 @@ func (s *StatsService) ReferralsStats(ctx context.Context, userID int64) ([]mode
 		}
 	}
 	return result, nil
+}
+
+func (s *StatsService) increment(ctx context.Context, userID int64, now time.Time) error {
+	txErr := s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
+		err := queries.ProfileTotalViewsInc(ctx, userID)
+		if err != nil {
+			return err
+		}
+
+		err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
+			UserID: userID,
+			Time:   now,
+			Count:  1,
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if txErr != nil {
+		return txErr
+	}
+
+	return nil
 }
