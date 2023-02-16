@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/u8views/go-u8views/internal/badge"
 	"github.com/u8views/go-u8views/internal/services"
@@ -163,7 +164,9 @@ func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvid
 		return
 	}
 
-	statsCount, err := c.statsService.StatsCount(ctx, userID, true)
+	increment := strings.HasPrefix(ctx.GetHeader("User-Agent"), "github-camo")
+
+	statsCount, err := c.statsService.StatsCount(ctx, userID, increment)
 	if err == sql.ErrNoRows {
 		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
 			ErrorMessage: "User not found (stats)",
