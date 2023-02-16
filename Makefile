@@ -71,7 +71,6 @@ postgres-fixtures-clear:
 	cat ./console/postgres-fixtures-clear.sql | docker exec -i go_u8views_postgres psql -d u8views -U u8user
 
 go-mod-update:
-	go get -u
 	go mod tidy
 	go mod vendor
 

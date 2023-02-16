@@ -12,6 +12,7 @@ import (
 	"github.com/u8views/go-u8views/internal/storage"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/gzip"
 
 	_ "github.com/lib/pq"
 )
@@ -45,6 +46,8 @@ func main() {
 	)
 
 	var r = gin.New()
+
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/count.json", statsController.GitHubDayWeekMonthTotalCount)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", statsController.GitHubStats)
