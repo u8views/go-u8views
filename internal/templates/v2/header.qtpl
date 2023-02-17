@@ -1,0 +1,25 @@
+{% func header(referrer int64) %}
+<header class="header">
+    <div class="header__wrapper wrapper-u8">
+        <a href="/" class="header__logo">
+            <img class="header__logo-img" src="/assets/images/logo.svg" alt="logo">
+        </a>
+        <div class="header__stars">
+            <iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+                    frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+        </div>
+        <button class="button__log-in">
+            <a href="/login/github?referrer={%dl referrer %}" class="button__link">
+                <img
+                        src="/assets/images/github.svg"
+                        width="24"
+                        height="24"
+                        alt="github"
+                        class="button__log-in-img"
+                />
+                <span class="button__text">Log in with GitHub</span>
+            </a>
+        </button>
+    </div>
+</header>
+{% endfunc %}
