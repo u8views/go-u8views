@@ -8,20 +8,21 @@
                 </a>
                 <p class="footer__subtitle">Views counter and views statistics for your GitHub profile</p>
                 <div class="footer__map">
-                    <img class="footer__map-Ukraine" src="/assets/images/map-of-ukraine.png" alt="map Ukraine">
+                    <img class="footer__map-Ukraine" src="/assets/images/map-of-ukraine.png" alt="Map of Ukraine">
                 </div>
-
             </div>
 
             <div class="footer__middle-section">
-                <a href="#" class="footer__statistics-link">Registration statistics on u8views</a>
-                <a href="#" class="footer__github-link">
+                <a href="/stats" class="footer__statistics-link">Registration statistics on u8views</a>
+                <a href="https://github.com/u8views/go-u8views" class="footer__github-link">
                     View the project on GitHub
                     <img src="/assets/images/arrow.svg" alt="arrow">
                 </a>
-                <iframe class="footer__stars" src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+                <iframe class="footer__stars"
+                        src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
                         frameborder="0" scrolling="0" width="170" height="34" title="GitHub"></iframe>
             </div>
+
             <div class="footer__support">
                 <a href="https://savelife.in.ua/en/" class="footer__link">
                     <figure class="footer__figure">
@@ -47,7 +48,7 @@
         </div>
         <div class="footer__copyrights">
             <span>© 2023 Yaroslav Podorvanov</span>
-            <img class="footer__flag-UA" src="/assets/images/flag-of-ukraine.svg" alt="Flag Ukraine">
+            <img class="footer__flag-UA" src="/assets/images/flag-of-ukraine.svg" alt="Flag of Ukraine">
         </div>
     </div>
 </footer>
