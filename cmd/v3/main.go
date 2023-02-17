@@ -68,7 +68,7 @@ func main() {
 
 	r.GET("/github/:username", webController.GitHubProfile)
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
-		ctx.File("./public/design/v1/profile.html")
+		ctx.File("./public/design/v2/u8views-profile.html")
 	})
 
 	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
