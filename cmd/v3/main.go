@@ -63,19 +63,19 @@ func main() {
 
 	r.GET("/", webController.Index)
 	r.GET("/design", func(ctx *gin.Context) {
-		ctx.File("./public/design/v2/index.html")
+		ctx.File("./public/design/v2/index-auth.html")
 	})
 
 	r.GET("/github/:username", webController.GitHubProfile)
 	r.GET("/design/github/:username", func(ctx *gin.Context) {
-		ctx.File("./public/design/v2/profile.html")
+		ctx.File("./public/design/v2/profile-auth.html")
 	})
 
 	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
-		ctx.File("./public/design/v2/stats.html")
+		ctx.File("./public/design/v2/stats-auth.html")
 	})
 
 	r.Static("/assets/images", "./public/assets/images")
