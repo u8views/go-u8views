@@ -99,6 +99,130 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, showChar
                 </button>
             </div>
         </section>
+
+        <section class="example">
+            <div class="example__badges">
+                <h3 class="example__title">That badge looks like this:</h3>
+                <div class="example__badges-group">
+                    <div class="history__badge">
+                        <span class="history__badge-title">Views per day</span>
+                        <span class="history__badge-count">17</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title">Views per week</span>
+                        <span class="history__badge-count">328</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title"> Views per month </span>
+                        <span class="history__badge-count">986</span>
+                    </div>
+                    <div class="history__badge">
+                        <span class="history__badge-title">Total views</span>
+                        <span class="history__badge-count">48656</span>
+                    </div>
+                </div>
+            </div>
+            <div class="example__statistics">
+                <h3 class="example__title center">
+                    and your statistics look like this:
+                </h3>
+                <div class="example__chart-group">
+                    <img src="/assets/images/view-statistic.png" alt="Views statistics example"/>
+                    <img src="/assets/images/referral-statistic.png" alt="Referral statistics example"/>
+                </div>
+            </div>
+        </section>
+
+        <section class="history">
+            <h2 class="history__title">Registration history</h2>
+            <p class="history__subtitle">
+                Recent registered users who posted a badge on their GitHub profile and have one or more views
+            </p>
+            <div class="history__main">
+                <div class="history__main-values">
+                    <span>User:</span>
+                    <span>Badge:</span>
+                    <span>Time, data:</span>
+                </div>
+                <ul class="history__list">
+                    `)
+	for _, profile := range registrationHistoryProfiles {
+		qw422016.N().S(`
+                    <li class="history__card">
+                        <div class="history__user">
+                            <img
+                                    src="https://avatars.githubusercontent.com/u/`)
+		qw422016.E().S(profile.SocialProviderUserID)
+		qw422016.N().S(`?v=4&s=56"
+                                    alt="`)
+		qw422016.E().S(profile.GetName())
+		qw422016.N().S(` profile photo"
+                                    class="history__user-picture"
+                            />
+                            <div class="history__user-info">
+                                <div class="history__user-name">
+                                    `)
+		qw422016.E().S(profile.GetName())
+		qw422016.N().S(`
+                                </div>
+                                <a href="https://u8views.com/github/`)
+		qw422016.E().S(profile.Username)
+		qw422016.N().S(`" class="history__link">
+                                    <img
+                                            src="/assets/images/u8-icon.svg"
+                                            width="16"
+                                            height="16"
+                                            alt="link"
+                                    />
+                                    <span class="history__user-github">u8views.com/github/`)
+		qw422016.E().S(profile.Username)
+		qw422016.N().S(`</span>
+                                </a>
+                                <a href="https://github.com/`)
+		qw422016.E().S(profile.Username)
+		qw422016.N().S(`" class="history__link">
+                                    <img
+                                            src="/assets/images/github.svg"
+                                            width="16"
+                                            height="16"
+                                            alt="link"
+                                    />
+                                    <span class="history__user-github">github.com/`)
+		qw422016.E().S(profile.Username)
+		qw422016.N().S(`</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="history__badges">
+                            <div class="history__badge">
+                                <span class="history__badge-title">Views per day</span>
+                                <span class="history__badge-count">`)
+		qw422016.N().DL(profile.DayCount)
+		qw422016.N().S(`</span>
+                            </div>
+                            <div class="history__badge">
+                                <span class="history__badge-title">per week</span>
+                                <span class="history__badge-count">`)
+		qw422016.N().DL(profile.WeekCount)
+		qw422016.N().S(`</span>
+                            </div>
+                            <div class="history__badge">
+                                <span class="history__badge-title">per month</span>
+                                <span class="history__badge-count">`)
+		qw422016.N().DL(profile.MonthCount)
+		qw422016.N().S(`</span>
+                            </div>
+                        </div>
+                        <div class="history__user-time">`)
+		qw422016.E().S(profile.CreatedAt.Format("15:04, Jan _2 2006"))
+		qw422016.N().S(`</div>
+                    </li>
+                    `)
+	}
+	qw422016.N().S(`
+                </ul>
+            </div>
+        </section>
     </div>
 </main>
 `)
