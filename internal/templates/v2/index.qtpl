@@ -21,6 +21,46 @@
 <body>
 {%= header(ProfileView{}, sessionProfile) %}
 <main class="main">
+    <div class="wrapper-u8">
+        <section class="hero">
+            {% if showCharity %}
+            <div class="hero__donate-block">
+                {%= charity() %}
+            </div>
+            {% endif %}
+            <div class="hero__main">
+                <h1 class="hero__title">Track your GitHub profile views</h1>
+                <p class="hero__subtitle">
+                    Receive, view and analyze your profile views and profile performance statistics
+                </p>
+                <button class="button__log-in hero-button">
+                    {% if sessionProfile.ID == 0 %}
+                    <a href="/login/github" class="button__link">
+                        <img
+                                src="/assets/images/github.svg"
+                                width="24"
+                                height="24"
+                                alt="github"
+                                class="button__log-in-img"
+                        />
+                        <span class="button__text">Log in with GitHub</span>
+                    </a>
+                    {% else %}
+                    <a href="https://u8views.com/github/{%s sessionProfile.Username %}" class="button__link">
+                        <img
+                                src="https://avatars.githubusercontent.com/u/{%s sessionProfile.SocialProviderUserID %}?v=4&s=48"
+                                width="24"
+                                height="24"
+                                alt="{%s sessionProfile.GetName() %} profile photo"
+                                class="button__log-in-img"
+                        />
+                        <span class="button__text">View your statistics</span>
+                    </a>
+                    {% endif %}
+                </button>
+            </div>
+        </section>
+    </div>
 </main>
 {%= footer() %}
 </body>
