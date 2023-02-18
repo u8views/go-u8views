@@ -31,17 +31,20 @@ func NewWebController(userService *services.UserService, statsService *services.
 func (c *WebController) Index(ctx *gin.Context) {
 	const limit = 32
 
+	sessionProfile, totalCount := c.sessionProfile(ctx)
+	charity := totalCount > 0
+
 	users, err := c.userService.Users(ctx, limit)
 	if err != nil {
 		log.Printf("Cannot fetch users %s\n", err)
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, nil)))
 
 		return
 	}
 
 	if len(users) == 0 {
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, nil)))
 
 		return
 	}
@@ -59,12 +62,12 @@ func (c *WebController) Index(ctx *gin.Context) {
 		// NOP
 	}
 
-	profiles := make([]tv1.FullProfileView, len(users))
+	profiles := make([]tv2.FullProfileView, len(users))
 	for i, user := range users {
 		stats := userViewsStatsMap[user.ID]
 
-		profiles[i] = tv1.FullProfileView{
-			ProfileView: tv1.ProfileView{
+		profiles[i] = tv2.FullProfileView{
+			ProfileView: tv2.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,
@@ -80,7 +83,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(profiles)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, profiles)))
 }
 
 func (c *WebController) GitHubProfile(ctx *gin.Context) {
@@ -144,13 +147,19 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 }
 
 func (c *WebController) Stats(ctx *gin.Context) {
-	sessionUserID := parseCookieUserID(ctx, userCookieKey)
+	sessionProfile, totalCount := c.sessionProfile(ctx)
+	charity := totalCount > 0
 
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Stats(sessionProfile, charity)))
+}
+
+func (c *WebController) sessionProfile(ctx *gin.Context) (tv2.ProfileView, int64) {
 	var (
 		sessionProfile tv2.ProfileView
 		totalCount     int64
 	)
 
+	sessionUserID := parseCookieUserID(ctx, userCookieKey)
 	if sessionUserID > 0 {
 		user, err := c.userService.GetByID(ctx, sessionUserID)
 		if err != nil {
@@ -174,5 +183,5 @@ func (c *WebController) Stats(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Stats(sessionProfile, totalCount > 0)))
+	return sessionProfile, totalCount
 }

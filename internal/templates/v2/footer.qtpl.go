@@ -20,7 +20,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
     <div class="footer__wrapper wrapper-u8">
         <div class="footer__group-u8">
             <div class="footer__info">
-                <a href="/u8views-main.html" class="footer__title">
+                <a href="/" class="footer__title">
                     <img src="/assets/images/logo.svg" alt="logo">
                 </a>
                 <p class="footer__subtitle">Views counter and views statistics for your GitHub profile</p>
