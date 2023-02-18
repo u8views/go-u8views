@@ -20,6 +20,10 @@ func NewStatsService(repository *db.Repository) *StatsService {
 	return &StatsService{repository: repository}
 }
 
+func (s *StatsService) TotalCount(ctx context.Context, userID int64) (int64, error) {
+	return s.repository.Queries().ProfileTotalViews(ctx, userID)
+}
+
 func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
 	totalCount, err := s.repository.Queries().ProfileTotalViews(ctx, userID)
 	if err != nil {

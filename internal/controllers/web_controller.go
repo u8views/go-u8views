@@ -9,7 +9,8 @@ import (
 
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
-	templates "github.com/u8views/go-u8views/internal/templates/v1"
+	tv1 "github.com/u8views/go-u8views/internal/templates/v1"
+	tv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,13 +35,13 @@ func (c *WebController) Index(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("Cannot fetch users %s\n", err)
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Index(nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(nil)))
 
 		return
 	}
 
 	if len(users) == 0 {
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Index(nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(nil)))
 
 		return
 	}
@@ -58,18 +59,18 @@ func (c *WebController) Index(ctx *gin.Context) {
 		// NOP
 	}
 
-	profiles := make([]templates.FullProfileView, len(users))
+	profiles := make([]tv1.FullProfileView, len(users))
 	for i, user := range users {
 		stats := userViewsStatsMap[user.ID]
 
-		profiles[i] = templates.FullProfileView{
-			ProfileView: templates.ProfileView{
+		profiles[i] = tv1.FullProfileView{
+			ProfileView: tv1.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,
 				Name:                 user.Name,
 			},
-			ProfileViewsStats: templates.ProfileViewsStats{
+			ProfileViewsStats: tv1.ProfileViewsStats{
 				DayCount:   stats.DayCount,
 				WeekCount:  stats.WeekCount,
 				MonthCount: stats.MonthCount,
@@ -79,7 +80,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Index(profiles)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Index(profiles)))
 }
 
 func (c *WebController) GitHubProfile(ctx *gin.Context) {
@@ -111,7 +112,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		log.Printf("Cannot fetch views stats by id = %d err: %v", user.ID, err)
 	}
 
-	var currentUserView templates.ProfileView
+	var currentUserView tv1.ProfileView
 
 	currentUserID := parseCookieUserID(ctx, userCookieKey)
 	if currentUserID > 0 {
@@ -121,7 +122,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 			// NOP
 		} else {
-			currentUserView = templates.ProfileView{
+			currentUserView = tv1.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,
@@ -130,8 +131,8 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Profile(
-		templates.ProfileView{
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Profile(
+		tv1.ProfileView{
 			ID:                   user.ID,
 			SocialProviderUserID: user.SocialProviderUserID,
 			Username:             user.Username,
@@ -143,5 +144,35 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 }
 
 func (c *WebController) Stats(ctx *gin.Context) {
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.Stats()))
+	sessionUserID := parseCookieUserID(ctx, userCookieKey)
+
+	var (
+		sessionProfile tv2.ProfileView
+		totalCount     int64
+	)
+
+	if sessionUserID > 0 {
+		user, err := c.userService.GetByID(ctx, sessionUserID)
+		if err != nil {
+			log.Printf("Cannot fetch user by id = %d err: %v", sessionUserID, err)
+
+			// NOP
+		} else {
+			sessionProfile = tv2.ProfileView{
+				ID:                   user.ID,
+				SocialProviderUserID: user.SocialProviderUserID,
+				Username:             user.Username,
+				Name:                 user.Name,
+			}
+		}
+
+		totalCount, err = c.statsService.TotalCount(ctx, sessionUserID)
+		if err != nil {
+			log.Printf("Cannot fetch total count by user_id = %d err: %v", sessionUserID, err)
+
+			// NOP
+		}
+	}
+
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Stats(sessionProfile, totalCount > 0)))
 }
