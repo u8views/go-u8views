@@ -334,7 +334,7 @@
             <div class="step__view-group">
                 <div class="step__view">
                     <h2 class="step__title step-link">
-                        Copy a badge code from your profile page
+                        Add a badge to GitHub profile
                     </h2>
                     <a href="https://github.com/{%s exampleProfile.Username %}/{%s exampleProfile.Username %}/edit/main/README.md"
                        class="step__subtitle step__readme-file-link">Go to edit the README.md file</a>
@@ -407,7 +407,7 @@
                             <div class="step-4__left-section">
                                 <div class="step-4__profile-photo">
                                     <img
-                                            src="https://avatars.githubusercontent.com/u/{%s sessionProfile.SocialProviderUserID %}?v=4&s=181"
+                                            src="https://avatars.githubusercontent.com/u/{%s exampleProfile.SocialProviderUserID %}?v=4&s=181"
                                             alt="profile photo"
                                             class="step-4__photo"
                                     />

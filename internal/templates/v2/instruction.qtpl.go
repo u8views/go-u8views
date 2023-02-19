@@ -383,7 +383,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             <div class="step__view-group">
                 <div class="step__view">
                     <h2 class="step__title step-link">
-                        Copy a badge code from your profile page
+                        Add a badge to GitHub profile
                     </h2>
                     <a href="https://github.com/`)
 	qw422016.E().S(exampleProfile.Username)
@@ -471,7 +471,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                                 <div class="step-4__profile-photo">
                                     <img
                                             src="https://avatars.githubusercontent.com/u/`)
-	qw422016.E().S(sessionProfile.SocialProviderUserID)
+	qw422016.E().S(exampleProfile.SocialProviderUserID)
 	qw422016.N().S(`?v=4&s=181"
                                             alt="profile photo"
                                             class="step-4__photo"
