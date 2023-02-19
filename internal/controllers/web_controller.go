@@ -38,13 +38,13 @@ func (c *WebController) Index(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("Cannot fetch users %s\n", err)
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
 
 		return
 	}
 
 	if len(users) == 0 {
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
 
 		return
 	}
@@ -83,7 +83,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, charity, profiles)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, profiles)))
 }
 
 func (c *WebController) GitHubProfile(ctx *gin.Context) {
@@ -184,4 +184,13 @@ func (c *WebController) sessionProfile(ctx *gin.Context) (tv2.ProfileView, int64
 	}
 
 	return sessionProfile, totalCount
+}
+
+func (c *WebController) exampleProfile() tv2.ProfileView {
+	return tv2.ProfileView{
+		ID:                   1,
+		SocialProviderUserID: "63663261",
+		Username:             "YaroslavPodorvanov",
+		Name:                 "Yaroslav Podorvanov",
+	}
 }

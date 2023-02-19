@@ -1,4 +1,4 @@
-{% func Index(sessionProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) %}
+{% func Index(sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,6 +93,8 @@
                 </div>
             </div>
         </section>
+
+        {%= instruction(ProfileView{}, sessionProfile, exampleProfile) %}
 
         <section class="history">
             <h2 class="history__title">Registration history</h2>

@@ -14,7 +14,7 @@ var (
 	_ = qt422016.AcquireByteBuffer
 )
 
-func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) {
+func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) {
 	qw422016.N().S(`
 <!DOCTYPE html>
 <html lang="en">
@@ -133,6 +133,10 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, showChar
             </div>
         </section>
 
+        `)
+	streaminstruction(qw422016, ProfileView{}, sessionProfile, exampleProfile)
+	qw422016.N().S(`
+
         <section class="history">
             <h2 class="history__title">Registration history</h2>
             <p class="history__subtitle">
@@ -233,15 +237,15 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, showChar
 `)
 }
 
-func WriteIndex(qq422016 qtio422016.Writer, sessionProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) {
+func WriteIndex(qq422016 qtio422016.Writer, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	StreamIndex(qw422016, sessionProfile, showCharity, registrationHistoryProfiles)
+	StreamIndex(qw422016, sessionProfile, exampleProfile, showCharity, registrationHistoryProfiles)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func Index(sessionProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) string {
+func Index(sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, registrationHistoryProfiles []FullProfileView) string {
 	qb422016 := qt422016.AcquireByteBuffer()
-	WriteIndex(qb422016, sessionProfile, showCharity, registrationHistoryProfiles)
+	WriteIndex(qb422016, sessionProfile, exampleProfile, showCharity, registrationHistoryProfiles)
 	qs422016 := string(qb422016.B)
 	qt422016.ReleaseByteBuffer(qb422016)
 	return qs422016
