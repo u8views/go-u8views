@@ -1,6 +1,6 @@
 import {formatDay} from "./time";
 
-const socialProviderUserId = document.body.getAttribute("data-social-provider-user-id");
+const socialProviderUserId = document.body.getAttribute("data-current-page-profile-social-provider-user-id");
 
 fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
     .then(function (response) {

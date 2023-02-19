@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
-	tv1 "github.com/u8views/go-u8views/internal/templates/v1"
-	tv2 "github.com/u8views/go-u8views/internal/templates/v2"
+	tmv1 "github.com/u8views/go-u8views/internal/templates/v1"
+	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,13 +39,13 @@ func (c *WebController) Index(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("Cannot fetch users %s\n", err)
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
 
 		return
 	}
 
 	if len(users) == 0 {
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
 
 		return
 	}
@@ -62,18 +63,18 @@ func (c *WebController) Index(ctx *gin.Context) {
 		// NOP
 	}
 
-	profiles := make([]tv2.FullProfileView, len(users))
+	profiles := make([]tmv2.FullProfileView, len(users))
 	for i, user := range users {
 		stats := userViewsStatsMap[user.ID]
 
-		profiles[i] = tv2.FullProfileView{
-			ProfileView: tv2.ProfileView{
+		profiles[i] = tmv2.FullProfileView{
+			ProfileView: tmv2.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,
 				Name:                 user.Name,
 			},
-			ProfileViewsStats: tv1.ProfileViewsStats{
+			ProfileViewsStats: tmv1.ProfileViewsStats{
 				DayCount:   stats.DayCount,
 				WeekCount:  stats.WeekCount,
 				MonthCount: stats.MonthCount,
@@ -83,7 +84,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Index(sessionProfile, c.exampleProfile(), charity, profiles)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, profiles)))
 }
 
 func (c *WebController) GitHubProfile(ctx *gin.Context) {
@@ -98,7 +99,10 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		return
 	}
 
-	user, err := c.userService.GetBySocialProviderUsername(ctx, dbs.SocialProviderGithub, uri.Username)
+	sessionProfile, totalCount := c.sessionProfile(ctx)
+	charity := totalCount > 0
+
+	currentPageProfile, err := c.getProfileByUsername(ctx, sessionProfile, uri.Username)
 	if err == sql.ErrNoRows {
 		ctx.Data(http.StatusBadRequest, "text/html; charset=utf-8", []byte(fmt.Sprintf("User not found")))
 
@@ -110,38 +114,21 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		return
 	}
 
-	stats, err := c.statsService.StatsCount(ctx, user.ID, false)
+	stats, err := c.statsService.StatsCount(ctx, currentPageProfile.ID, false)
 	if err != nil {
-		log.Printf("Cannot fetch views stats by id = %d err: %v", user.ID, err)
+		log.Printf("Cannot fetch views stats by id = %d err: %v", currentPageProfile.ID, err)
 	}
 
-	var currentUserView tv1.ProfileView
-
-	currentUserID := parseCookieUserID(ctx, userCookieKey)
-	if currentUserID > 0 {
-		user, err := c.userService.GetByID(ctx, currentUserID)
-		if err != nil {
-			log.Printf("Cannot fetch user by id = %d err: %v", currentUserID, err)
-
-			// NOP
-		} else {
-			currentUserView = tv1.ProfileView{
-				ID:                   user.ID,
-				SocialProviderUserID: user.SocialProviderUserID,
-				Username:             user.Username,
-				Name:                 user.Name,
-			}
-		}
+	exampleProfile := sessionProfile
+	if exampleProfile.ID == 0 {
+		exampleProfile = c.exampleProfile()
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv1.Profile(
-		tv1.ProfileView{
-			ID:                   user.ID,
-			SocialProviderUserID: user.SocialProviderUserID,
-			Username:             user.Username,
-			Name:                 user.Name,
-		},
-		currentUserView,
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Profile(
+		sessionProfile,
+		currentPageProfile,
+		exampleProfile,
+		charity,
 		stats,
 	)))
 }
@@ -150,12 +137,12 @@ func (c *WebController) Stats(ctx *gin.Context) {
 	sessionProfile, totalCount := c.sessionProfile(ctx)
 	charity := totalCount > 0
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tv2.Stats(sessionProfile, charity)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Stats(sessionProfile, charity)))
 }
 
-func (c *WebController) sessionProfile(ctx *gin.Context) (tv2.ProfileView, int64) {
+func (c *WebController) sessionProfile(ctx *gin.Context) (tmv2.ProfileView, int64) {
 	var (
-		sessionProfile tv2.ProfileView
+		sessionProfile tmv2.ProfileView
 		totalCount     int64
 	)
 
@@ -167,7 +154,7 @@ func (c *WebController) sessionProfile(ctx *gin.Context) (tv2.ProfileView, int64
 
 			// NOP
 		} else {
-			sessionProfile = tv2.ProfileView{
+			sessionProfile = tmv2.ProfileView{
 				ID:                   user.ID,
 				SocialProviderUserID: user.SocialProviderUserID,
 				Username:             user.Username,
@@ -186,8 +173,26 @@ func (c *WebController) sessionProfile(ctx *gin.Context) (tv2.ProfileView, int64
 	return sessionProfile, totalCount
 }
 
-func (c *WebController) exampleProfile() tv2.ProfileView {
-	return tv2.ProfileView{
+func (c *WebController) getProfileByUsername(ctx *gin.Context, sessionProfile tmv2.ProfileView, username string) (tmv2.ProfileView, error) {
+	if strings.EqualFold(username, sessionProfile.Username) {
+		return sessionProfile, nil
+	}
+
+	user, err := c.userService.GetBySocialProviderUsername(ctx, dbs.SocialProviderGithub, username)
+	if err != nil {
+		return tmv2.ProfileView{}, err
+	}
+
+	return tmv2.ProfileView{
+		ID:                   user.ID,
+		SocialProviderUserID: user.SocialProviderUserID,
+		Username:             user.Username,
+		Name:                 user.Name,
+	}, nil
+}
+
+func (c *WebController) exampleProfile() tmv2.ProfileView {
+	return tmv2.ProfileView{
 		ID:                   1,
 		SocialProviderUserID: "63663261",
 		Username:             "YaroslavPodorvanov",

@@ -472,8 +472,10 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                                     <img
                                             src="https://avatars.githubusercontent.com/u/`)
 	qw422016.E().S(exampleProfile.SocialProviderUserID)
-	qw422016.N().S(`?v=4&s=181"
-                                            alt="profile photo"
+	qw422016.N().S(`?v=4&s=192"
+                                            alt="`)
+	qw422016.E().S(exampleProfile.GetName())
+	qw422016.N().S(` profile photo"
                                             class="step-4__photo"
                                     />
                                 </div>

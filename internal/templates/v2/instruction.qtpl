@@ -407,8 +407,8 @@
                             <div class="step-4__left-section">
                                 <div class="step-4__profile-photo">
                                     <img
-                                            src="https://avatars.githubusercontent.com/u/{%s exampleProfile.SocialProviderUserID %}?v=4&s=181"
-                                            alt="profile photo"
+                                            src="https://avatars.githubusercontent.com/u/{%s exampleProfile.SocialProviderUserID %}?v=4&s=192"
+                                            alt="{%s exampleProfile.GetName() %} profile photo"
                                             class="step-4__photo"
                                     />
                                 </div>
