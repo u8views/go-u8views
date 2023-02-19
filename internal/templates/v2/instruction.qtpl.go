@@ -266,6 +266,9 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                 <h2 class="step__title">Copy a badge code from your profile page</h2>
                 <div class="step__main step-3">
                     <div class="step-3__item-group">
+                        `)
+	if sessionProfile.ID == 0 {
+		qw422016.N().S(`
                         <div class="step-3__item">
                             <div class="step-3__title">Markdown:</div>
                             <img
@@ -284,8 +287,8 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                             <div class="step-3__button">
                                 <button class="button__log-in black hero-button">
                                     <a href="/login/github?referrer=`)
-	qw422016.N().DL(currentPageProfile.ID)
-	qw422016.N().S(`" class="button__link">
+		qw422016.N().DL(currentPageProfile.ID)
+		qw422016.N().S(`" class="button__link">
                                         <img
                                                 src="/assets/images/github-white.svg"
                                                 width="24"
@@ -299,6 +302,68 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
 
                             </div>
                         </div>
+                        `)
+	} else {
+		qw422016.N().S(`
+                        <div class="step-3__item">
+                            <div class="step-3__title">Markdown:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    [![Hits](https://u8views.com/api/v1/github/profiles/`)
+		qw422016.E().S(exampleProfile.SocialProviderUserID)
+		qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)
+		qw422016.E().S(exampleProfile.Username)
+		qw422016.N().S(`)
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                        <div class="step-3__item">
+                            <div class="step-3__title">HTML:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    &lt;a href=&quot;https://u8views.com/github/`)
+		qw422016.E().S(exampleProfile.Username)
+		qw422016.N().S(`&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/`)
+		qw422016.E().S(exampleProfile.SocialProviderUserID)
+		qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                        `)
+	}
+	qw422016.N().S(`
                     </div>
                 </div>
             </div>

@@ -233,6 +233,7 @@
                 <h2 class="step__title">Copy a badge code from your profile page</h2>
                 <div class="step__main step-3">
                     <div class="step-3__item-group">
+                        {% if sessionProfile.ID == 0 %}
                         <div class="step-3__item">
                             <div class="step-3__title">Markdown:</div>
                             <img
@@ -264,6 +265,56 @@
 
                             </div>
                         </div>
+                        {% else %}
+                        <div class="step-3__item">
+                            <div class="step-3__title">Markdown:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    [![Hits](https://u8views.com/api/v1/github/profiles/{%s exampleProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s exampleProfile.Username %})
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                        <div class="step-3__item">
+                            <div class="step-3__title">HTML:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    &lt;a href=&quot;https://u8views.com/github/{%s exampleProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s exampleProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
