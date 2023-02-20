@@ -56,7 +56,7 @@ func streamunauthorizedHeader(qw422016 *qt422016.Writer, currentPageProfile Prof
             <img class="header__logo-img" src="/assets/images/logo.svg" alt="logo">
         </a>
         <div class="header__stars">
-            <iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+            <iframe src="https://ghbtns.com/github-btn.html?user=u8views&repo=go-u8views&type=star&count=true&size=large"
                     frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
         </div>
         <button class="button__log-in">
@@ -100,7 +100,7 @@ func streamauthorizedHeader(qw422016 *qt422016.Writer, sessionProfile ProfileVie
             <img class="header__logo-img" src="/assets/images/logo.svg" alt="logo">
         </a>
         <div class="header__stars">
-            <iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+            <iframe src="https://ghbtns.com/github-btn.html?user=u8views&repo=go-u8views&type=star&count=true&size=large"
                     frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
         </div>
         <div class="header__profile">

@@ -36,7 +36,7 @@ func streamfooter(qw422016 *qt422016.Writer) {
                     <img src="/assets/images/arrow.svg" alt="arrow">
                 </a>
                 <iframe class="footer__stars"
-                        src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+                        src="https://ghbtns.com/github-btn.html?user=u8views&repo=go-u8views&type=star&count=true&size=large"
                         frameborder="0" scrolling="0" width="170" height="34" title="GitHub"></iframe>
             </div>
 

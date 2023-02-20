@@ -78,7 +78,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                                     /></a>
                                 <div class="header__stars">
                                     <iframe
-                                            src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true"
+                                            src="https://ghbtns.com/github-btn.html?user=u8views&repo=go-u8views&type=star&count=true"
                                             frameborder="0"
                                             scrolling="0"
                                             width="110"
