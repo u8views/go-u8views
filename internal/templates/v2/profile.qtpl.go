@@ -229,6 +229,39 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                 </div>
             </div>
         </section>
+
+        `)
+	if sessionProfile.ID == 0 {
+		qw422016.N().S(`
+        <section class="action">
+            <div class="action__text">
+                <h2 class="action__title">Track your GitHub profile views</h2>
+                <p class="action__subtitle">
+                    Receive, view and analyze your profile views and profile performance statistics
+                </p>
+            </div>
+            <button class="button__log-in hero-button">
+                <a href="/login/github?referrer=`)
+		qw422016.N().DL(currentPageProfile.ID)
+		qw422016.N().S(`" class="button__link">
+                    <img
+                            src="/assets/images/github.svg"
+                            width="24"
+                            height="24"
+                            alt="github"
+                            class="button__log-in-img"
+                    />
+                    <span class="button__text">Log in with GitHub</span>
+                </a>
+            </button>
+        </section>
+        `)
+	}
+	qw422016.N().S(`
+
+        `)
+	streaminstruction(qw422016, currentPageProfile, sessionProfile, exampleProfile)
+	qw422016.N().S(`
     </div>
 </main>
 `)
