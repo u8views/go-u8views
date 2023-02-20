@@ -110,7 +110,7 @@
                 </div>
             </div>
             <div class="profile__chart">
-                <div class="profile__chart chart-js"></div>
+                <div class="profile__chart js-chart-views-statistic"></div>
             </div>
         </div>
     </section>

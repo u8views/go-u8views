@@ -138,7 +138,7 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                 <h3 class="profile__title">Your GitHub profile views statistic</h3>
             </div>
             <div class="profile__chart">
-                <div class="profile__chart chart-js"></div>
+                <div class="profile__chart js-chart-views-statistic"></div>
             </div>
         </section>
 
@@ -216,6 +216,19 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
         `)
 	}
 	qw422016.N().S(`
+
+        <section class="referal">
+            <div class="referal__statistic">
+                <div class="profile__statistics">
+                    <div class="profile__header">
+                        <h3 class="profile__title">Referral registration statistics</h3>
+                    </div>
+                    <div class="profile__chart">
+                        <div class="profile__chart js-chart-referral-registration-statistics"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </main>
 `)

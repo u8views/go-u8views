@@ -125,8 +125,8 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 	}
 
 	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Profile(
-		sessionProfile,
 		currentPageProfile,
+		sessionProfile,
 		exampleProfile,
 		charity,
 		stats,
