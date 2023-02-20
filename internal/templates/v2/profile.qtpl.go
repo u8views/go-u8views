@@ -163,22 +163,8 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 		qw422016.E().S(sessionProfile.Username)
 		qw422016.N().S(`)
                                 </p>
-                                <button class="step-3__copy-text">
-                                    <img
-                                            src="/assets/images/copy-black.svg"
-                                            width="24"
-                                            height="24"
-                                            alt="copy"
-                                            class="step-3__copy-img"
-                                    />
-                                    <img
-                                            src="/assets/images/check-green.svg"
-                                            width="24"
-                                            height="24"
-                                            alt="copy"
-                                            class="step-3__copy-img step-3__copy-done"
-                                    />
-                                </button>
+                                `)
+		qw422016.N().S(`
                             </div>
                         </div>
                         <div class="step-3__item">
@@ -191,22 +177,8 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 		qw422016.E().S(sessionProfile.SocialProviderUserID)
 		qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
-                                <button class="step-3__copy-text">
-                                    <img
-                                            src="/assets/images/copy-black.svg"
-                                            width="24"
-                                            height="24"
-                                            alt="copy"
-                                            class="step-3__copy-img"
-                                    />
-                                    <img
-                                            src="/assets/images/check-green.svg"
-                                            width="24"
-                                            height="24"
-                                            alt="copy"
-                                            class="step-3__copy-img step-3__copy-done"
-                                    />
-                                </button>
+                                `)
+		qw422016.N().S(`
                             </div>
                         </div>
                     </div>

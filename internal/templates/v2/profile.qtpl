@@ -102,6 +102,7 @@
                                 <p class="step-3__item-text">
                                     [![Hits](https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s sessionProfile.Username %})
                                 </p>
+                                {% comment %}
                                 <button class="step-3__copy-text">
                                     <img
                                             src="/assets/images/copy-black.svg"
@@ -118,6 +119,7 @@
                                             class="step-3__copy-img step-3__copy-done"
                                     />
                                 </button>
+                                {% endcomment %}
                             </div>
                         </div>
                         <div class="step-3__item">
@@ -126,6 +128,7 @@
                                 <p class="step-3__item-text">
                                     &lt;a href=&quot;https://u8views.com/github/{%s sessionProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
+                                {% comment %}
                                 <button class="step-3__copy-text">
                                     <img
                                             src="/assets/images/copy-black.svg"
@@ -142,6 +145,7 @@
                                             class="step-3__copy-img step-3__copy-done"
                                     />
                                 </button>
+                                {% endcomment %}
                             </div>
                         </div>
                     </div>
