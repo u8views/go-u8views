@@ -141,6 +141,81 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                 <div class="profile__chart chart-js"></div>
             </div>
         </section>
+
+        `)
+	if currentPageProfile.ID == sessionProfile.ID {
+		qw422016.N().S(`
+        <section class="badge">
+            <h2 class="badge__title">Profile badge</h2>
+            <p class="badge__subtitle">
+                Copy the badge and place it on your GitHub profile
+            </p>
+            <div class="step__view">
+                <div class="step-3">
+                    <div class="step-3__item-group">
+                        <div class="step-3__item">
+                            <div class="step-3__title">Markdown:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    [![Hits](https://u8views.com/api/v1/github/profiles/`)
+		qw422016.E().S(sessionProfile.SocialProviderUserID)
+		qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)
+		qw422016.E().S(sessionProfile.Username)
+		qw422016.N().S(`)
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                        <div class="step-3__item">
+                            <div class="step-3__title">HTML:</div>
+                            <div class="step-3__item-content">
+                                <p class="step-3__item-text">
+                                    &lt;a href=&quot;https://u8views.com/github/`)
+		qw422016.E().S(sessionProfile.Username)
+		qw422016.N().S(`&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/`)
+		qw422016.E().S(sessionProfile.SocialProviderUserID)
+		qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+                                </p>
+                                <button class="step-3__copy-text">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        `)
+	}
+	qw422016.N().S(`
     </div>
 </main>
 `)
