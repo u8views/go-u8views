@@ -163,6 +163,7 @@
     </div>
 </main>
 {%= footer() %}
+<script src="/assets/js/index-app.js"></script>
 </body>
 </html>
 {% endfunc %}

@@ -31,19 +31,19 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             <div class="instruction__title">
                 Follow these steps to get started:
             </div>
-            <button class="instruction__show-button show-instruction-button-js">
+            <button class="instruction__show-button js-instruction-toggle-button">
                 <img
                         src="/assets/images/arrow-down.svg"
                         width="15"
                         height="10"
                         alt="arrow"
-                        class="instruction__show-img"
+                        class="instruction__show-img js-instruction-visibility-state"
                 />
             </button>
         </div>
     </div>
 
-    <div class="instruction__steps instruction-block-js">
+    <div class="instruction__steps js-instruction">
         <div class="instruction__step-1 active step">
             <div class="step__progress">
                 <div class="step__done">

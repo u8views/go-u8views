@@ -232,6 +232,7 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleP
 `)
 	streamfooter(qw422016)
 	qw422016.N().S(`
+<script src="/assets/js/index-app.js"></script>
 </body>
 </html>
 `)
