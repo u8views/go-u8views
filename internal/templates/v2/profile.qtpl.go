@@ -14,7 +14,7 @@ var (
 	_ = qt422016.AcquireByteBuffer
 )
 
-func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, stats ProfileViewsStats) {
+func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, instructionDone bool, stats ProfileViewsStats) {
 	qw422016.N().S(`
 <!DOCTYPE html>
 <html lang="en">
@@ -232,7 +232,7 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 	qw422016.N().S(`
 
         `)
-	streaminstruction(qw422016, currentPageProfile, sessionProfile, exampleProfile)
+	streaminstruction(qw422016, currentPageProfile, sessionProfile, exampleProfile, instructionDone)
 	qw422016.N().S(`
     </div>
 </main>
@@ -245,15 +245,15 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 `)
 }
 
-func WriteProfile(qq422016 qtio422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, stats ProfileViewsStats) {
+func WriteProfile(qq422016 qtio422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, instructionDone bool, stats ProfileViewsStats) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	StreamProfile(qw422016, currentPageProfile, sessionProfile, exampleProfile, showCharity, stats)
+	StreamProfile(qw422016, currentPageProfile, sessionProfile, exampleProfile, showCharity, instructionDone, stats)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func Profile(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, stats ProfileViewsStats) string {
+func Profile(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, instructionDone bool, stats ProfileViewsStats) string {
 	qb422016 := qt422016.AcquireByteBuffer()
-	WriteProfile(qb422016, currentPageProfile, sessionProfile, exampleProfile, showCharity, stats)
+	WriteProfile(qb422016, currentPageProfile, sessionProfile, exampleProfile, showCharity, instructionDone, stats)
 	qs422016 := string(qb422016.B)
 	qt422016.ReleaseByteBuffer(qb422016)
 	return qs422016

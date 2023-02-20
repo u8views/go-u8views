@@ -14,7 +14,7 @@ var (
 	_ = qt422016.AcquireByteBuffer
 )
 
-func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView) {
+func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, done bool) {
 	qw422016.N().S(`
 <section class="instruction">
     <div class="instruction__header">
@@ -44,7 +44,11 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
     </div>
 
     <div class="instruction__steps js-instruction">
-        <div class="instruction__step-1 active step">
+        <div class="instruction__step-1 `)
+	if sessionProfile.ID > 0 {
+		qw422016.N().S(`active`)
+	}
+	qw422016.N().S(` step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -150,7 +154,11 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             </div>
         </div>
 
-        <div class="instruction__step-2 active step">
+        <div class="instruction__step-2 `)
+	if done {
+		qw422016.N().S(`active`)
+	}
+	qw422016.N().S(` step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -251,7 +259,11 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             </div>
         </div>
 
-        <div class="instruction__step-3 step">
+        <div class="instruction__step-3 `)
+	if done {
+		qw422016.N().S(`active`)
+	}
+	qw422016.N().S(` step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -341,7 +353,11 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             </div>
         </div>
 
-        <div class="instruction__step-4 step">
+        <div class="instruction__step-4 `)
+	if done {
+		qw422016.N().S(`active`)
+	}
+	qw422016.N().S(` step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -552,7 +568,11 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             </div>
         </div>
 
-        <div class="instruction__step-5 step">
+        <div class="instruction__step-5 `)
+	if done {
+		qw422016.N().S(`active`)
+	}
+	qw422016.N().S(` step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -581,15 +601,15 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
 `)
 }
 
-func writeinstruction(qq422016 qtio422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView) {
+func writeinstruction(qq422016 qtio422016.Writer, currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, done bool) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	streaminstruction(qw422016, currentPageProfile, sessionProfile, exampleProfile)
+	streaminstruction(qw422016, currentPageProfile, sessionProfile, exampleProfile, done)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func instruction(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView) string {
+func instruction(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, done bool) string {
 	qb422016 := qt422016.AcquireByteBuffer()
-	writeinstruction(qb422016, currentPageProfile, sessionProfile, exampleProfile)
+	writeinstruction(qb422016, currentPageProfile, sessionProfile, exampleProfile, done)
 	qs422016 := string(qb422016.B)
 	qt422016.ReleaseByteBuffer(qb422016)
 	return qs422016

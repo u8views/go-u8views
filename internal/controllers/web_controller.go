@@ -34,18 +34,19 @@ func (c *WebController) Index(ctx *gin.Context) {
 
 	sessionProfile, totalCount := c.sessionProfile(ctx)
 	charity := totalCount > 0
+	instructionDone := totalCount > 0
 
 	users, err := c.userService.Users(ctx, limit)
 	if err != nil {
 		log.Printf("Cannot fetch users %s\n", err)
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, instructionDone, nil)))
 
 		return
 	}
 
 	if len(users) == 0 {
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, nil)))
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, instructionDone, nil)))
 
 		return
 	}
@@ -84,7 +85,13 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(sessionProfile, c.exampleProfile(), charity, profiles)))
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(
+		sessionProfile,
+		c.exampleProfile(),
+		charity,
+		charity,
+		profiles,
+	)))
 }
 
 func (c *WebController) GitHubProfile(ctx *gin.Context) {
@@ -101,6 +108,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 	sessionProfile, totalCount := c.sessionProfile(ctx)
 	charity := totalCount > 0
+	instructionDone := totalCount > 0
 
 	currentPageProfile, err := c.getProfileByUsername(ctx, sessionProfile, uri.Username)
 	if err == sql.ErrNoRows {
@@ -129,6 +137,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 		sessionProfile,
 		exampleProfile,
 		charity,
+		instructionDone,
 		stats,
 	)))
 }

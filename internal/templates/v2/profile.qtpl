@@ -1,4 +1,4 @@
-{% func Profile(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, stats ProfileViewsStats) %}
+{% func Profile(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, showCharity bool, instructionDone bool, stats ProfileViewsStats) %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -190,7 +190,7 @@
         </section>
         {% endif %}
 
-        {%= instruction(currentPageProfile, sessionProfile, exampleProfile) %}
+        {%= instruction(currentPageProfile, sessionProfile, exampleProfile, instructionDone) %}
     </div>
 </main>
 {%= footer() %}

@@ -1,4 +1,4 @@
-{% func instruction(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView) %}
+{% func instruction(currentPageProfile ProfileView, sessionProfile ProfileView, exampleProfile ProfileView, done bool) %}
 <section class="instruction">
     <div class="instruction__header">
         <div class="instruction__step">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="instruction__steps js-instruction">
-        <div class="instruction__step-1 active step">
+        <div class="instruction__step-1 {% if sessionProfile.ID > 0 %}active{% endif %} step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -129,7 +129,7 @@
             </div>
         </div>
 
-        <div class="instruction__step-2 active step">
+        <div class="instruction__step-2 {% if done %}active{% endif %} step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -218,7 +218,7 @@
             </div>
         </div>
 
-        <div class="instruction__step-3 step">
+        <div class="instruction__step-3 {% if done %}active{% endif %} step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -324,7 +324,7 @@
             </div>
         </div>
 
-        <div class="instruction__step-4 step">
+        <div class="instruction__step-4 {% if done %}active{% endif %} step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
@@ -495,7 +495,7 @@
             </div>
         </div>
 
-        <div class="instruction__step-5 step">
+        <div class="instruction__step-5 {% if done %}active{% endif %} step">
             <div class="step__progress">
                 <div class="step__done">
                     <img
