@@ -1,22 +1,23 @@
 import {formatDay} from "./time";
+import {connectInstructionToggle} from "./instruction";
 
-const socialProviderUserId = document.body.getAttribute("data-social-provider-user-id");
+const socialProviderUserId = document.body.getAttribute("data-current-page-profile-social-provider-user-id");
 
 fetch(`/api/v1/github/profiles/${socialProviderUserId}/views/stats.json`)
     .then(function (response) {
         return response.json();
     })
-    .then(render)
+    .then(renderViewsStatistics)
     .catch(console.error);
 
 fetch(`/api/v1/github/profiles/${socialProviderUserId}/referrals/stats.json`)
     .then(function (response) {
         return response.json();
     })
-    .then(console.log)
+    .then(renderReferralRegistrationStatistics)
     .catch(console.error);
 
-function render(stats) {
+function renderViewsStatistics(stats) {
     stats = groupByDay(stats);
 
     const options = {
@@ -27,7 +28,7 @@ function render(stats) {
             })
         }],
         chart: {
-            type: 'area',
+            type: "area",
             height: 340,
             zoom: {
                 enabled: false
@@ -44,29 +45,83 @@ function render(stats) {
                 shadeIntensity: 1,
                 opacityFrom: 0.7,
                 opacityTo: 0.9,
-            }
+            },
         },
         dataLabels: {
             enabled: false
         },
         stroke: {
-            curve: 'smooth'
+            curve: "smooth"
         },
         labels: stats.map((item) => {
             return item.time;
         }),
         xaxis: {
-            type: 'datey',
+            type: "datey",
         },
         yaxis: {
             opposite: true
         },
         legend: {
-            horizontalAlign: 'left'
+            horizontalAlign: "left"
         }
     };
 
-    const chartApex = new ApexCharts(document.querySelector(".chart-js"), options);
+    const chartApex = new ApexCharts(document.querySelector(".js-chart-views-statistic"), options);
+    chartApex.render();
+}
+
+function renderReferralRegistrationStatistics(stats) {
+    const options = {
+        series: [{
+            name: "Users",
+            data: stats.map((item) => {
+                return item.count;
+            })
+        }],
+        chart: {
+            type: "bar",
+            height: 350,
+            zoom: {
+                enabled: false
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        colors: ["#13161B"],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: "10%",
+                endingShape: "rounded"
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"]
+        },
+        xaxis: {
+            categories: stats.map((item) => {
+                return formatDay(item.time);
+            }),
+        },
+        yaxis: {
+            opposite: true
+        },
+        fill: {
+            opacity: 1
+        },
+        legend: {
+            horizontalAlign: "left"
+        }
+    };
+
+    const chartApex = new ApexCharts(document.querySelector(".js-chart-referral-registration-statistics"), options);
     chartApex.render();
 }
 
@@ -88,3 +143,5 @@ function groupByDay(rows) {
 
     return Object.values(result);
 }
+
+connectInstructionToggle();

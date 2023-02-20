@@ -47,7 +47,7 @@ generate-dbs:
 
 generate-template:
 	# go install github.com/valyala/quicktemplate/qtc
-	qtc -dir=./internal/templates/v1 -skipLineComments
+	qtc -dir=./internal/templates/v2 -skipLineComments
 	git add .
 
 # BENCHTIME=100x make bench

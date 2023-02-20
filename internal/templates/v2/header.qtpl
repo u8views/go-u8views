@@ -1,0 +1,83 @@
+{% func header(currentPageProfile ProfileView, sessionProfile ProfileView) %}
+    {% if sessionProfile.ID == 0 %}
+        {%= unauthorizedHeader(currentPageProfile) %}
+    {% else %}
+        {%= authorizedHeader(sessionProfile) %}
+    {% endif %}
+{% endfunc %}
+
+{% func unauthorizedHeader(currentPageProfile ProfileView) %}
+<header class="header">
+    <div class="header__wrapper wrapper-u8">
+        <a href="/" class="header__logo">
+            <img class="header__logo-img" src="/assets/images/logo.svg" alt="logo">
+        </a>
+        <div class="header__stars">
+            <iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+                    frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+        </div>
+        <button class="button__log-in">
+            <a href="/login/github?referrer={%dl currentPageProfile.ID %}" class="button__link">
+                <img
+                        src="/assets/images/github.svg"
+                        width="24"
+                        height="24"
+                        alt="github"
+                        class="button__log-in-img"
+                />
+                <span class="button__text">Log in with GitHub</span>
+            </a>
+        </button>
+    </div>
+</header>
+{% endfunc %}
+
+{% func authorizedHeader(sessionProfile ProfileView) %}
+<header class="header">
+    <div class="header__wrapper auth wrapper-u8">
+        <a href="/" class="header__logo">
+            <img class="header__logo-img" src="/assets/images/logo.svg" alt="logo">
+        </a>
+        <div class="header__stars">
+            <iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
+                    frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+        </div>
+        <div class="header__profile">
+            <button class="header__profile-button">
+                <img src="https://avatars.githubusercontent.com/u/{%s sessionProfile.SocialProviderUserID %}?v=4&s=48"
+                     width="48" height="48" alt="{%s sessionProfile.GetName() %} profile photo">
+            </button>
+            <div class="header__modal modal">
+                <div class="modal__profile">
+                    <img src="https://avatars.githubusercontent.com/u/{%s sessionProfile.SocialProviderUserID %}?v=4&s=48"
+                         class="modal__user-photo" width="48" height="48"
+                         alt="{%s sessionProfile.GetName() %} profile photo">
+                    <div class="modal__profile-info">
+                        <div class="modal__profile-name">{%s sessionProfile.GetName() %}</div>
+                        <a href="https://u8views.com/github/{%s sessionProfile.Username %}" class="modal__link">
+                            <img src="/assets/images/u8-icon.svg" width="24" height="24" alt="link">
+                            <span class="modal__profile-u8views">u8views.com/github/{%s sessionProfile.Username %}</span>
+                        </a>
+                        <a href="https://github.com/{%s sessionProfile.Username %}" class="modal__link">
+                            <img src="/assets/images/github.svg" width="24" height="24" alt="link">
+                            <span class="modal__profile-github">github.com/{%s sessionProfile.Username %}</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal__log-out">
+                    <a href="/logout" class="modal__button">
+                        <img src="/assets/images/log-out.svg" alt="log-out">
+                        <span>Log out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    document.querySelector(".header__profile-button").addEventListener("click", () => {
+        document.querySelector(".header__modal").classList.toggle("active");
+    })
+</script>
+{% endfunc %}

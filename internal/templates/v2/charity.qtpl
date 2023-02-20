@@ -1,0 +1,16 @@
+{% func charity() %}
+<figure class="hero__figure-donate">
+	<img
+		src="/assets/images/come-back-alive-ukraine.png"
+		alt="Make a donation to our charity fund – Come Back Alive"
+	/>
+	<figcaption class="hero__figcaption">
+		«Come Back Alive» is Ukraine's largest charitable organization.
+		The Foundation implements projects that save our defenders'
+		lives and help them liberate the Ukrainian land from invaders.
+	</figcaption>
+</figure>
+<button class="hero__donate-button">
+	<a href="https://savelife.in.ua/en/donate-en/" class="hero__donate-link">Donate</a>
+</button>
+{% endfunc %}

@@ -2,14 +2,28 @@
 <html class="page-root" lang="uk">
 
 <head>
-    <title>Main</title>
-    <meta name="description" content="Statistics views profile github">
+    <title>Profile</title>
+    <meta name="description" content="profileistics views profile github">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" sizes="192x192" href="/assets/images/pages/u8views/favicon/icon192.png">
-    <link rel="shortcut icon" sizes="16x16" href="/assets/images/pages/u8views/favicon/favicon.ico">
-    <link rel="shortcut icon" type="image/png" sizes="32x32" href="/assets/images/pages/u8views/favicon/icon192.png">
+	<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,94 +35,225 @@
 </head>
 
 <body>
-    <header class="header">
-	<div class="header__wrapper wrapper-u8">
-		<a href="/u8views-main.html" class="header__logo">
-			<img class="header__logo-img" src="/assets/images/pages/u8views/logo.svg" alt=""></a>
+
+<header class="header">
+	<div class="header__wrapper auth wrapper-u8">
+		<a href="/design" class="header__logo">
+			<img class="header__logo-img" src="/assets/images/logo.svg" alt=""></a>
 		<div class="header__stars">
 			<iframe src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
 				frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
 		</div>
-		<button class="button__log-in">
-	<a href="#" class="button__link">
-		<img
-			src="/assets/images/pages/u8views/github.svg"
-			width="24"
-			height="24"
-			alt="github"
-			class="button__log-in-img"
-		/>
-		<span class="button__text">Log in with GitHub</span>
-	</a>
-</button>
+		<div class="header__profile">
+			<button class="header__profile-button">
+				<img src="/assets/images/photo-profile.png" alt="photo-profile">
+			</button>
+			<div class="header__modal modal">
+				<div class="modal__profile">
+					<img src="/assets/images/photo-profile.png" class="modal__user-photo" width="48" height="48" alt="photo-profile">
+					<div class="modal__profile-info">
+						<div class="modal__profile-name">Yaroslav Podorvanov</div>
+						<a href="#" class="modal__link">
+							<img src="/assets/images/u8-icon.svg" width="24" height="24" alt="link">
+							<span class="modal__profile-u8views">u8views.com/github/YaroslavPodorvanov</span>
+						</a>
+						<a href="#" class="modal__link">
+							<img src="/assets/images/github.svg" width="24" height="24" alt="link">
+							<span class="modal__profile-github">github.com/YaroslavPodorvanov</span>
+						</a>
+					</div>
 
-
+				</div>
+				<div class="modal__log-out">
+					<button class="modal__button">
+						<img src="/assets/images/log-out.svg" alt="log-out">
+						<span>Log out</span>
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </header>
-    <main class="main">
+
+<script>
+	document.querySelector('.header__profile-button').addEventListener('click', () => {
+		document.querySelector('.header__modal').classList.toggle('active')
+	})
+</script>
+
+<main class="main">
 
 <div class="wrapper-u8">
-	<section class="hero">
-	<div class="hero__main">
-		<h1 class="hero__title">Track your GitHub profile views</h1>
-		<p class="hero__subtitle">
-			Receive, view and analyze your profile views and profile performance
-			statistics
-		</p>
-		<button class="button__log-in hero-button">
-	<a href="#" class="button__link">
-		<img
-			src="/assets/images/pages/u8views/github.svg"
-			width="24"
-			height="24"
-			alt="github"
-			class="button__log-in-img"
-		/>
-		<span class="button__text">Log in with GitHub</span>
-	</a>
-</button>
-
+	<div class="hero__donate-block profile">
+		<figure class="hero__figure-donate">
+			<img
+				src="/assets/images/come-back-alive-ukraine.png"
+				alt="come back alive"
+			/>
+			<figcaption class="hero__figcaption">
+				«Come Back Alive» is Ukraine's largest charitable organization.
+				The Foundation implements projects that save our defenders'
+				lives and help them liberate the Ukrainian land from invaders.
+			</figcaption>
+		</figure>
+		<button class="hero__donate-button">
+			<a href="https://savelife.in.ua/en/donate-en/" class="hero__donate-link">Donate</a>
+		</button>
 	</div>
-</section>
-
-	<section class="example">
-		<div class="example__badges">
-			<h3 class="example__title">That badge looks like this:</h3>
-			<div class="example__badges-group">
+	<section class="profile">
+		<div class="profile__card">
+			<img
+				class="profile__photo"
+				src="/assets/images/profile-picture-big.png"
+				alt="profile"
+			/>
+			<div class="profile__info">
+				<span class="profile__name">Yaroslav Podorvanov</span>
+				<a href="" class="profile__link">
+					<img
+						src="/assets/images/u8-icon.svg"
+						width="16"
+						height="16"
+						alt="link"
+					/>
+					<span class="profile__u8views-link"
+						>u8views.com/github/YaroslavPodorvanov</span
+					>
+				</a>
+				<a href="" class="profile__link">
+					<img
+						src="/assets/images/github.svg"
+						width="16"
+						height="16"
+						alt="link"
+					/>
+					<span class="profile__github-link"
+						>github.com/YaroslavPodorvanov</span
+					>
+				</a>
+			</div>
+			<div class="history__badges">
 				<div class="history__badge">
-					<span class="history__badge-title">Views per day</span>
+					<span class="history__badge-title"> Views per day </span>
 					<span class="history__badge-count">17</span>
 				</div>
 				<div class="history__badge">
-					<span class="history__badge-title">Views per week</span>
-					<span class="history__badge-count">328</span>
+					<span class="history__badge-title"> Views per week </span>
+					<span class="history__badge-count">50</span>
 				</div>
 				<div class="history__badge">
 					<span class="history__badge-title"> Views per month </span>
-					<span class="history__badge-count">986</span>
+					<span class="history__badge-count">800</span>
 				</div>
 				<div class="history__badge">
-					<span class="history__badge-title">Total views</span>
-					<span class="history__badge-count">48656</span>
+					<span class="history__badge-title"> Total views </span>
+					<span class="history__badge-count">11392</span>
 				</div>
 			</div>
 		</div>
-		<div class="example__statistics">
-			<h3 class="example__title center">
-				and your statistics look like this:
-			</h3>
-			<div class="example__chart-group">
-				<img src="/assets/images/pages/u8views/view-statistic.png" alt="" />
-				<img src="/assets/images/pages/u8views/referal-statistic.png" alt="" />
+		<div class="profile__statistics">
+			<div class="profile__header">
+				<h3 class="profile__title">
+					Your GitHub profile view statistics
+				</h3>
+				<div class="profile__view-count">
+					<span class="profile__circle"></span>View count
+				</div>
+				<div class="profile__select">Last month</div>
+			</div>
+			<div class="profile__chart">
+				<div class="profile__chart chart-js"></div>
 			</div>
 		</div>
 	</section>
+	<section class="badge">
+		<h2 class="badge__title">Profile badge</h2>
+		<p class="badge__subtitle">
+			Copy the badge and place it on your GitHub profile
+		</p>
+		<div class="step__view">
+			<div class="step-3">
+				<div class="step-3__item-group">
+					<div class="step-3__item">
+						<div class="step-3__title">Markdown:</div>
+						<div class="step-3__item-content">
+							<p class="step-3__item-text">
+								[![Hits](https://u8views.com/api/v1/github
+								/profiles/123738314/views/day-week-month-total-count.svg)](https://u8views.com/github/Username)
+							</p>
+							<button class="step-3__copy-text">
+								<img
+									src="/assets/images/copy-black.svg"
+									width="24"
+									height="24"
+									alt="copy"
+									class="step-3__copy-img"
+								/>
+								<img
+									src="/assets/images/check-green.svg"
+									width="24"
+									height="24"
+									alt="copy"
+									class="step-3__copy-img step-3__copy-done"
+								/>
+							</button>
+						</div>
+					</div>
+					<div class="step-3__item">
+						<div class="step-3__title">HTML link:</div>
+						<div class="step-3__item-content">
+							<p class="step-3__item-text">
+								&lt;a href="https:// hits.seeyoufarm.com">&lt;
+								img src="https:// hits.seeyoufarm.com/api
+								/count/incr/badge.svg? url=https%3A%2F%2Fgith
+								ub.com%2Fgjbae1212%2F
+								hit-counter"/>&lt;/a>&lt;/p>
+							</p>
+							<button class="step-3__copy-text">
+								<img
+									src="/assets/images/copy-black.svg"
+									width="24"
+									height="24"
+									alt="copy"
+									class="step-3__copy-img"
+								/>
+								<img
+									src="/assets/images/check-green.svg"
+									width="24"
+									height="24"
+									alt="copy"
+									class="step-3__copy-img step-3__copy-done"
+								/>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="referal">
+	<h2 class="referal__title">Referral registration statistics</h2>
+	<div class="referal__statistic">
+		<div class="profile__statistics">
+			<div class="profile__header">
+				<h3 class="profile__title">Referral registration statistics</h3>
+				<div class="profile__view-count">
+					<span class="profile__circle"></span>Referal count
+				</div>
+				<div class="profile__select">Last month</div>
+			</div>
+			<div class="profile__chart">
+				<div class="profile__chart chart-js-rows"></div>
+			</div>
+		</div>
+	</div>
+</section>
 
 	<section class="instruction">
 	<div class="instruction__header">
 		<div class="instruction__step">
 			<img
-				src="/assets/images/pages/u8views/arrow-right.svg"
+				src="/assets/images/arrow-right.svg"
 				width="24"
 				height="24"
 				alt="arrow"
@@ -122,7 +267,7 @@
 			<button class="instruction__show-button show-instruction-button-js">
 				<!-- Show completed steps -->
 				<img
-					src="/assets/images/pages/u8views/arrow-down.svg"
+					src="/assets/images/arrow-down.svg"
 					width="15"
 					height="10"
 					alt="arrow"
@@ -136,7 +281,7 @@
 	<div class="step__progress">
 		<div class="step__done">
 			<img
-				src="/assets/images/pages/u8views/done.svg"
+				src="/assets/images/done.svg"
 				class="step__done-img"
 				alt="done"
 			/>
@@ -149,15 +294,15 @@
 			<div class="wrapper-u8 step-wrapper">
 				<img
 					class="step__browser"
-					src="/assets/images/pages/u8views/browser.png"
+					src="/assets/images/browser.png"
 					alt="browser"
 				/>
 				<header class="header step-block">
 					<div class="header__wrapper wrapper-u8">
-						<a href="/u8views-main.html" class="header__logo">
+						<a href="/design" class="header__logo">
 							<img
 								class="header__logo-img"
-								src="/assets/images/pages/u8views/logo.svg"
+								src="/assets/images/logo.svg"
 								alt=""
 						/></a>
 						<div class="header__stars">
@@ -173,7 +318,7 @@
 						<button class="button__log-in step-block">
 							<a href="#" class="button__log-in-link">
 								<img
-									src="/assets/images/pages/u8views/github.svg"
+									src="/assets/images/github.svg"
 									width="24"
 									height="24"
 									alt="github"
@@ -200,7 +345,7 @@
 								class="button__log-in hero-button step-block"
 							>
 								<img
-									src="/assets/images/pages/u8views/github.svg"
+									src="/assets/images/github.svg"
 									width="12"
 									height="12"
 									alt="github"
@@ -252,7 +397,7 @@
 	<div class="step__progress">
 		<div class="step__done">
 			<img
-				src="/assets/images/pages/u8views/done.svg"
+				src="/assets/images/done.svg"
 				class="step__done-img"
 				alt="done"
 			/>
@@ -299,12 +444,12 @@
 					<div class="step-2__select-block">
 						<img
 							class="step-2__profile-photo"
-							src="/assets/images/pages/u8views/github-user-photo.png"
+							src="/assets/images/github-user-photo.png"
 							alt="photo"
 						/>
 						<select
 							name="select"
-							id="select"
+							id="user-name"
 							class="step-2__select"
 							type="text"
 						>
@@ -345,7 +490,7 @@
 			</div>
 			<div class="step-2__readme">
 				<img
-					src="/assets/images/pages/u8views/icon-cat.png"
+					src="/assets/images/icon-cat.png"
 					class="step-2__readme-img"
 					alt="photo"
 				/>
@@ -378,7 +523,7 @@
 	<div class="step__progress">
 		<div class="step__done">
 			<img
-				src="/assets/images/pages/u8views/done.svg"
+				src="/assets/images/done.svg"
 				class="step__done-img"
 				alt="done"
 			/>
@@ -391,33 +536,54 @@
 			<div class="step-3__item-group">
 				<div class="step-3__item">
 					<div class="step-3__title">Markdown:</div>
-					<img
-						src="/assets/images/pages/u8views/markdown-blur.jpg"
-						class="step-3__img"
-						alt="markdown link"
-					/>
+					<div class="step-3__item-content">
+						<p class="step-3__item-text">
+							[![Hits](https://u8views.com/api/v1/github
+							/profiles/123738314/views/day-week-month-total-count.svg)](https://u8views.com/github/Username)
+						</p>
+						<button class="step-3__copy-text">
+							<img
+								src="/assets/images/copy-black.svg"
+								width="24"
+								height="24"
+								alt="copy"
+								class="step-3__copy-img"
+							/>
+							<img
+								src="/assets/images/check-green.svg"
+								width="24"
+								height="24"
+								alt="copy"
+								class="step-3__copy-img step-3__copy-done"
+							/>
+						</button>
+					</div>
 				</div>
-				<div class="step-3__item step-3__item-log">
+				<div class="step-3__item">
 					<div class="step-3__title">HTML link:</div>
-					<img
-						src="/assets/images/pages/u8views/html-link-blur.jpg"
-						class="step-3__img"
-						alt="markdown link"
-					/>
-					<div class="step-3__button">
-						<button class="button__log-in black hero-button">
-	<a href="#" class="button__link">
-		<img
-			src="/assets/images/pages/u8views/github-white.svg"
-			width="24"
-			height="24"
-			alt="github"
-			class="button__log-in-img"
-		/>
-		<span class="button__text">Log in with GitHub</span>
-	</a>
-</button>
-
+					<div class="step-3__item-content">
+						<p class="step-3__item-text">
+							&lt;a href="https:// hits.seeyoufarm.com">&lt; img
+							src="https:// hits.seeyoufarm.com/api
+							/count/incr/badge.svg? url=https%3A%2F%2Fgith
+							ub.com%2Fgjbae1212%2F hit-counter"/>&lt;/a>&lt;/p>
+						</p>
+						<button class="step-3__copy-text">
+							<img
+								src="/assets/images/copy-black.svg"
+								width="24"
+								height="24"
+								alt="copy"
+								class="step-3__copy-img"
+							/>
+							<img
+								src="/assets/images/check-green.svg"
+								width="24"
+								height="24"
+								alt="copy"
+								class="step-3__copy-img step-3__copy-done"
+							/>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -429,7 +595,7 @@
 	<div class="step__progress">
 		<div class="step__done">
 			<img
-				src="/assets/images/pages/u8views/done.svg"
+				src="/assets/images/done.svg"
 				class="step__done-img"
 				alt="done"
 			/>
@@ -439,7 +605,7 @@
 	<div class="step__view-group">
 		<div class="step__view">
 			<h2 class="step__title step-link">
-				Copy a badge code from your profile page
+				Add a badge to GitHub profile
 			</h2>
 			<a href="#" class="step__subtitle step__readme-file-link"
 				>Go to edit the README.md file</a
@@ -452,7 +618,7 @@
 								<img
 									width="10"
 									height="10"
-									src="/assets/images/pages/u8views/nav-book.svg"
+									src="/assets/images/nav-book.svg"
 									alt="book"
 								/>
 								Overview
@@ -463,7 +629,7 @@
 								<img
 									width="10"
 									height="10"
-									src="/assets/images/pages/u8views/nav-repo.svg"
+									src="/assets/images/nav-repo.svg"
 									alt="repo"
 								/>
 								Repositories
@@ -474,7 +640,7 @@
 								<img
 									width="10"
 									height="10"
-									src="/assets/images/pages/u8views/nav-project.svg"
+									src="/assets/images/nav-project.svg"
 									alt="project"
 								/>
 								Projects
@@ -485,7 +651,7 @@
 								<img
 									width="10"
 									height="10"
-									src="/assets/images/pages/u8views/nav-packages.svg"
+									src="/assets/images/nav-packages.svg"
 									alt="packages"
 								/>
 								Packages
@@ -496,7 +662,7 @@
 								<img
 									width="10"
 									height="10"
-									src="/assets/images/pages/u8views/nav-star.svg"
+									src="/assets/images/nav-star.svg"
 									alt="star"
 								/>
 								Stars
@@ -508,7 +674,7 @@
 					<div class="step-4__left-section">
 						<div class="step-4__profile-photo">
 							<img
-								src="/assets/images/pages/u8views/default-user-photo.png"
+								src="/assets/images/default-user-photo.png"
 								alt="profile photo"
 								class="step-4__photo"
 							/>
@@ -531,7 +697,7 @@
 							<button class="step-4__edit">
 								<a href="#" class="step-4__edit-link">
 									<img
-										src="/assets/images/pages/u8views/edit.svg"
+										src="/assets/images/edit.svg"
 										width="12"
 										height="12"
 										alt="edit"
@@ -572,7 +738,7 @@
 					<div class="step-4__file-buttons">
 						<button class="step-4__file-edit">
 							<img
-								src="/assets/images/pages/u8views/tag-code.svg"
+								src="/assets/images/tag-code.svg"
 								alt="code"
 								width="10"
 								height="10"
@@ -580,7 +746,7 @@
 						</button>
 						<button class="step-4__file-preview">
 							<img
-								src="/assets/images/pages/u8views/eye.svg"
+								src="/assets/images/eye.svg"
 								alt="code"
 								width="10"
 								height="10"
@@ -620,7 +786,7 @@
 	<div class="step__progress">
 		<div class="step__done">
 			<img
-				src="/assets/images/pages/u8views/done.svg"
+				src="/assets/images/done.svg"
 				class="step__done-img"
 				alt="done"
 			/>
@@ -635,616 +801,14 @@
 			You can also see referral registration statistics from your profile
 		</div>
 		<div class="step__main step-5">
-			<img src="/assets/images/pages/u8views/graph.png" alt="graph" />
-			<img src="/assets/images/pages/u8views/graph-rows.png" alt="graph" />
+			<img src="/assets/images/graph.png" alt="graph" />
+			<img src="/assets/images/graph-rows.png" alt="graph" />
 		</div>
 	</div>
 </div>
 
 	</div>
 </section>
-
-
-    
-	<section class="history">
-		<h2 class="history__title">Registration history</h2>
-		<p class="history__subtitle">
-			Recent registered users who posted a badge on their GitHub profile
-			and have one or more views
-		</p>
-		<div class="history__main">
-			<div class="history__main-values">
-				<span>User:</span>
-				<span>Badge:</span>
-				<span>Time, data:</span>
-			</div>
-			<ul class="history__list">
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-				<li class="history__card">
-					<div class="history__user">
-						<img
-							src="/assets/images/pages/u8views/profile-picture.svg"
-							alt=""
-							class="history__user-picture"
-						/>
-						<div class="history__user-info">
-							<div class="history__user-name">
-								Yaroslav Podorvanov
-							</div>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/u8-icon.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-							<a href="#" class="history__link">
-								<img
-									src="/assets/images/pages/u8views/github.svg"
-									width="16"
-									height="16"
-									alt="link"
-								/>
-								<span class="history__user-github"
-									>github.com/YaroslavPodorvanov</span
-								>
-							</a>
-						</div>
-					</div>
-					<div class="history__badges">
-						<div class="history__badge">
-							<span class="history__badge-title"
-								>Views per day</span
-							>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per week</span>
-							<span class="history__badge-count">17</span>
-						</div>
-						<div class="history__badge">
-							<span class="history__badge-title">per month</span>
-							<span class="history__badge-count">17</span>
-						</div>
-					</div>
-					<div class="history__user-time">20:02, January 17</div>
-				</li>
-			</ul>
-		</div>
-	</section>
 </div>
 
 </main>
@@ -1252,52 +816,51 @@
 	<div class="footer__wrapper wrapper-u8">
 		<div class="footer__group-u8">
 			<div class="footer__info">
-				<a href="/u8views-main.html" class="footer__title">
-					<img src="/assets/images/pages/u8views/logo.svg" alt="logo">
+				<a href="/design" class="footer__title">
+					<img src="/assets/images/logo.svg" alt="logo">
 				</a>
 				<p class="footer__subtitle">Views counter and views statistics for your GitHub profile</p>
 				<div class="footer__map">
-					<img class="footer__map-Ukraine" src="/assets/images/pages/u8views/map-of-ukraine.png" alt="map Ukraine">
+					<img class="footer__map-Ukraine" src="/assets/images/map-of-ukraine.png" alt="Map of Ukraine">
 				</div>
 				
 			</div>
 
 			<div class="footer__middle-section">
-				<a href="#" class="footer__statistics-link">Registration statistics on u8views</a>
-				<a href="#" class="footer__github-link">
+				<a href="/design/stats" class="footer__statistics-link">Registration statistics on u8views</a>
+				<a href="https://github.com/u8views/go-u8views" class="footer__github-link">
 					View the project on GitHub
-					<img src="/assets/images/pages/u8views/arrow.svg" alt="arrow">
+					<img src="/assets/images/arrow.svg" alt="arrow">
 				</a>
 				<iframe class="footer__stars" src="https://ghbtns.com/github-btn.html?user=twbs&repo=bootstrap&type=star&count=true&size=large"
 				frameborder="0" scrolling="0" width="170" height="34" title="GitHub"></iframe>
 			</div>
 			<div class="footer__support">
-				<a href="#" class="footer__link">
+				<a href="https://savelife.in.ua/en/" class="footer__link">
 					<figure class="footer__figure">
-						<img class="" width="60" height="24" src="/assets/images/pages/u8views/come-back-alive-ukraine.png" alt="support">
+						<img width="60" height="24" src="/assets/images/come-back-alive-ukraine.png" alt="support">
 						<figcaption class="footer__caption">Support</figcaption>
-						<img src="/assets/images/pages/u8views/arrow.svg" alt="arrow">
+						<img src="/assets/images/arrow.svg" alt="arrow">
 					</figure>
 				</a>
-				<a href="#" class="footer__link">
+				<a href="https://bank.gov.ua/en/about/support-the-armed-forces/" class="footer__link">
 					<figure class="footer__figure">
-						<img class="footer__img" width="60" height="24" src="/assets/images/pages/u8views/national-bank-of-ukraine.png" alt="support">
+						<img width="60" height="24" src="/assets/images/national-bank-of-ukraine.png" alt="support">
 						<figcaption class="footer__caption">Support</figcaption>
-						<img src="/assets/images/pages/u8views/arrow.svg" alt="arrow">
-						
+						<img src="/assets/images/arrow.svg" alt="arrow">
 					</figure>
 				</a>
-				<a href="#" class="footer__link">
+				<a href="https://war.ukraine.ua/" class="footer__link">
 					<figure class="footer__figure">
 						<figcaption class="footer__caption">war.ukraine.ua</figcaption>
-						<img src="/assets/images/pages/u8views/arrow.svg" alt="arrow">
+						<img src="/assets/images/arrow.svg" alt="arrow">
 					</figure>
 				</a>
 			</div>
 		</div>
 		<div class="footer__copyrights">
-			<span>© 2022 Yaroslav Podorvanov</span>
-			<img class="footer__flag-UA" src="/assets/images/pages/u8views/flag-of-ukraine.svg" alt="Flag Ukraine">
+			<span>© 2023 Yaroslav Podorvanov</span>
+			<img class="footer__flag-UA" src="/assets/images/flag-of-ukraine.svg" alt="Flag of Ukraine">
 		</div>
 	</div>
 	
