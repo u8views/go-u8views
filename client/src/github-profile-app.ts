@@ -1,5 +1,5 @@
 import {formatDay} from "./time";
-import {connectInstructionToggle} from "./instruction";
+import {initInstruction} from "./instruction";
 
 const socialProviderUserId = document.body.getAttribute("data-current-page-profile-social-provider-user-id");
 
@@ -144,4 +144,4 @@ function groupByDay(rows) {
     return Object.values(result);
 }
 
-connectInstructionToggle();
+initInstruction();

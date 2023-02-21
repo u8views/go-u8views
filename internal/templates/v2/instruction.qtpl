@@ -129,7 +129,7 @@
             </div>
         </div>
 
-        <div class="instruction__step-2 {% if done %}active{% endif %} step">
+        <div class="instruction__step-2 {% if done %}active{% endif %} step js-instruction-repository-exists">
             <div class="step__progress">
                 <div class="step__done">
                     <img

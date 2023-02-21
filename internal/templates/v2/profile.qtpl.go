@@ -45,6 +45,9 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
         data-current-page-profile-social-provider-user-id="`)
 	qw422016.E().S(currentPageProfile.SocialProviderUserID)
 	qw422016.N().S(`"
+        data-session-profile-username="`)
+	qw422016.E().S(sessionProfile.Username)
+	qw422016.N().S(`"
 >
 `)
 	streamheader(qw422016, currentPageProfile, sessionProfile)

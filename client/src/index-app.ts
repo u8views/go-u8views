@@ -1,3 +1,3 @@
-import {connectInstructionToggle} from "./instruction";
+import {initInstruction} from "./instruction";
 
-connectInstructionToggle();
+initInstruction();

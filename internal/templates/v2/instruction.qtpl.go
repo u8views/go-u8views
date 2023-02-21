@@ -158,7 +158,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
 	if done {
 		qw422016.N().S(`active`)
 	}
-	qw422016.N().S(` step">
+	qw422016.N().S(` step js-instruction-repository-exists">
             <div class="step__progress">
                 <div class="step__done">
                     <img
