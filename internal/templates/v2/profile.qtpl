@@ -20,6 +20,7 @@
 </head>
 <body
         data-current-page-profile-social-provider-user-id="{%s currentPageProfile.SocialProviderUserID %}"
+        data-session-profile-username="{%s sessionProfile.Username %}"
 >
 {%= header(currentPageProfile, sessionProfile) %}
 <main class="main">
