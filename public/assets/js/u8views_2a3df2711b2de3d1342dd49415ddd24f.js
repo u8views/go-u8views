@@ -1,1 +1,179 @@
-!function r(o,i,a){function s(t,e){if(!i[t]){if(!o[t]){var n="function"==typeof require&&require;if(!e&&n)return n(t,!0);if(c)return c(t,!0);throw(e=new Error("Cannot find module '"+t+"'")).code="MODULE_NOT_FOUND",e}n=i[t]={exports:{}},o[t][0].call(n.exports,function(e){return s(o[t][1][e]||e)},n,n.exports,r,o,i,a)}return i[t].exports}for(var c="function"==typeof require&&require,e=0;e<a.length;e++)s(a[e]);return s}({1:[function(e,t,n){"use strict";var e=e("../functions/querySelector"),r=(0,e.qSA)(".sorting-option-js"),o=(0,e.qS)(".sorting-select-js"),i=(0,e.qS)(".sorting-list-js"),a=(0,e.qS)(".sorting-current-js"),o=(o.addEventListener("click",function(){i.classList.toggle("is-visible")}),r.forEach(function(e){e.addEventListener("click",function(e){a.value=e.target.value,i.classList.remove("is-visible")})}),(0,e.qS)(".header__profile-button")),s=(0,e.qS)(".header__modal"),c=(o&&o.addEventListener("click",function(){s.classList.toggle("active")}),(0,e.qS)(".button-copy-code-js")),u=(0,e.qS)(".copy-notification-js"),r=(c&&c.addEventListener("click",function(){u.style.animation="anim 3s linear",c.disabled=!0,setTimeout(function(){u.style.animation="none",c.disabled=!1},3e3)}),new Date),o=r.getMonth()+1,l=new Date(r.getFullYear(),r.getMonth(),0).getDate();var d=o<10?".0"+o:o;r=function(){for(var e=[],t=1;t<l;t++)t%2==0&&e.push({x:Math.floor(100*Math.random()),y:10<=t||0==t?t+d:"0"+t+d});return e}(),o={series:[{name:"Views",data:r.map(function(e){return e.x})}],chart:{type:"area",height:340,zoom:{enabled:!1},toolbar:{show:!1}},colors:["black"],fill:{type:"gradient",colors:["#A0ACFF"],gradient:{shadeIntensity:1,opacityFrom:.7,opacityTo:.9}},dataLabels:{enabled:!1},stroke:{curve:"smooth"},labels:r.map(function(e){return e.y}),xaxis:{type:"datey"},yaxis:{opposite:!0},legend:{horizontalAlign:"left"}};new ApexCharts((0,e.qS)(".chart-js"),o).render()},{"../functions/querySelector":2}],2:[function(e,t,n){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.qSA=n.qS=void 0;var r=document.querySelector.bind(document);n.qS=r;n.qSA=function(e){return Array.from(document.querySelectorAll("".concat(e)))}},{}]},{},[1]);
+!(function o(r, a, i) {
+    function s(t, e) {
+        if (!a[t]) {
+            if (!r[t]) {
+                var n = "function" == typeof require && require;
+                if (!e && n) return n(t, !0);
+                if (l) return l(t, !0);
+                throw (
+                    (((e = new Error("Cannot find module '" + t + "'")).code =
+                        "MODULE_NOT_FOUND"),
+                        e)
+                );
+            }
+            (n = a[t] = { exports: {} }),
+                r[t][0].call(
+                    n.exports,
+                    function (e) {
+                        return s(r[t][1][e] || e);
+                    },
+                    n,
+                    n.exports,
+                    o,
+                    r,
+                    a,
+                    i
+                );
+        }
+        return a[t].exports;
+    }
+    for (
+        var l = "function" == typeof require && require, e = 0;
+        e < i.length;
+        e++
+    )
+        s(i[e]);
+    return s;
+})(
+    {
+        1: [
+            function (e, t, n) {
+                "use strict";
+                var e = e("../functions/querySelector"),
+                    o = (0, e.qS)(".show-instruction-button-js"),
+                    r = (0, e.qS)(".instruction-block-js"),
+                    a = (0, e.qS)(".instruction__show-img"),
+                    o =
+                        (o &&
+                        o.addEventListener("click", function () {
+                            r.classList.toggle("hide"), a.classList.toggle("active");
+                        }),
+                            (0, e.qSA)(".step-3__copy-text"));
+                o &&
+                o.forEach(function (o) {
+                    o.addEventListener("click", function (e) {
+                        var t = e.target.querySelector(".step-3__copy-img"),
+                            n = e.target.querySelector(".step-3__copy-done"),
+                            e =
+                                ((t.style.display = "none"),
+                                    (n.style.display = "block"),
+                                    (o.style.animationName = "github-button"),
+                                    o);
+                        (e = o.parentElement
+                            .querySelector(".step-3__item-text")
+                            .textContent.trim()),
+                            navigator.clipboard.writeText(e),
+                            setTimeout(function () {
+                                (t.style.display = "block"),
+                                    (n.style.display = "none"),
+                                    (o.style.animationName = "none");
+                            }, 2e3);
+                    });
+                });
+                var o = new Date(),
+                    i = o.getMonth() + 1,
+                    s = new Date(o.getFullYear(), o.getMonth(), 0).getDate();
+                var l = i < 10 ? ".0" + i : i;
+                (o = (function () {
+                    for (var e = [], t = 1; t < s; t++)
+                        t % 2 == 0 &&
+                        e.push({
+                            x: Math.floor(100 * Math.random()),
+                            y: 10 <= t || 0 == t ? t + l : "0" + t + l,
+                        });
+                    return e;
+                })()),
+                    (i = {
+                        series: [
+                            {
+                                name: "Views",
+                                data: o.map(function (e) {
+                                    return e.x;
+                                }),
+                            },
+                        ],
+                        chart: {
+                            type: "area",
+                            height: 340,
+                            zoom: { enabled: !1 },
+                            toolbar: { show: !1 },
+                        },
+                        colors: ["#6D96FF"],
+                        fill: {
+                            type: "gradient",
+                            colors: ["#A0ACFF"],
+                            gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.9 },
+                        },
+                        dataLabels: { enabled: !1 },
+                        stroke: { curve: "smooth" },
+                        labels: o.map(function (e) {
+                            return e.y;
+                        }),
+                        xaxis: { type: "datey" },
+                        yaxis: { opposite: !0 },
+                        legend: { horizontalAlign: "left" },
+                    }),
+                    (o = (0, e.qS)(".chart-js")),
+                o && new ApexCharts(o, i).render(),
+                    (o = (0, e.qS)(".chart-js-rows"));
+                o &&
+                new ApexCharts(o, {
+                    series: [
+                        {
+                            name: "Registaation",
+                            data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
+                        },
+                    ],
+                    chart: {
+                        type: "bar",
+                        height: 350,
+                        zoom: { enabled: !1 },
+                        toolbar: { show: !1 },
+                    },
+                    colors: ["#13161B"],
+                    plotOptions: {
+                        bar: {
+                            horizontal: !1,
+                            columnWidth: "10%",
+                            endingShape: "rounded",
+                        },
+                    },
+                    dataLabels: { enabled: !1 },
+                    stroke: { show: !0, width: 2, colors: ["transparent"] },
+                    xaxis: {
+                        categories: [
+                            "Jan 03",
+                            "Jan 06",
+                            "Jan 09",
+                            "Jan 12",
+                            "Jan 15",
+                            "Jan 18",
+                            "Jan 24",
+                            "Jan 27",
+                            "Jan 30",
+                        ],
+                    },
+                    yaxis: { opposite: !0 },
+                    fill: { opacity: 1 },
+                    legend: { horizontalAlign: "left" },
+                }).render();
+            },
+            { "../functions/querySelector": 2 },
+        ],
+        2: [
+            function (e, t, n) {
+                "use strict";
+                Object.defineProperty(n, "__esModule", { value: !0 }),
+                    (n.qSA = n.qS = void 0);
+                var o = document.querySelector.bind(document);
+                n.qS = o;
+                n.qSA = function (e) {
+                    return Array.from(document.querySelectorAll("".concat(e)));
+                };
+            },
+            {},
+        ],
+    },
+    {},
+    [1]
+);
