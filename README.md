@@ -1,7 +1,8 @@
 # [u8views.com](https://u8views.com)
-### Profile views counter
+[![Yaroslav Podorvanov profile views](https://u8views.com/api/v1/github/profiles/63663261/views/day-week-month-total-count.svg)](https://u8views.com/github/YaroslavPodorvanov)
 
-[![Hits](https://u8views.com/api/v1/github/profiles/63663261/views/day-week-month-total-count.svg)](https://u8views.com/github/YaroslavPodorvanov)
+### Profile views counter
+[![Yaroslav Podorvanov profile views](https://github.com/u8views/go-u8views/blob/main/public/assets/images/yaroslav-podorvanov-developer.jpg?raw=true)](https://u8views.com/github/YaroslavPodorvanov)
 
 ### Development
 
