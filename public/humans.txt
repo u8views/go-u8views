@@ -14,6 +14,11 @@
     Profile: https://github.com/AnastasiiaSihetii
     From: Ukraine
 
+    Name: Dmitry Shylov
+    Role: Back-end Developer
+    Profile: https://github.com/dmitry-shylov
+    From: Ukraine
+
 /* SITE */
     Tools:
         Back-end:

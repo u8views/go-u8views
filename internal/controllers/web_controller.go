@@ -85,9 +85,14 @@ func (c *WebController) Index(ctx *gin.Context) {
 		}
 	}
 
+	exampleProfile := sessionProfile
+	if exampleProfile.ID == 0 {
+		exampleProfile = c.exampleProfile()
+	}
+
 	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Index(
 		sessionProfile,
-		c.exampleProfile(),
+		exampleProfile,
 		charity,
 		charity,
 		profiles,
@@ -129,7 +134,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 	exampleProfile := sessionProfile
 	if exampleProfile.ID == 0 {
-		exampleProfile = c.exampleProfile()
+		exampleProfile = currentPageProfile
 	}
 
 	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(tmv2.Profile(
