@@ -322,7 +322,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                             <div class="step-3__item-content">
                                 <p class="step-3__item-text">
                                     [![`)
-		qw422016.E().S(exampleProfile.Name())
+		qw422016.E().S(exampleProfile.GetName())
 		qw422016.N().S(` profile views](https://u8views.com/api/v1/github/profiles/`)
 		qw422016.E().S(exampleProfile.SocialProviderUserID)
 		qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)

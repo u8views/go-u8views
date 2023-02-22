@@ -101,7 +101,7 @@
                             <div class="step-3__title">Markdown:</div>
                             <div class="step-3__item-content">
                                 <p class="step-3__item-text">
-                                    [![{%s sessionProfile.Name() %} profile views](https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s sessionProfile.Username %})
+                                    [![{%s sessionProfile.GetName() %} profile views](https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s sessionProfile.Username %})
                                 </p>
                                 {% comment %}
                                 <button class="step-3__copy-text">
