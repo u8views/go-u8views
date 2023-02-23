@@ -101,7 +101,7 @@
                             <div class="step-3__title">Markdown:</div>
                             <div class="step-3__item-content">
                                 <p class="step-3__item-text js-code-for-copy">
-                                    [![Hits](https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s sessionProfile.Username %})
+                                    [![{%s sessionProfile.GetName() %} profile views](https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s sessionProfile.Username %})
                                 </p>
                                 <button class="step-3__copy-text js-copy-code-button">
                                     <img
@@ -124,7 +124,8 @@
                         <div class="step-3__item">
                             <div class="step-3__title">HTML:</div>
                             <div class="step-3__item-content">
-                                <p class="step-3__item-text js-code-for-copy">&lt;a href=&quot;https://u8views.com/github/{%s sessionProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+                                <p class="step-3__item-text js-code-for-copy">
+                                    &lt;a href=&quot;https://u8views.com/github/{%s sessionProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s sessionProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
                                 <button class="step-3__copy-text js-copy-code-button">
                                     <img
@@ -190,7 +191,7 @@
     </div>
 </main>
 {%= footer() %}
-<script src="/assets/js/github-profile-app.js"></script>
+<script src="/assets/js/github-profile-app.js?{%d appVersion %}"></script>
 </body>
 </html>
 {% endfunc %}

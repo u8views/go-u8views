@@ -33,6 +33,7 @@ func streamfavicon(qw422016 *qt422016.Writer) {
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    <meta property="og:image" content="/assets/images/anastasiia-sihetii-designer-1200x630.png">
 `)
 }
 
