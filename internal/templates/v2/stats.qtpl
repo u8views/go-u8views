@@ -60,7 +60,7 @@
     </div>
 </main>
 {%= footer() %}
-<script src="/assets/js/stats-app.js"></script>
+<script src="/assets/js/stats-app.js?{%d appVersion %}"></script>
 </body>
 </html>
 {% endfunc %}

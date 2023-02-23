@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/u8views/go-u8views/internal/services"
-	templates "github.com/u8views/go-u8views/internal/templates/v1"
+	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,5 +37,5 @@ func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
 	for i, user := range users {
 		usernames[i] = user.Username
 	}
-	ctx.Data(http.StatusOK, "application/xml", []byte(templates.SitemapGithubProfiles(usernames)))
+	ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfiles(usernames)))
 }

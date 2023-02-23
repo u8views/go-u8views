@@ -131,8 +131,8 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleP
                     and your statistics look like this:
                 </h3>
                 <div class="example__chart-group">
-                    <img src="/assets/images/view-statistic.png" alt="Views statistics example"/>
-                    <img src="/assets/images/referral-statistic.png" alt="Referral statistics example"/>
+                    <img src="/assets/images/views-statistics.png" alt="Views statistics example"/>
+                    <img src="/assets/images/referral-statistics.png" alt="Referral statistics example"/>
                 </div>
             </div>
         </section>
@@ -236,7 +236,9 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleP
 `)
 	streamfooter(qw422016)
 	qw422016.N().S(`
-<script src="/assets/js/index-app.js"></script>
+<script src="/assets/js/index-app.js?`)
+	qw422016.N().D(appVersion)
+	qw422016.N().S(`"></script>
 </body>
 </html>
 `)

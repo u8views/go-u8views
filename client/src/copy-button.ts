@@ -1,33 +1,29 @@
-export function initCopyCodeButtons(){
+export function initCopyCodeButtons() {
     const $copyCodeButtons = document.querySelectorAll<HTMLElement>(".js-copy-code-button");
 
-    if ($copyCodeButtons) {
-        $copyCodeButtons.forEach((button) => {
-            button.addEventListener("click", (e) => {
+    $copyCodeButtons.forEach(($button) => {
+        $button.addEventListener("click", function (event) {
+            const $copyCheck = (event.target as Element).querySelector<HTMLElement>(".js-copy-code-check");
+            const $copyDone = (event.target as Element).querySelector<HTMLElement>(".js-copy-code-done");
 
-                const $copyCheck = (e.target as Element).querySelector<HTMLElement>('.js-copy-code-check')
-                const $copyDone = (e.target as Element).querySelector<HTMLElement>('.js-copy-code-done')
+            $copyCheck.style.display = "none";
+            $copyDone.style.display = "block";
+            $button.style.animationName = "github-button";
 
-                $copyCheck.style.display = 'none'
-                $copyDone.style.display = 'block'
-                button.style.animationName = "github-button"
+            codeToClipboard($button);
 
-                copyToClipboard(button)
+            setTimeout(() => {
+                $copyCheck.style.display = "block";
+                $copyDone.style.display = "none";
+                $button.style.animationName = "none";
 
-                setTimeout(() => {
-                    $copyCheck.style.display = 'block'
-                    $copyDone.style.display = 'none'
-                    button.style.animationName = "none"
-
-                }, 2000);
-            });
+            }, 2000);
         });
-    }
+    });
 }
 
-function copyToClipboard(button) {
-    const $codeForCopy = (button.parentElement.querySelector('.js-code-for-copy') as HTMLParagraphElement)
-        .textContent.trim();
+function codeToClipboard($button) {
+    const code = $button.parentElement.querySelector(".js-code-for-copy").innerText.trim();
 
-    navigator.clipboard.writeText($codeForCopy).catch(console.error);
+    navigator.clipboard.writeText(code).catch(console.error);
 }

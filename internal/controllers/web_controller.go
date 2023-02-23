@@ -10,7 +10,6 @@ import (
 
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
-	tmv1 "github.com/u8views/go-u8views/internal/templates/v1"
 	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
@@ -75,7 +74,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 				Username:             user.Username,
 				Name:                 user.Name,
 			},
-			ProfileViewsStats: tmv1.ProfileViewsStats{
+			ProfileViewsStats: tmv2.ProfileViewsStats{
 				DayCount:   stats.DayCount,
 				WeekCount:  stats.WeekCount,
 				MonthCount: stats.MonthCount,
