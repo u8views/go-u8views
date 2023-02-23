@@ -320,29 +320,56 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
                         <div class="step-3__item">
                             <div class="step-3__title">Markdown:</div>
                             <div class="step-3__item-content">
-                                <p class="step-3__item-text">
+                                <p class="step-3__item-text js-code-for-copy">
                                     [![Hits](https://u8views.com/api/v1/github/profiles/`)
 		qw422016.E().S(exampleProfile.SocialProviderUserID)
 		qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)
 		qw422016.E().S(exampleProfile.Username)
 		qw422016.N().S(`)
                                 </p>
-                                `)
-		qw422016.N().S(`
+                                <button class="step-3__copy-text js-copy-code-button">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img js-copy-code-check"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done js-copy-code-done"
+                                    />
+                                </button>
                             </div>
                         </div>
                         <div class="step-3__item">
                             <div class="step-3__title">HTML:</div>
                             <div class="step-3__item-content">
-                                <p class="step-3__item-text">
-                                    &lt;a href=&quot;https://u8views.com/github/`)
+                                <p class="step-3__item-text js-code-for-copy">&lt;a href=&quot;https://u8views.com/github/`)
 		qw422016.E().S(exampleProfile.Username)
 		qw422016.N().S(`&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/`)
 		qw422016.E().S(exampleProfile.SocialProviderUserID)
 		qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
-                                `)
-		qw422016.N().S(`
+                                <button class="step-3__copy-text js-copy-code-button">
+                                    <img
+                                            src="/assets/images/copy-black.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img js-copy-code-check"
+                                    />
+                                    <img
+                                            src="/assets/images/check-green.svg"
+                                            width="24"
+                                            height="24"
+                                            alt="copy"
+                                            class="step-3__copy-img step-3__copy-done js-copy-code-done"
+                                    />
+                                </button>
                             </div>
                         </div>
                         `)
