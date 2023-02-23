@@ -269,53 +269,48 @@
                         <div class="step-3__item">
                             <div class="step-3__title">Markdown:</div>
                             <div class="step-3__item-content">
-                                <p class="step-3__item-text">
+                                <p class="step-3__item-text js-code-for-copy">
                                     [![{%s exampleProfile.GetName() %} profile views](https://u8views.com/api/v1/github/profiles/{%s exampleProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg)](https://u8views.com/github/{%s exampleProfile.Username %})
                                 </p>
-                                {% comment %}
-                                <button class="step-3__copy-text">
+                                <button class="step-3__copy-text js-copy-code-button">
                                     <img
                                             src="/assets/images/copy-black.svg"
                                             width="24"
                                             height="24"
                                             alt="copy"
-                                            class="step-3__copy-img"
+                                            class="step-3__copy-img js-copy-code-check"
                                     />
                                     <img
                                             src="/assets/images/check-green.svg"
                                             width="24"
                                             height="24"
                                             alt="copy"
-                                            class="step-3__copy-img step-3__copy-done"
+                                            class="step-3__copy-img step-3__copy-done js-copy-code-done"
                                     />
                                 </button>
-                                {% endcomment %}
                             </div>
                         </div>
                         <div class="step-3__item">
                             <div class="step-3__title">HTML:</div>
                             <div class="step-3__item-content">
-                                <p class="step-3__item-text">
-                                    &lt;a href=&quot;https://u8views.com/github/{%s exampleProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s exampleProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+                                <p class="step-3__item-text js-code-for-copy">&lt;a href=&quot;https://u8views.com/github/{%s exampleProfile.Username %}&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/{%s exampleProfile.SocialProviderUserID %}/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
-                                {% comment %}
-                                <button class="step-3__copy-text">
+                                <button class="step-3__copy-text js-copy-code-button">
                                     <img
                                             src="/assets/images/copy-black.svg"
                                             width="24"
                                             height="24"
                                             alt="copy"
-                                            class="step-3__copy-img"
+                                            class="step-3__copy-img js-copy-code-check"
                                     />
                                     <img
                                             src="/assets/images/check-green.svg"
                                             width="24"
                                             height="24"
                                             alt="copy"
-                                            class="step-3__copy-img step-3__copy-done"
+                                            class="step-3__copy-img step-3__copy-done js-copy-code-done"
                                     />
                                 </button>
-                                {% endcomment %}
                             </div>
                         </div>
                         {% endif %}
