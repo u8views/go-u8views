@@ -10,7 +10,6 @@ import (
 	"github.com/u8views/go-u8views/internal/oauth2/github"
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
-	templates "github.com/u8views/go-u8views/internal/templates/v1"
 
 	"github.com/gin-gonic/gin"
 )
@@ -61,9 +60,7 @@ func (s *OAuth2Controller) CallbackGitHubLogin(ctx *gin.Context) {
 func (s *OAuth2Controller) Logout(ctx *gin.Context) {
 	delCookieUserID(ctx)
 
-	// Sending browser cookies during a 302 redirect
-	// https://stackoverflow.com/questions/4694089/sending-browser-cookies-during-a-302-redirect
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.RawRedirect("/")))
+	ctx.Redirect(http.StatusTemporaryRedirect, "/")
 }
 
 func (s *OAuth2Controller) callbackLogin(ctx *gin.Context, secret oauth2.Secret, userGetter func(secret oauth2.Secret, code string) (oauth2.SocialProviderUser, error)) {
@@ -100,9 +97,7 @@ func (s *OAuth2Controller) callbackLogin(ctx *gin.Context, secret oauth2.Secret,
 
 	setCookieUserID(ctx, userID)
 
-	// Sending browser cookies during a 302 redirect
-	// https://stackoverflow.com/questions/4694089/sending-browser-cookies-during-a-302-redirect
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(templates.RawRedirect("/github/"+socialProviderUser.Username)))
+	ctx.Redirect(http.StatusTemporaryRedirect, "/github/"+socialProviderUser.Username)
 }
 
 func setCookieUserID(ctx *gin.Context, userID int64) {

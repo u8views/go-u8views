@@ -90,8 +90,8 @@
                     and your statistics look like this:
                 </h3>
                 <div class="example__chart-group">
-                    <img src="/assets/images/view-statistic.png" alt="Views statistics example"/>
-                    <img src="/assets/images/referral-statistic.png" alt="Referral statistics example"/>
+                    <img src="/assets/images/views-statistics.png" alt="Views statistics example"/>
+                    <img src="/assets/images/referral-statistics.png" alt="Referral statistics example"/>
                 </div>
             </div>
         </section>
@@ -165,7 +165,7 @@
     </div>
 </main>
 {%= footer() %}
-<script src="/assets/js/index-app.js"></script>
+<script src="/assets/js/index-app.js?{%d appVersion %}"></script>
 </body>
 </html>
 {% endfunc %}

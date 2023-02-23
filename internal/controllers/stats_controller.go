@@ -10,7 +10,7 @@ import (
 	"github.com/u8views/go-u8views/internal/badge"
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
-	templates "github.com/u8views/go-u8views/internal/templates/v1"
+	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -85,7 +85,7 @@ func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	ctx.Header("Pragma", "no-cache")
 	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(templates.Badge(statsCount)))
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.Badge(statsCount)))
 }
 
 func (c *StatsController) GitHubStats(ctx *gin.Context) {

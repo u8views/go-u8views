@@ -6,6 +6,10 @@ import (
 	"github.com/u8views/go-u8views/internal/models"
 )
 
+const (
+	appVersion = 1
+)
+
 type ProfileView struct {
 	ID                   int64
 	SocialProviderUserID string

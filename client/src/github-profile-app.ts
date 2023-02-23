@@ -1,5 +1,6 @@
 import {formatDay} from "./time";
 import {initInstruction} from "./instruction";
+import {initCopyCodeButtons} from "./copy-button";
 
 const socialProviderUserId = document.body.getAttribute("data-current-page-profile-social-provider-user-id");
 
@@ -145,3 +146,4 @@ function groupByDay(rows) {
 }
 
 initInstruction();
+initCopyCodeButtons();
