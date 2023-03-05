@@ -2,8 +2,8 @@ POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 
 include Makefile.ansible
 
-env-local-up:
-	docker-compose -f docker-compose.local.yml --env-file .env up -d
+env-up:
+	docker-compose -f docker-compose.yml --env-file .env up -d
 
 restart:
 	docker restart go_u8views_app
@@ -14,11 +14,11 @@ logs:
 pg:
 	docker exec -it go_u8views_postgres bash
 
-env-local-down:
-	docker-compose -f docker-compose.local.yml --env-file .env down
+env-down:
+	docker-compose -f docker-compose.yml --env-file .env down
 
-env-local-down-with-clear:
-	docker-compose -f docker-compose.local.yml --env-file .env down --remove-orphans -v # --rmi=all
+env-down-with-clear:
+	docker-compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
 
 # make migrate-pgsql-create NAME=init
 migrate-pgsql-create:

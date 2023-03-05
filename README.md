@@ -9,7 +9,7 @@
 ##### Start local development session
 ```bash
 cp .local.env .env
-make env-local-up
+make env-up
 make migrate-all-reset
 make postgres-fixtures
 make postgres-fixtures-count
@@ -19,14 +19,14 @@ make postgres-fixtures-count
 
 ##### Run after code changes
 ```bash
-make env-local-up
+make env-up
 ```
 
 ##### End development session
 ```bash
-make env-local-down
+make env-down
 # or
-# make env-local-down-with-clear
+# make env-down-with-clear
 ```
 
 ##### Benchmark (PC) Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
