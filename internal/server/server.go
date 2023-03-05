@@ -15,7 +15,7 @@ import (
 func Run(handler http.Handler) {
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("u8views.com"),
+		HostPolicy: autocert.HostWhitelist("u8views.com", "dev.u8views.com"),
 		Cache:      autocert.DirCache(env.Must("TLS_CERTIFICATES_DIR")),
 	}
 
