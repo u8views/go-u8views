@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/u8views/go-u8views/internal/env"
 
@@ -15,7 +16,7 @@ import (
 func Run(handler http.Handler) {
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("u8views.com", "dev.u8views.com"),
+		HostPolicy: autocert.HostWhitelist(strings.Split(env.Must("HOSTS", ","))),
 		Cache:      autocert.DirCache(env.Must("TLS_CERTIFICATES_DIR")),
 	}
 

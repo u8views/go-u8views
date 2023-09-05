@@ -28,6 +28,7 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       TLS_CERTIFICATES_DIR: /var/lib/tls-certificates/data/
+      HOSTS: ${HOSTS}
     ports:
       - "80:80"
       - "443:443"
