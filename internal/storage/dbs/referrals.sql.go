@@ -16,8 +16,8 @@ SELECT g.time                        AS time,
 FROM (
     SELECT time::TIMESTAMP
     FROM generate_series(
-        $1::TIMESTAMP,
-        $2::TIMESTAMP,
+        $1::DATE,
+        $2::DATE,
         '1 DAY'::INTERVAL
     ) AS time
 ) AS g
@@ -27,7 +27,7 @@ FROM (
         FROM referrals r
                  INNER JOIN users u ON (r.referee_user_id = u.id)
         WHERE r.referrer_user_id = $3
-          AND u.created_at >= $1::TIMESTAMP
+          AND u.created_at >= $1::DATE
         GROUP BY DATE_TRUNC('DAY', u.created_at)
     ) AS rc ON (g.time = rc.time)
 ORDER BY g.time
