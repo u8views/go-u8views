@@ -1,6 +1,6 @@
 module github.com/u8views/go-u8views
 
-go 1.19
+go 1.21
 
 require (
 	github.com/gin-contrib/gzip v0.0.6
@@ -14,6 +14,7 @@ require (
 	github.com/valyala/quicktemplate v1.7.0
 	golang.org/x/crypto v0.5.0
 	golang.org/x/image v0.3.0
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 )
 
 require (

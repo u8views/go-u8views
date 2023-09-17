@@ -106,6 +106,7 @@ generate-production-environment-file:
 	touch .production.env
 
 	grep -qF 'PORT=' .production.env || echo 'PORT=:80' >> .production.env
+	grep -qF 'ENVIRONMENT=' .production.env || echo 'ENVIRONMENT="production"' >> .production.env
 
 	# Database
 	grep -qF 'POSTGRES_USER=' .production.env || echo 'POSTGRES_USER="u8user"' >> .production.env
