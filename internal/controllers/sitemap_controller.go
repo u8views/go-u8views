@@ -19,7 +19,7 @@ func NewSitemapController(userService *services.UserService) *SitemapController 
 }
 
 func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
-	users, err := c.userService.GetAllUsernames(ctx)
+	usernames, err := c.userService.GetAllUsernames(ctx)
 	if err != nil {
 		log.Printf("Database error (sitemap) %s\n", err)
 
@@ -33,9 +33,5 @@ func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
 		return
 	}
 
-	usernames := make([]string, len(users))
-	for i, user := range users {
-		usernames[i] = user.Username
-	}
 	ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfiles(usernames)))
 }

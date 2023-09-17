@@ -42,8 +42,8 @@ migrate-pgsql-status:
 migrate-all-reset:
 	time make migrate-pgsql-reset migrate-pgsql-up
 
-generate-dbs:
-	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
+generate-sqlc:
+	sqlc generate
 
 generate-template:
 	# go install github.com/valyala/quicktemplate/qtc
