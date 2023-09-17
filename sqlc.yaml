@@ -3,8 +3,8 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "./internal/storage/query/"
-    schema: "./internal/storage/schema/"
+    queries: "./internal/storage/queries/"
+    schema: "./internal/storage/migrations/"
 
     gen:
       go:

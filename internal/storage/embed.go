@@ -7,7 +7,7 @@ import (
 	"github.com/pressly/goose/v3"
 )
 
-//go:embed schema/*.sql
+//go:embed migrations/*.sql
 var migrations embed.FS
 
 func MigrateUp(db *sql.DB) error {
@@ -17,7 +17,7 @@ func MigrateUp(db *sql.DB) error {
 	// PostgreSQL by default
 	// goose.SetDialect("postgres")
 
-	err := goose.Up(db, "schema")
+	err := goose.Up(db, "migrations")
 	if err != nil {
 		return err
 	}
