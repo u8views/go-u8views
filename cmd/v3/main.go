@@ -78,43 +78,47 @@ func main() {
 		ctx.File("./public/design/v2/stats-auth.html")
 	})
 
-	r.Static("/assets/images", "./public/assets/images")
-	r.Static("/assets/js", "./public/assets/js")
+	r.
+		// Assets
+		Static("/assets/images", "./public/assets/images").
+		Static("/assets/js", "./public/assets/js").
 
-	r.StaticFile("/android-icon-144x144.png", "./public/android-icon-144x144.png")
-	r.StaticFile("/android-icon-192x192.png", "./public/android-icon-192x192.png")
-	r.StaticFile("/android-icon-36x36.png", "./public/android-icon-36x36.png")
-	r.StaticFile("/android-icon-48x48.png", "./public/android-icon-48x48.png")
-	r.StaticFile("/android-icon-72x72.png", "./public/android-icon-72x72.png")
-	r.StaticFile("/android-icon-96x96.png", "./public/android-icon-96x96.png")
-	r.StaticFile("/apple-icon-114x114.png", "./public/apple-icon-114x114.png")
-	r.StaticFile("/apple-icon-120x120.png", "./public/apple-icon-120x120.png")
-	r.StaticFile("/apple-icon-144x144.png", "./public/apple-icon-144x144.png")
-	r.StaticFile("/apple-icon-152x152.png", "./public/apple-icon-152x152.png")
-	r.StaticFile("/apple-icon-180x180.png", "./public/apple-icon-180x180.png")
-	r.StaticFile("/apple-icon-57x57.png", "./public/apple-icon-57x57.png")
-	r.StaticFile("/apple-icon-60x60.png", "./public/apple-icon-60x60.png")
-	r.StaticFile("/apple-icon-72x72.png", "./public/apple-icon-72x72.png")
-	r.StaticFile("/apple-icon-76x76.png", "./public/apple-icon-76x76.png")
-	r.StaticFile("/apple-icon.png", "./public/apple-icon.png")
-	r.StaticFile("/apple-icon-precomposed.png", "./public/apple-icon-precomposed.png")
-	r.StaticFile("/favicon-16x16.png", "./public/favicon-16x16.png")
-	r.StaticFile("/favicon-32x32.png", "./public/favicon-32x32.png")
-	r.StaticFile("/favicon-96x96.png", "./public/favicon-96x96.png")
-	r.StaticFile("/favicon.ico", "./public/favicon.ico")
-	r.StaticFile("/ms-icon-144x144.png", "./public/ms-icon-144x144.png")
-	r.StaticFile("/ms-icon-150x150.png", "./public/ms-icon-150x150.png")
-	r.StaticFile("/ms-icon-310x310.png", "./public/ms-icon-310x310.png")
-	r.StaticFile("/ms-icon-70x70.png", "./public/ms-icon-70x70.png")
+		// Favicons
+		StaticFile("/android-icon-144x144.png", "./public/android-icon-144x144.png").
+		StaticFile("/android-icon-192x192.png", "./public/android-icon-192x192.png").
+		StaticFile("/android-icon-36x36.png", "./public/android-icon-36x36.png").
+		StaticFile("/android-icon-48x48.png", "./public/android-icon-48x48.png").
+		StaticFile("/android-icon-72x72.png", "./public/android-icon-72x72.png").
+		StaticFile("/android-icon-96x96.png", "./public/android-icon-96x96.png").
+		StaticFile("/apple-icon-114x114.png", "./public/apple-icon-114x114.png").
+		StaticFile("/apple-icon-120x120.png", "./public/apple-icon-120x120.png").
+		StaticFile("/apple-icon-144x144.png", "./public/apple-icon-144x144.png").
+		StaticFile("/apple-icon-152x152.png", "./public/apple-icon-152x152.png").
+		StaticFile("/apple-icon-180x180.png", "./public/apple-icon-180x180.png").
+		StaticFile("/apple-icon-57x57.png", "./public/apple-icon-57x57.png").
+		StaticFile("/apple-icon-60x60.png", "./public/apple-icon-60x60.png").
+		StaticFile("/apple-icon-72x72.png", "./public/apple-icon-72x72.png").
+		StaticFile("/apple-icon-76x76.png", "./public/apple-icon-76x76.png").
+		StaticFile("/apple-icon.png", "./public/apple-icon.png").
+		StaticFile("/apple-icon-precomposed.png", "./public/apple-icon-precomposed.png").
+		StaticFile("/favicon-16x16.png", "./public/favicon-16x16.png").
+		StaticFile("/favicon-32x32.png", "./public/favicon-32x32.png").
+		StaticFile("/favicon-96x96.png", "./public/favicon-96x96.png").
+		StaticFile("/favicon.ico", "./public/favicon.ico").
+		StaticFile("/ms-icon-144x144.png", "./public/ms-icon-144x144.png").
+		StaticFile("/ms-icon-150x150.png", "./public/ms-icon-150x150.png").
+		StaticFile("/ms-icon-310x310.png", "./public/ms-icon-310x310.png").
+		StaticFile("/ms-icon-70x70.png", "./public/ms-icon-70x70.png").
 
-	r.StaticFile("/manifest.json", "./public/manifest.json")
-	r.StaticFile("/browserconfig.xml", "./public/browserconfig.xml")
+		// Sitemaps
+		StaticFile("/sitemap.xml", "./public/sitemap.xml").
+		StaticFile("/sitemap-main.xml", "./public/sitemap-main.xml").
 
-	r.StaticFile("/humans.txt", "./public/humans.txt")
-	r.StaticFile("/robots.txt", "./public/robots.txt")
-
-	r.StaticFile("/sitemap-main.xml", "./public/sitemap-main.xml")
-	r.StaticFile("/sitemap.xml", "./public/sitemap.xml")
+		// System
+		StaticFile("/humans.txt", "./public/humans.txt").
+		StaticFile("/robots.txt", "./public/robots.txt").
+		StaticFile("/manifest.json", "./public/manifest.json").
+		StaticFile("/browserconfig.xml", "./public/browserconfig.xml")
 
 	server.Run(r.Handler())
 }

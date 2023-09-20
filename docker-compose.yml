@@ -15,7 +15,7 @@ services:
 
   app:
     container_name: "go_u8views_app"
-    image: golang:1.20.0-alpine
+    image: golang:1.21.0-alpine
     working_dir: /go/src/github.com/u8views/go-u8views
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
@@ -23,6 +23,7 @@ services:
     command: "go run ./cmd/v3/main.go"
     environment:
       GIN_MODE: release
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       POSTGRES_DSN: ${POSTGRES_DSN}
       GOOSE_DBSTRING: ${POSTGRES_DSN}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}

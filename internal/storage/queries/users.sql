@@ -54,8 +54,8 @@ SELECT g.time                         AS time,
 FROM (
     SELECT time::TIMESTAMP
     FROM generate_series(
-        sqlc.arg('from')::TIMESTAMP,
-        sqlc.arg('to')::TIMESTAMP,
+        sqlc.arg('from')::DATE,
+        sqlc.arg('to')::DATE,
         '1 DAY'::INTERVAL
     ) AS time
 ) AS g
@@ -63,7 +63,7 @@ FROM (
         SELECT DATE_TRUNC('DAY', created_at) AS time,
                COUNT(*)                      AS count
         FROM users
-        WHERE created_at >= sqlc.arg('from')::TIMESTAMP
+        WHERE created_at >= sqlc.arg('from')::DATE
         GROUP BY time
     ) AS rcs ON (g.time = rcs.time)
 ORDER BY g.time;

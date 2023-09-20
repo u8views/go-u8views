@@ -1,7 +1,14 @@
-version: "1"
-packages:
-  - path: "./internal/storage/dbs/"
-    engine: "postgresql"
-    schema: "./internal/storage/schema/"
-    queries: "./internal/storage/query/"
-    emit_prepared_queries: true
+# https://docs.sqlc.dev/en/stable/overview/install.html
+# https://docs.sqlc.dev/en/stable/tutorials/getting-started-postgresql.html
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./internal/storage/queries/"
+    schema: "./internal/storage/migrations/"
+
+    gen:
+      go:
+        package: "dbs"
+        sql_package: "database/sql"
+        out: "./internal/storage/dbs/"
+        emit_prepared_queries: true

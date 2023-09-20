@@ -22,28 +22,28 @@ env-down-with-clear:
 
 # make migrate-pgsql-create NAME=init
 migrate-pgsql-create:
-	# mkdir -p ./internal/storage/schema
+	# mkdir -p ./internal/storage/migrations
 	$(eval NAME ?= todo)
-	goose -dir ./internal/storage/schema -table schema_migrations postgres $(POSTGRES_DSN) create $(NAME) sql
+	goose -dir ./internal/storage/migrations -table schema_migrations postgres $(POSTGRES_DSN) create $(NAME) sql
 
 migrate-pgsql-goose-install:
 	docker exec go_u8views_app go install github.com/pressly/goose/v3/cmd/goose@latest
 migrate-pgsql-up: migrate-pgsql-goose-install
-	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres up
+	docker exec go_u8views_app goose -dir ./internal/storage/migrations -table schema_migrations postgres up
 migrate-pgsql-redo:
-	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres redo
+	docker exec go_u8views_app goose -dir ./internal/storage/migrations -table schema_migrations postgres redo
 migrate-pgsql-down:
-	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres down
+	docker exec go_u8views_app goose -dir ./internal/storage/migrations -table schema_migrations postgres down
 migrate-pgsql-reset:
-	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres reset
+	docker exec go_u8views_app goose -dir ./internal/storage/migrations -table schema_migrations postgres reset
 migrate-pgsql-status:
-	docker exec go_u8views_app goose -dir ./internal/storage/schema -table schema_migrations postgres status
+	docker exec go_u8views_app goose -dir ./internal/storage/migrations -table schema_migrations postgres status
 
 migrate-all-reset:
 	time make migrate-pgsql-reset migrate-pgsql-up
 
-generate-dbs:
-	docker run --rm -v $(shell pwd):/src -w /src kjconroy/sqlc generate
+generate-sqlc:
+	sqlc generate
 
 generate-template:
 	# go install github.com/valyala/quicktemplate/qtc
@@ -106,6 +106,7 @@ generate-production-environment-file:
 	touch .production.env
 
 	grep -qF 'PORT=' .production.env || echo 'PORT=:80' >> .production.env
+	grep -qF 'ENVIRONMENT=' .production.env || echo 'ENVIRONMENT="production"' >> .production.env
 
 	# Database
 	grep -qF 'POSTGRES_USER=' .production.env || echo 'POSTGRES_USER="u8user"' >> .production.env
