@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
       - ./.docker/volumes/go/tls-certificates:/var/lib/tls-certificates/data/
-    command: "go run ./cmd/v3/main.go"
+    command: "sleep infinity"
     environment:
       GIN_MODE: release
       ENVIRONMENT: ${ENVIRONMENT:-development}

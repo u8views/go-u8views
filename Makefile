@@ -20,6 +20,17 @@ env-down:
 env-down-with-clear:
 	docker-compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
 
+app-build:
+	docker exec go_u8views_app go build -o /bin/u8views-server ./cmd/v3/main.go
+
+app-start:
+	docker exec go_u8views_app u8views-server
+
+app-stop:
+	docker exec go_u8views_app pkill u8views-server || echo "u8views-server already stopped"
+
+app-restart: app-build app-stop app-start
+
 # make migrate-pgsql-create NAME=init
 migrate-pgsql-create:
 	# mkdir -p ./internal/storage/migrations
@@ -94,7 +105,7 @@ postgres-volume-size:
 	docker stats --no-stream
 
 ssh:
-	# cat ~/.ssh/id_rsa.pub | ssh root@45.77.2.17 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	# cat ~/.ssh/id_ed25519.pub | ssh root@45.77.2.17 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 	ssh -t root@45.77.2.17 "cd /var/go/u8views/; bash --login"
 
 ssh-copy-tls-certificates:
