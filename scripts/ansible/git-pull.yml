@@ -1,37 +1,19 @@
 ---
-# https://fabianlee.org/2021/02/03/ansible-cloning-a-git-repository-that-requires-credentials/
 - name: "Git clone u8views"
-  hosts: web
-  gather_facts: no
+  hosts: "web"
+  gather_facts: "no"
+  vars:
+    - REPOSITORY: "https://github.com/u8views/go-u8views.git"
+    - DESTINATION: "/var/go/u8views"
 
   tasks:
-    - name: "/var/go/u8views"
-      file:
-        path: /var/go/u8views
-        state: directory
+    - name: "Ensure directory {{ DESTINATION }} exists"
+      ansible.builtin.file:
+        path: "{{ DESTINATION }}"
+        state: "directory"
 
-    - name: "git pull"
+    - name: "Git pull repository {{ REPOSITORY }}"
       ansible.builtin.git:
-        repo: https://github.com/u8views/go-u8views.git
-        version: main
-        dest: /var/go/u8views
-
-    - name: "git status"
-      shell: "git status"
-      args:
-        chdir: "/var/go/u8views"
-      register: out
-      when: false
-    - debug:
-        var: out.stdout_lines
-      when: false
-
-    - name: "ls -la"
-      shell: "ls -la"
-      args:
-        chdir: "/var/go/u8views"
-      register: out
-      when: false
-    - debug:
-        var: out.stdout_lines
-      when: false
+        repo: "{{ REPOSITORY }}"
+        version: "main"
+        dest: "{{ DESTINATION }}"
