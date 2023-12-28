@@ -58,6 +58,19 @@ func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment b
 	}, nil
 }
 
+func (s *StatsService) Increment(ctx context.Context, userID int64) (err error) {
+	now := time.Now().UTC().Truncate(time.Hour)
+
+	go func() {
+		err := s.increment(context.Background(), userID, now)
+		if err != nil {
+			log.Printf("Database err %s\n", err)
+		}
+	}()
+
+	return nil
+}
+
 func (s *StatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userIDs []int64, now time.Time) (map[int64]models.DayWeekMonthViewsStats, error) {
 	rows, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
 		Day:     now.AddDate(0, 0, -1),
