@@ -88,6 +88,25 @@ func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.Badge(statsCount)))
 }
 
+func (c *StatsController) Pixel(ctx *gin.Context) {
+	const (
+		// language=SVG
+		pixel = `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1">
+  <rect width="1" height="1" fill="white" />
+</svg>`
+	)
+
+	done := c.increment(ctx, dbs.SocialProviderGithub)
+	if done {
+		return
+	}
+
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
+	ctx.Data(http.StatusOK, "image/svg+xml", []byte(pixel))
+}
+
 func (c *StatsController) GitHubStats(ctx *gin.Context) {
 	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
@@ -186,6 +205,36 @@ func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvid
 	}
 
 	return statsCount, false
+}
+
+func (c *StatsController) increment(ctx *gin.Context, provider dbs.SocialProvider) (done bool) {
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
+	if done {
+		return
+	}
+
+	userID, done := c.toUserID(ctx, provider, socialProviderUserID)
+	if done {
+		return
+	}
+
+	increment := strings.HasPrefix(ctx.GetHeader("User-Agent"), "github-camo")
+	if !increment {
+		return
+	}
+
+	err := c.statsService.Increment(ctx, userID)
+	if err != nil {
+		log.Printf("Database error (stats) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return true
+	}
+
+	return false
 }
 
 func (c *StatsController) parseSocialProviderUserID(ctx *gin.Context) (string, bool) {
