@@ -79,6 +79,8 @@
                 </div>
             </div>
         </section>
+
+        {% if showCharts(currentPageProfile, sessionProfile, stats) %}
         <section class="profile__statistics">
             <div class="profile__header">
                 <h3 class="profile__title">Your GitHub profile views statistic</h3>
@@ -163,6 +165,7 @@
                 </div>
             </div>
         </section>
+        {% endif %}
 
         {% if sessionProfile.ID == 0 %}
         <section class="action">

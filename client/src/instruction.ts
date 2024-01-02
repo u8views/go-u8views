@@ -8,9 +8,21 @@ function initToggle() {
     const $state = document.querySelector(".js-instruction-visibility-state");
     const $instruction = document.querySelector(".js-instruction");
 
+    function toggle(state: boolean) {
+        localStorage.setItem("instruction_hidden", state.toString());
+
+        $instruction.classList.toggle("hide", state);
+        $state.classList.toggle("active", state);
+    }
+
+    let hidden = localStorage.getItem("instruction_hidden") === "true";
+
+    toggle(hidden);
+
     $button.addEventListener("click", () => {
-        $instruction.classList.toggle("hide");
-        $state.classList.toggle("active");
+        hidden = !hidden;
+
+        toggle(hidden);
     });
 }
 

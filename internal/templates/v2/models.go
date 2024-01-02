@@ -32,3 +32,17 @@ func (v ProfileView) GetName() string {
 
 	return v.Name
 }
+
+func showCharts(currentPageProfile ProfileView, sessionProfile ProfileView, stats ProfileViewsStats) bool {
+	if stats.TotalCount > 0 {
+		return true
+	}
+
+	// hide charts before first view tracked
+	// focus on instructions
+	if currentPageProfile.ID == sessionProfile.ID {
+		return false
+	}
+
+	return true
+}

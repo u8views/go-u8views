@@ -136,6 +136,10 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                 </div>
             </div>
         </section>
+
+        `)
+	if showCharts(currentPageProfile, sessionProfile, stats) {
+		qw422016.N().S(`
         <section class="profile__statistics">
             <div class="profile__header">
                 <h3 class="profile__title">Your GitHub profile views statistic</h3>
@@ -146,8 +150,8 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
         </section>
 
         `)
-	if currentPageProfile.ID == sessionProfile.ID {
-		qw422016.N().S(`
+		if currentPageProfile.ID == sessionProfile.ID {
+			qw422016.N().S(`
         <section class="badge">
             <h2 class="badge__title">Profile badge</h2>
             <p class="badge__subtitle">
@@ -161,12 +165,12 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                             <div class="step-3__item-content">
                                 <p class="step-3__item-text js-code-for-copy">
                                     [![`)
-		qw422016.E().S(sessionProfile.GetName())
-		qw422016.N().S(` profile views](https://u8views.com/api/v1/github/profiles/`)
-		qw422016.E().S(sessionProfile.SocialProviderUserID)
-		qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)
-		qw422016.E().S(sessionProfile.Username)
-		qw422016.N().S(`)
+			qw422016.E().S(sessionProfile.GetName())
+			qw422016.N().S(` profile views](https://u8views.com/api/v1/github/profiles/`)
+			qw422016.E().S(sessionProfile.SocialProviderUserID)
+			qw422016.N().S(`/views/day-week-month-total-count.svg)](https://u8views.com/github/`)
+			qw422016.E().S(sessionProfile.Username)
+			qw422016.N().S(`)
                                 </p>
                                 <button class="step-3__copy-text js-copy-code-button">
                                     <img
@@ -191,10 +195,10 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                             <div class="step-3__item-content">
                                 <p class="step-3__item-text js-code-for-copy">
                                     &lt;a href=&quot;https://u8views.com/github/`)
-		qw422016.E().S(sessionProfile.Username)
-		qw422016.N().S(`&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/`)
-		qw422016.E().S(sessionProfile.SocialProviderUserID)
-		qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
+			qw422016.E().S(sessionProfile.Username)
+			qw422016.N().S(`&quot;&gt;&lt;img src=&quot;https://u8views.com/api/v1/github/profiles/`)
+			qw422016.E().S(sessionProfile.SocialProviderUserID)
+			qw422016.N().S(`/views/day-week-month-total-count.svg&quot;&gt;&lt;/a&gt;
                                 </p>
                                 <button class="step-3__copy-text js-copy-code-button">
                                     <img
@@ -219,8 +223,8 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
             </div>
         </section>
         `)
-	}
-	qw422016.N().S(`
+		}
+		qw422016.N().S(`
 
         <section class="referal">
             <div class="referal__statistic">
@@ -234,6 +238,9 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
                 </div>
             </div>
         </section>
+        `)
+	}
+	qw422016.N().S(`
 
         `)
 	if sessionProfile.ID == 0 {
