@@ -615,7 +615,7 @@ func streaminstruction(qw422016 *qt422016.Writer, currentPageProfile ProfileView
             </div>
             <div class="step__view">
                 <h2 class="step__title">
-                    View and analyze view statistics for your GitHub profile
+                    View and analyze views statistics for your GitHub profile
                 </h2>
                 <div class="step__subtitle">
                     You can also see referral registration statistics from your profile
