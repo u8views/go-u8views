@@ -19,8 +19,8 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleP
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>GitHub profile views statistic badge</title>
-    <meta name="description" content="GitHub profile views statistic badge">
+    <title>GitHub profile views statistics badge</title>
+    <meta name="description" content="GitHub profile views statistics badge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="author" type="text/plain" href="https://u8views.com/humans.txt"/>

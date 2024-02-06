@@ -21,10 +21,10 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 <head>
     <title>`)
 	qw422016.E().S(currentPageProfile.GetName())
-	qw422016.N().S(` profile views statistic</title>
+	qw422016.N().S(` profile views statistics</title>
     <meta name="description" content="`)
 	qw422016.E().S(currentPageProfile.GetName())
-	qw422016.N().S(` profile views statistic">
+	qw422016.N().S(` profile views statistics">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="author" type="text/plain" href="https://u8views.com/humans.txt"/>
@@ -142,7 +142,7 @@ func StreamProfile(qw422016 *qt422016.Writer, currentPageProfile ProfileView, se
 		qw422016.N().S(`
         <section class="profile__statistics">
             <div class="profile__header">
-                <h3 class="profile__title">Your GitHub profile views statistic</h3>
+                <h3 class="profile__title">Your GitHub profile views statistics</h3>
             </div>
             <div class="profile__chart">
                 <div class="profile__chart js-chart-views-statistic"></div>

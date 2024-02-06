@@ -1,7 +1,7 @@
 {
   "name": "u8views",
   "version": "0.1.0",
-  "description": "GitHub profile views statistic",
+  "description": "GitHub profile views statistics",
   "license": "MIT",
   "devDependencies": {
     "esbuild": "^0.17.6"

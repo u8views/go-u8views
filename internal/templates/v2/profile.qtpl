@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{%s currentPageProfile.GetName() %} profile views statistic</title>
-    <meta name="description" content="{%s currentPageProfile.GetName() %} profile views statistic">
+    <title>{%s currentPageProfile.GetName() %} profile views statistics</title>
+    <meta name="description" content="{%s currentPageProfile.GetName() %} profile views statistics">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="author" type="text/plain" href="https://u8views.com/humans.txt"/>
@@ -83,7 +83,7 @@
         {% if showCharts(currentPageProfile, sessionProfile, stats) %}
         <section class="profile__statistics">
             <div class="profile__header">
-                <h3 class="profile__title">Your GitHub profile views statistic</h3>
+                <h3 class="profile__title">Your GitHub profile views statistics</h3>
             </div>
             <div class="profile__chart">
                 <div class="profile__chart js-chart-views-statistic"></div>
