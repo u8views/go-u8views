@@ -75,7 +75,7 @@ func (s *StatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userID
 	rows, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
 		Day:     now.AddDate(0, 0, -1),
 		Week:    now.AddDate(0, 0, -7),
-		Month:   now.AddDate(0, -1, 0),
+		Month:   now.AddDate(0, 0, -30),
 		UserIds: userIDs,
 	})
 	if err != nil {
