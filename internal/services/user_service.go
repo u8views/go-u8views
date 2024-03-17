@@ -34,11 +34,10 @@ func (s *UserService) GetBySocialProviderUsername(ctx context.Context, provider 
 }
 
 func (s *UserService) GetUsernameByOldUsername(ctx context.Context, provider dbs.SocialProvider, oldUsername string) (string, error) {
-	user, err := s.repository.Queries().UserNicknamesGetByOldUsername(ctx, dbs.UserNicknamesGetByOldUsernameParams{
-		OldNickname:    oldUsername,
+	return s.repository.Queries().UsernameHistoryGetByOldUsername(ctx, dbs.UsernameHistoryGetByOldUsernameParams{
+		Username:       oldUsername,
 		SocialProvider: provider,
 	})
-	return user.Username, err
 }
 
 func (s *UserService) GetByID(ctx context.Context, id int64) (dbs.UsersGetByIDRow, error) {
@@ -116,19 +115,7 @@ func (s *UserService) Upsert(
 		if err != nil {
 			return err
 		}
-		user, err := queries.UsersGetByID(ctx, txID)
-		if err != nil {
-			return err
-		}
-		if user.Username != username {
-			err = queries.UserNicknamesNew(ctx, dbs.UserNicknamesNewParams{
-				UserID:      txID,
-				OldNickname: user.Username,
-			})
-			if err != nil {
-				return err
-			}
-		}
+
 		err = queries.UsersUpdateUsername(ctx, dbs.UsersUpdateUsernameParams{
 			Username:  username,
 			Name:      name,
@@ -139,9 +126,12 @@ func (s *UserService) Upsert(
 			return err
 		}
 
-		err = queries.UserNicknamesDelete(ctx, dbs.UserNicknamesDeleteParams{
-			OldNickname:    username,
+		err = queries.UsernameHistoryNew(ctx, dbs.UsernameHistoryNewParams{
+			UserID:         txID,
 			SocialProvider: provider,
+			Username:       username,
+			CreatedAt:      now,
+			UpdatedAt:      now,
 		})
 		if err != nil {
 			return err

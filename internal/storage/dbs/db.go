@@ -48,14 +48,11 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.referralsNewStmt, err = db.PrepareContext(ctx, referralsNew); err != nil {
 		return nil, fmt.Errorf("error preparing query ReferralsNew: %w", err)
 	}
-	if q.userNicknamesDeleteStmt, err = db.PrepareContext(ctx, userNicknamesDelete); err != nil {
-		return nil, fmt.Errorf("error preparing query UserNicknamesDelete: %w", err)
+	if q.usernameHistoryGetByOldUsernameStmt, err = db.PrepareContext(ctx, usernameHistoryGetByOldUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UsernameHistoryGetByOldUsername: %w", err)
 	}
-	if q.userNicknamesGetByOldUsernameStmt, err = db.PrepareContext(ctx, userNicknamesGetByOldUsername); err != nil {
-		return nil, fmt.Errorf("error preparing query UserNicknamesGetByOldUsername: %w", err)
-	}
-	if q.userNicknamesNewStmt, err = db.PrepareContext(ctx, userNicknamesNew); err != nil {
-		return nil, fmt.Errorf("error preparing query UserNicknamesNew: %w", err)
+	if q.usernameHistoryNewStmt, err = db.PrepareContext(ctx, usernameHistoryNew); err != nil {
+		return nil, fmt.Errorf("error preparing query UsernameHistoryNew: %w", err)
 	}
 	if q.usersCreatedAtStatsByDayStmt, err = db.PrepareContext(ctx, usersCreatedAtStatsByDay); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersCreatedAtStatsByDay: %w", err)
@@ -126,19 +123,14 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing referralsNewStmt: %w", cerr)
 		}
 	}
-	if q.userNicknamesDeleteStmt != nil {
-		if cerr := q.userNicknamesDeleteStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userNicknamesDeleteStmt: %w", cerr)
+	if q.usernameHistoryGetByOldUsernameStmt != nil {
+		if cerr := q.usernameHistoryGetByOldUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usernameHistoryGetByOldUsernameStmt: %w", cerr)
 		}
 	}
-	if q.userNicknamesGetByOldUsernameStmt != nil {
-		if cerr := q.userNicknamesGetByOldUsernameStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userNicknamesGetByOldUsernameStmt: %w", cerr)
-		}
-	}
-	if q.userNicknamesNewStmt != nil {
-		if cerr := q.userNicknamesNewStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userNicknamesNewStmt: %w", cerr)
+	if q.usernameHistoryNewStmt != nil {
+		if cerr := q.usernameHistoryNewStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usernameHistoryNewStmt: %w", cerr)
 		}
 	}
 	if q.usersCreatedAtStatsByDayStmt != nil {
@@ -228,9 +220,8 @@ type Queries struct {
 	profileTotalViewsNewStmt             *sql.Stmt
 	referralsCreatedAtStatsByDayStmt     *sql.Stmt
 	referralsNewStmt                     *sql.Stmt
-	userNicknamesDeleteStmt              *sql.Stmt
-	userNicknamesGetByOldUsernameStmt    *sql.Stmt
-	userNicknamesNewStmt                 *sql.Stmt
+	usernameHistoryGetByOldUsernameStmt  *sql.Stmt
+	usernameHistoryNewStmt               *sql.Stmt
 	usersCreatedAtStatsByDayStmt         *sql.Stmt
 	usersGetStmt                         *sql.Stmt
 	usersGetAllUsernamesStmt             *sql.Stmt
@@ -253,9 +244,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
 		referralsCreatedAtStatsByDayStmt:     q.referralsCreatedAtStatsByDayStmt,
 		referralsNewStmt:                     q.referralsNewStmt,
-		userNicknamesDeleteStmt:              q.userNicknamesDeleteStmt,
-		userNicknamesGetByOldUsernameStmt:    q.userNicknamesGetByOldUsernameStmt,
-		userNicknamesNewStmt:                 q.userNicknamesNewStmt,
+		usernameHistoryGetByOldUsernameStmt:  q.usernameHistoryGetByOldUsernameStmt,
+		usernameHistoryNewStmt:               q.usernameHistoryNewStmt,
 		usersCreatedAtStatsByDayStmt:         q.usersCreatedAtStatsByDayStmt,
 		usersGetStmt:                         q.usersGetStmt,
 		usersGetAllUsernamesStmt:             q.usersGetAllUsernamesStmt,

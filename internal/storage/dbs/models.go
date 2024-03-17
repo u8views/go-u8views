@@ -81,8 +81,11 @@ type User struct {
 	LastLoginAt          time.Time
 }
 
-type UserNickname struct {
-	ID          int64
-	UserID      int64
-	OldNickname string
+type UsernameHistory struct {
+	ID                int64
+	UserID            int64
+	SocialProvider    SocialProvider
+	CanonicalUsername string
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }

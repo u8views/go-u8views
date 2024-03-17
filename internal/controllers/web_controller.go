@@ -116,7 +116,7 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 	currentPageProfile, err := c.getProfileByUsername(ctx, sessionProfile, uri.Username)
 	if err == sql.ErrNoRows {
-		username, err := c.getUsernameByOldUsername(ctx, uri.Username)
+		username, err := c.userService.GetUsernameByOldUsername(ctx, dbs.SocialProviderGithub, uri.Username)
 		if err == nil {
 			ctx.Redirect(http.StatusTemporaryRedirect, "/github/"+username)
 
@@ -191,10 +191,6 @@ func (c *WebController) sessionProfile(ctx *gin.Context) (tmv2.ProfileView, int6
 	}
 
 	return sessionProfile, totalCount
-}
-
-func (c *WebController) getUsernameByOldUsername(ctx *gin.Context, oldUsername string) (string, error) {
-	return c.userService.GetUsernameByOldUsername(ctx, dbs.SocialProviderGithub, oldUsername)
 }
 
 func (c *WebController) getProfileByUsername(ctx *gin.Context, sessionProfile tmv2.ProfileView, username string) (tmv2.ProfileView, error) {
