@@ -10,6 +10,11 @@ CREATE TABLE username_history
     updated_at         TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (canonical_username, social_provider, user_id)
 );
+
+INSERT INTO username_history (user_id, social_provider, canonical_username, created_at, updated_at)
+SELECT id, social_provider, canonical_username, created_at, last_login_at
+FROM users
+ON CONFLICT (canonical_username, social_provider, user_id) DO NOTHING;
 -- +goose StatementEnd
 
 -- +goose Down
