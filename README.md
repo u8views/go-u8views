@@ -91,7 +91,7 @@ ok  	github.com/u8views/go-u8views/internal/tests	21.566s
 * [DrawSQL](https://drawsql.app/templates)
 
 ### Database schema
-![Database schema](https://github.com/u8views/go-u8views/blob/main/database-schema/v002.png?raw=true)
+![Database schema](https://github.com/u8views/go-u8views/blob/main/database-schema/v003.png?raw=true)
 
 ### SQL
 ```sql
@@ -137,5 +137,6 @@ ORDER BY 1;
 | 2023-10-01 | 4473  | 78    |
 | 2023-11-01 | 4919  | 96    |
 | 2023-12-01 | 5525  | 115   |
-| 2024-01-01 | 11130 | 231   |
-
+| 2024-01-01 | 11185 | 232   |
+| 2024-02-01 | 11348 | 245   |
+| 2024-03-01 | 7334  | 249   |

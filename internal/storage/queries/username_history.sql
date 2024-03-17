@@ -7,8 +7,7 @@ ON CONFLICT (canonical_username, social_provider, user_id) DO UPDATE
 -- name: UsernameHistoryGetByOldUsername :one
 SELECT u.username
 FROM username_history uh
-JOIN users u 
-  ON uh.user_id = u.id
+         INNER JOIN users u ON uh.user_id = u.id
 WHERE uh.canonical_username = LOWER(@username)
   AND uh.social_provider = @social_provider
 ORDER BY uh.updated_at DESC
