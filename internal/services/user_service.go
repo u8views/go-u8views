@@ -33,6 +33,13 @@ func (s *UserService) GetBySocialProviderUsername(ctx context.Context, provider 
 	})
 }
 
+func (s *UserService) GetUsernameByOldUsername(ctx context.Context, provider dbs.SocialProvider, oldUsername string) (string, error) {
+	return s.repository.Queries().UsernameHistoryGetByOldUsername(ctx, dbs.UsernameHistoryGetByOldUsernameParams{
+		Username:       oldUsername,
+		SocialProvider: provider,
+	})
+}
+
 func (s *UserService) GetByID(ctx context.Context, id int64) (dbs.UsersGetByIDRow, error) {
 	return s.repository.Queries().UsersGetByID(ctx, id)
 }
@@ -114,6 +121,17 @@ func (s *UserService) Upsert(
 			Name:      name,
 			UpdatedAt: now,
 			ID:        txID,
+		})
+		if err != nil {
+			return err
+		}
+
+		err = queries.UsernameHistoryNew(ctx, dbs.UsernameHistoryNewParams{
+			UserID:         txID,
+			SocialProvider: provider,
+			Username:       username,
+			CreatedAt:      now,
+			UpdatedAt:      now,
 		})
 		if err != nil {
 			return err

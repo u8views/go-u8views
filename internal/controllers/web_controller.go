@@ -116,6 +116,13 @@ func (c *WebController) GitHubProfile(ctx *gin.Context) {
 
 	currentPageProfile, err := c.getProfileByUsername(ctx, sessionProfile, uri.Username)
 	if err == sql.ErrNoRows {
+		username, err := c.userService.GetUsernameByOldUsername(ctx, dbs.SocialProviderGithub, uri.Username)
+		if err == nil {
+			ctx.Redirect(http.StatusTemporaryRedirect, "/github/"+username)
+
+			return
+		}
+
 		ctx.Data(http.StatusBadRequest, "text/html; charset=utf-8", []byte(fmt.Sprintf("User not found")))
 
 		return
