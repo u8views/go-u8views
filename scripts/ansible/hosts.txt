@@ -1,6 +1,6 @@
 [web]
 # Current 1024 MB Intel High Performance
-u8views.com ansible_host=45.77.2.17
+u8views.com ansible_host=64.176.71.11
 
 [web:vars]
 ansible_ssh_user=root
