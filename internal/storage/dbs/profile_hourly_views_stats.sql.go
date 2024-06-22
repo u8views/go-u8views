@@ -14,9 +14,9 @@ import (
 
 const profileHourlyViewsStats = `-- name: ProfileHourlyViewsStats :many
 SELECT user_id,
-       SUM(count) FILTER ( WHERE time >= $1 )  AS day_count,
-       SUM(count) FILTER ( WHERE time >= $2 ) AS week_count,
-       SUM(count)                                AS month_count
+       COALESCE(SUM(count) FILTER ( WHERE time >= $1 ), 0)::BIGINT  AS day_count,
+       COALESCE(SUM(count) FILTER ( WHERE time >= $2 ), 0)::BIGINT AS week_count,
+       SUM(count)                                                     AS month_count
 FROM profile_hourly_views_stats
 WHERE user_id = ANY ($3::BIGINT[])
   AND time >= $4
