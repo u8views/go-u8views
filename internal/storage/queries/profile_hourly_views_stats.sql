@@ -6,9 +6,9 @@ ON CONFLICT (user_id, time) DO UPDATE
 
 -- name: ProfileHourlyViewsStats :many
 SELECT user_id,
-       SUM(CASE WHEN time >= @day THEN count ELSE 0 END)::BIGINT  AS day_count,
-       SUM(CASE WHEN time >= @week THEN count ELSE 0 END)::BIGINT AS week_count,
-       SUM(count)::BIGINT                                         AS month_count
+       SUM(count) FILTER ( WHERE time >= @day )  AS day_count,
+       SUM(count) FILTER ( WHERE time >= @week ) AS week_count,
+       SUM(count)                                AS month_count
 FROM profile_hourly_views_stats
 WHERE user_id = ANY (@user_ids::BIGINT[])
   AND time >= @month

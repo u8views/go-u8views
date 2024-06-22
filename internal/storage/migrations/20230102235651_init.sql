@@ -25,7 +25,7 @@ CREATE INDEX SOCIAL_PROVIDER_USERNAME ON users (social_provider, canonical_usern
 
 CREATE TABLE profile_total_views
 (
-    user_id BIGINT NOT NULL REFERENCES users (id) PRIMARY KEY,
+    user_id BIGINT NOT NULL PRIMARY KEY REFERENCES users (id),
     count   BIGINT NOT NULL
 );
 
