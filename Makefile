@@ -86,7 +86,7 @@ go-mod-update:
 	go mod vendor
 
 local-go-app-run:
-	POSTGRES_DSN=$(POSTGRES_DSN) PORT=:8080 go run ./cmd/v1/main.go
+	POSTGRES_DSN=$(POSTGRES_DSN) PORT=:8081 go run ./cmd/v1/main.go
 
 esbuild-minify:
 	MINIFY=true npm run --prefix=client esbuild

@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"database/sql"
-	"log"
-	"net/http"
-	"strconv"
-	"strings"
-
 	"github.com/u8views/go-u8views/internal/badge"
 	"github.com/u8views/go-u8views/internal/services"
 	"github.com/u8views/go-u8views/internal/storage/dbs"
 	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
+	"log"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -51,6 +51,45 @@ func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 		MonthCount: statsCount.MonthCount,
 		TotalCount: statsCount.TotalCount,
 	})
+}
+
+func (c *StatsController) DayCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1)
+
+	c.TimePeriodCountBadge(ctx, period)
+}
+
+func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7)
+
+	c.TimePeriodCountBadge(ctx, period)
+}
+
+func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0)
+
+	c.TimePeriodCountBadge(ctx, period)
+}
+
+func (c *StatsController) TimePeriodCountBadge(ctx *gin.Context, period time.Time) {
+	currentTime := time.Now().UTC().Truncate(time.Hour)
+
+	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
+	switch currentTime {
+	case period.AddDate(0, 0, 1):
+		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.DayBadge(statsCount)))
+	case period.AddDate(0, 0, 7):
+		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.WeekBadge(statsCount)))
+	case period.AddDate(0, 1, 0):
+		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.MonthBadge(statsCount)))
+	}
 }
 
 func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
@@ -172,6 +211,52 @@ func (c *StatsController) ReferralsStats(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount services.ProfileViewsStats, done bool) {
+
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
+	if done {
+		return
+	}
+
+	userID, done := c.toUserID(ctx, provider, socialProviderUserID)
+	if done {
+		return
+	}
+
+	increment := strings.HasPrefix(ctx.GetHeader("User-Agent"), "github-camo")
+	statsCountNum, err := c.statsService.TimePeriodStatsCount(ctx, userID, increment, period)
+
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
+			ErrorMessage: "User not found (stats)",
+		})
+
+		return statsCount, true
+	}
+
+	if err != nil {
+		log.Printf("Database error (stats) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return statsCount, true
+	}
+
+	switch period.UTC().Truncate(time.Hour) {
+	case time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1):
+		statsCount.DayCount = statsCountNum
+	case time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7):
+		statsCount.WeekCount = statsCountNum
+	case time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0):
+		statsCount.MonthCount = statsCountNum
+	}
+	statsCount.TotalCount = statsCountNum
+
+	return statsCount, false
+}
+
 func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
 	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
@@ -265,7 +350,6 @@ func (c *StatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider
 	}
 	if err != nil {
 		log.Printf("Database error (social) %s\n", err)
-
 		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
 			ErrorMessage: "Database error",
 		})

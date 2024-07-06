@@ -1,0 +1,18 @@
+{% func TotalBadge(stats ProfileViewsStats) %}
+<svg width="568" height="24" viewBox="0 0 568 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <g>
+     <rect x="171" width="82" height="24" rx="4" fill="#24292F"></rect>
+     <rect x="252" width="54" height="24" rx="4" fill="#6D96FF"></rect>
+     <rect x="252" width="1" height="24" fill="#E4EAF1"></rect>
+     <g
+       fill="#fff"
+       text-anchor="middle"
+       font-family="DejaVu Sans,Verdana,Geneva,sans-serif"
+       font-size="14"
+     >
+       <text x="213" y="16">Total views</text>
+       <text x="279" y="16">{%dl stats.TotalCount %}</text>
+     </g>
+   </g>
+</svg>
+{% endfunc %}

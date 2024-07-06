@@ -1,12 +1,12 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE referrals
+CREATE TABLE IF NOT EXISTS referrals
 (
     referee_user_id  BIGINT NOT NULL REFERENCES users (id) PRIMARY KEY,
     referrer_user_id BIGINT NOT NULL REFERENCES users (id)
 );
 
-CREATE INDEX referrals_referee_user_id_idx ON referrals (referee_user_id);
+CREATE INDEX IF NOT EXISTS referrals_referee_user_id_idx ON referrals (referee_user_id);
 -- +goose StatementEnd
 
 -- +goose Down

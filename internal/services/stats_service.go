@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -22,6 +23,29 @@ func NewStatsService(repository *db.Repository) *StatsService {
 
 func (s *StatsService) TotalCount(ctx context.Context, userID int64) (int64, error) {
 	return s.repository.Queries().ProfileTotalViews(ctx, userID)
+}
+
+func (s *StatsService) TimePeriodStatsCount(ctx context.Context, userID int64, increment bool, period time.Time) (int64, error) {
+	profileTimePeriodViewsParams := dbs.ProfileTimePeriodViewsParams{UserID: userID, TimePeriod: period}
+
+	statsCount, err := s.repository.Queries().ProfileTimePeriodViews(ctx, profileTimePeriodViewsParams)
+	if err != nil {
+		fmt.Println("stats_service 33 err: " + err.Error())
+		return statsCount, err
+	}
+
+	if increment {
+		statsCount += 1
+
+		go func() {
+			err := s.increment(context.Background(), userID, time.Now().UTC().Truncate(time.Hour))
+			if err != nil {
+				log.Printf("Database err %s\n", err)
+			}
+		}()
+	}
+
+	return statsCount, nil
 }
 
 func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
