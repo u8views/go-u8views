@@ -53,7 +53,7 @@ SELECT g.time                         AS time,
        COALESCE(rcs.count, 0)::BIGINT AS count
 FROM (
     SELECT time::TIMESTAMP
-    FROM generate_series(
+    FROM GENERATE_SERIES(
         sqlc.arg('from')::DATE,
         sqlc.arg('to')::DATE,
         '1 DAY'::INTERVAL

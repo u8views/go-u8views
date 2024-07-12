@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -25,12 +24,14 @@ func (s *StatsService) TotalCount(ctx context.Context, userID int64) (int64, err
 	return s.repository.Queries().ProfileTotalViews(ctx, userID)
 }
 
-func (s *StatsService) TimePeriodStatsCount(ctx context.Context, userID int64, increment bool, period time.Time) (int64, error) {
-	profileTimePeriodViewsParams := dbs.ProfileTimePeriodViewsParams{UserID: userID, TimePeriod: period}
-
-	statsCount, err := s.repository.Queries().ProfileTimePeriodViews(ctx, profileTimePeriodViewsParams)
+func (s *StatsService) TimePeriodStatsCount(ctx context.Context, userID int64, increment bool, timeAfter time.Time) (int64, error) {
+	statsCount, err := s.repository.Queries().ProfileHourlyViewsStatsByPeriod(ctx, dbs.ProfileHourlyViewsStatsByPeriodParams{
+		UserID:    userID,
+		TimeAfter: timeAfter,
+	})
 	if err != nil {
-		fmt.Println("stats_service 33 err: " + err.Error())
+		log.Printf("Database err %s\n", err)
+
 		return statsCount, err
 	}
 

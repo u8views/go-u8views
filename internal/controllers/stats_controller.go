@@ -2,15 +2,16 @@ package controllers
 
 import (
 	"database/sql"
-	"github.com/u8views/go-u8views/internal/badge"
-	"github.com/u8views/go-u8views/internal/services"
-	"github.com/u8views/go-u8views/internal/storage/dbs"
-	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/u8views/go-u8views/internal/badge"
+	"github.com/u8views/go-u8views/internal/services"
+	"github.com/u8views/go-u8views/internal/storage/dbs"
+	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -56,58 +57,34 @@ func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 func (c *StatsController) DayCountBadge(ctx *gin.Context) {
 	period := time.Now().UTC().AddDate(0, 0, -1)
 
-	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
 		return
 	}
 
-	render := []byte(tmv2.DayBadge(statsCount))
-
-	c.TimePeriodCountBadge(ctx, period, render)
+	c.renderImage(ctx, []byte(tmv2.DayBadge(statsCount)))
 }
 
 func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
 	period := time.Now().UTC().AddDate(0, 0, -7)
 
-	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
 		return
 	}
 
-	render := []byte(tmv2.WeekBadge(statsCount))
-
-	c.TimePeriodCountBadge(ctx, period, render)
+	c.renderImage(ctx, []byte(tmv2.WeekBadge(statsCount)))
 }
 
 func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
 	period := time.Now().UTC().AddDate(0, -1, 0)
 
-	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
 		return
 	}
 
-	render := []byte(tmv2.MonthBadge(statsCount))
-
-	c.TimePeriodCountBadge(ctx, period, render)
-}
-
-func (c *StatsController) TimePeriodCountBadge(ctx *gin.Context, period time.Time, render []byte) {
-
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-
-	ctx.Data(http.StatusOK, "image/svg+xml", render)
-
-	//switch currentTime {
-	//case period.AddDate(0, 0, 1):
-	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.DayBadge(statsCount)))
-	//case period.AddDate(0, 0, 7):
-	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.WeekBadge(statsCount)))
-	//case period.AddDate(0, 1, 0):
-	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.MonthBadge(statsCount)))
-	//}
+	c.renderImage(ctx, []byte(tmv2.MonthBadge(statsCount)))
 }
 
 func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
@@ -127,10 +104,7 @@ func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(totalCountBadge))
+	c.renderImage(ctx, totalCountBadge)
 }
 
 func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
@@ -139,10 +113,7 @@ func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.Badge(statsCount)))
+	c.renderImage(ctx, []byte(tmv2.Badge(statsCount)))
 }
 
 func (c *StatsController) Pixel(ctx *gin.Context) {
@@ -158,10 +129,7 @@ func (c *StatsController) Pixel(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(pixel))
+	c.renderImage(ctx, []byte(pixel))
 }
 
 func (c *StatsController) GitHubStats(ctx *gin.Context) {
@@ -229,8 +197,7 @@ func (c *StatsController) ReferralsStats(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount int64, done bool) {
-
+func (c *StatsController) timePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount int64, done bool) {
 	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
 		return
@@ -242,16 +209,8 @@ func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.So
 	}
 
 	increment := strings.HasPrefix(ctx.GetHeader("User-Agent"), "github-camo")
-	statsCountNum, err := c.statsService.TimePeriodStatsCount(ctx, userID, increment, period)
 
-	if err == sql.ErrNoRows {
-		ctx.JSON(http.StatusBadRequest, &ErrorResponse{
-			ErrorMessage: "User not found (stats)",
-		})
-
-		return statsCount, true
-	}
-
+	statsCount, err := c.statsService.TimePeriodStatsCount(ctx, userID, increment, period)
 	if err != nil {
 		log.Printf("Database error (stats) %s\n", err)
 
@@ -262,7 +221,7 @@ func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.So
 		return statsCount, true
 	}
 
-	return statsCountNum, false
+	return statsCount, false
 }
 
 func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
@@ -368,14 +327,21 @@ func (c *StatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider
 	return userID, false
 }
 
-func createBadge(subject string, count int64) (string, error) {
+func (c *StatsController) renderImage(ctx *gin.Context, data []byte) {
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
+	ctx.Data(http.StatusOK, "image/svg+xml", data)
+}
+
+func createBadge(subject string, count int64) ([]byte, error) {
 	svg, err := badge.RenderBytes(
 		subject,
 		strconv.FormatInt(count, 10),
 	)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return string(svg), nil
+	return svg, nil
 }

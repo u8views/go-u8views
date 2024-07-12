@@ -1,5 +1,5 @@
 # [u8views.com](https://u8views.com)
-[![Yaroslav Podorvanov profile views](https://u8views.com/api/v1/github/profiles/63663261/views/day-week-month-total-count.svg)](https://u8views.com/github/YaroslavPodorvanov)
+[![u8views profile views](https://u8views.com/api/v1/github/profiles/121827373/views/day-week-month-total-count.svg)](https://u8views.com/github/u8views)
 
 ### Profile views counter
 [![Yaroslav Podorvanov profile views](https://github.com/u8views/go-u8views/blob/main/public/assets/images/yaroslav-podorvanov-developer.jpg?raw=true)](https://u8views.com/github/YaroslavPodorvanov)
@@ -117,26 +117,30 @@ FROM (
 ```sql
 SELECT DATE_TRUNC('MONTH', time) AS month,
        COUNT(*)                  AS views,
-       COUNT(DISTINCT (user_id)) AS users
+       COUNT(DISTINCT (user_id)) AS users,
+       SUM("count")              AS total
 FROM profile_hourly_views_stats
 GROUP BY 1
 ORDER BY 1;
-
 ```
-| Month      | Views | Users |
-|------------|-------|-------|
-| 2023-01-01 | 15    | 3     |
-| 2023-02-01 | 438   | 18    |
-| 2023-03-01 | 951   | 32    |
-| 2023-04-01 | 1110  | 36    |
-| 2023-05-01 | 2191  | 43    |
-| 2023-06-01 | 3433  | 57    |
-| 2023-07-01 | 3331  | 54    |
-| 2023-08-01 | 4539  | 69    |
-| 2023-09-01 | 4519  | 77    |
-| 2023-10-01 | 4473  | 78    |
-| 2023-11-01 | 4919  | 96    |
-| 2023-12-01 | 5525  | 115   |
-| 2024-01-01 | 11185 | 232   |
-| 2024-02-01 | 11348 | 245   |
-| 2024-03-01 | 7334  | 249   |
+| Month      | Views | Users | Total |
+|------------|-------|-------|-------|
+| 2023-01-01 | 15    | 3     | 78    |
+| 2023-02-01 | 438   | 18    | 2700  |
+| 2023-03-01 | 951   | 32    | 10241 |
+| 2023-04-01 | 1110  | 36    | 3441  |
+| 2023-05-01 | 2191  | 43    | 9032  |
+| 2023-06-01 | 3433  | 57    | 16866 |
+| 2023-07-01 | 3331  | 54    | 14233 |
+| 2023-08-01 | 4539  | 69    | 18017 |
+| 2023-09-01 | 4519  | 77    | 17053 |
+| 2023-10-01 | 4473  | 78    | 15771 |
+| 2023-11-01 | 4919  | 96    | 17567 |
+| 2023-12-01 | 5525  | 115   | 19882 |
+| 2024-01-01 | 11185 | 232   | 40202 |
+| 2024-02-01 | 11348 | 245   | 39586 |
+| 2024-03-01 | 13581 | 273   | 48629 |
+| 2024-04-01 | 13613 | 291   | 47198 |
+| 2024-05-01 | 14655 | 306   | 50581 |
+| 2024-06-01 | 13924 | 319   | 57695 |
+| 2024-07-01 | 5692  | 293   | 25950 |
