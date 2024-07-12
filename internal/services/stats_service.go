@@ -24,6 +24,31 @@ func (s *StatsService) TotalCount(ctx context.Context, userID int64) (int64, err
 	return s.repository.Queries().ProfileTotalViews(ctx, userID)
 }
 
+func (s *StatsService) TimePeriodStatsCount(ctx context.Context, userID int64, increment bool, timeAfter time.Time) (int64, error) {
+	statsCount, err := s.repository.Queries().ProfileHourlyViewsStatsByPeriod(ctx, dbs.ProfileHourlyViewsStatsByPeriodParams{
+		UserID:    userID,
+		TimeAfter: timeAfter,
+	})
+	if err != nil {
+		log.Printf("Database err %s\n", err)
+
+		return statsCount, err
+	}
+
+	if increment {
+		statsCount += 1
+
+		go func() {
+			err := s.increment(context.Background(), userID, time.Now().UTC().Truncate(time.Hour))
+			if err != nil {
+				log.Printf("Database err %s\n", err)
+			}
+		}()
+	}
+
+	return statsCount, nil
+}
+
 func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment bool) (result ProfileViewsStats, err error) {
 	totalCount, err := s.repository.Queries().ProfileTotalViews(ctx, userID)
 	if err != nil {

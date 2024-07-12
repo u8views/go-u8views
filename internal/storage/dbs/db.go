@@ -30,6 +30,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileHourlyViewsStatsByHourStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsByHour); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsByHour: %w", err)
 	}
+	if q.profileHourlyViewsStatsByPeriodStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsByPeriod); err != nil {
+		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsByPeriod: %w", err)
+	}
 	if q.profileHourlyViewsStatsUpsertStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsUpsert); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsUpsert: %w", err)
 	}
@@ -91,6 +94,11 @@ func (q *Queries) Close() error {
 	if q.profileHourlyViewsStatsByHourStmt != nil {
 		if cerr := q.profileHourlyViewsStatsByHourStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileHourlyViewsStatsByHourStmt: %w", cerr)
+		}
+	}
+	if q.profileHourlyViewsStatsByPeriodStmt != nil {
+		if cerr := q.profileHourlyViewsStatsByPeriodStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing profileHourlyViewsStatsByPeriodStmt: %w", cerr)
 		}
 	}
 	if q.profileHourlyViewsStatsUpsertStmt != nil {
@@ -214,6 +222,7 @@ type Queries struct {
 	tx                                   *sql.Tx
 	profileHourlyViewsStatsStmt          *sql.Stmt
 	profileHourlyViewsStatsByHourStmt    *sql.Stmt
+	profileHourlyViewsStatsByPeriodStmt  *sql.Stmt
 	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
 	profileTotalViewsStmt                *sql.Stmt
 	profileTotalViewsIncStmt             *sql.Stmt
@@ -238,6 +247,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		tx:                                   tx,
 		profileHourlyViewsStatsStmt:          q.profileHourlyViewsStatsStmt,
 		profileHourlyViewsStatsByHourStmt:    q.profileHourlyViewsStatsByHourStmt,
+		profileHourlyViewsStatsByPeriodStmt:  q.profileHourlyViewsStatsByPeriodStmt,
 		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,

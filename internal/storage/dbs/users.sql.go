@@ -15,7 +15,7 @@ SELECT g.time                         AS time,
        COALESCE(rcs.count, 0)::BIGINT AS count
 FROM (
     SELECT time::TIMESTAMP
-    FROM generate_series(
+    FROM GENERATE_SERIES(
         $1::DATE,
         $2::DATE,
         '1 DAY'::INTERVAL

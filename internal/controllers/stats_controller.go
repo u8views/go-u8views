@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/u8views/go-u8views/internal/badge"
 	"github.com/u8views/go-u8views/internal/services"
@@ -53,6 +54,39 @@ func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 	})
 }
 
+func (c *StatsController) DayCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1)
+
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	c.renderImage(ctx, []byte(tmv2.DayBadge(statsCount)))
+}
+
+func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7)
+
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	c.renderImage(ctx, []byte(tmv2.WeekBadge(statsCount)))
+}
+
+func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0)
+
+	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	c.renderImage(ctx, []byte(tmv2.MonthBadge(statsCount)))
+}
+
 func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
 	statsCount, done := c.statsCount(ctx, dbs.SocialProviderGithub)
 	if done {
@@ -70,10 +104,7 @@ func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(totalCountBadge))
+	c.renderImage(ctx, totalCountBadge)
 }
 
 func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
@@ -82,10 +113,7 @@ func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.Badge(statsCount)))
+	c.renderImage(ctx, []byte(tmv2.Badge(statsCount)))
 }
 
 func (c *StatsController) Pixel(ctx *gin.Context) {
@@ -101,10 +129,7 @@ func (c *StatsController) Pixel(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	ctx.Header("Pragma", "no-cache")
-	ctx.Header("Expires", "0")
-	ctx.Data(http.StatusOK, "image/svg+xml", []byte(pixel))
+	c.renderImage(ctx, []byte(pixel))
 }
 
 func (c *StatsController) GitHubStats(ctx *gin.Context) {
@@ -170,6 +195,33 @@ func (c *StatsController) ReferralsStats(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, result)
+}
+
+func (c *StatsController) timePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount int64, done bool) {
+	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
+	if done {
+		return
+	}
+
+	userID, done := c.toUserID(ctx, provider, socialProviderUserID)
+	if done {
+		return
+	}
+
+	increment := strings.HasPrefix(ctx.GetHeader("User-Agent"), "github-camo")
+
+	statsCount, err := c.statsService.TimePeriodStatsCount(ctx, userID, increment, period)
+	if err != nil {
+		log.Printf("Database error (stats) %s\n", err)
+
+		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
+			ErrorMessage: "Database error",
+		})
+
+		return statsCount, true
+	}
+
+	return statsCount, false
 }
 
 func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {
@@ -265,7 +317,6 @@ func (c *StatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider
 	}
 	if err != nil {
 		log.Printf("Database error (social) %s\n", err)
-
 		ctx.JSON(http.StatusInternalServerError, &ErrorResponse{
 			ErrorMessage: "Database error",
 		})
@@ -276,14 +327,21 @@ func (c *StatsController) toUserID(ctx *gin.Context, provider dbs.SocialProvider
 	return userID, false
 }
 
-func createBadge(subject string, count int64) (string, error) {
+func (c *StatsController) renderImage(ctx *gin.Context, data []byte) {
+	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	ctx.Header("Pragma", "no-cache")
+	ctx.Header("Expires", "0")
+	ctx.Data(http.StatusOK, "image/svg+xml", data)
+}
+
+func createBadge(subject string, count int64) ([]byte, error) {
 	svg, err := badge.RenderBytes(
 		subject,
 		strconv.FormatInt(count, 10),
 	)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return string(svg), nil
+	return svg, nil
 }

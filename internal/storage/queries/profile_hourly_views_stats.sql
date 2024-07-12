@@ -19,7 +19,7 @@ SELECT g.time                          AS time,
        COALESCE(phvs.count, 0)::BIGINT AS count
 FROM (
     SELECT time::TIMESTAMP
-    FROM generate_series(
+    FROM GENERATE_SERIES(
         sqlc.arg('from')::TIMESTAMP,
         sqlc.arg('to')::TIMESTAMP,
         '1 HOUR'::INTERVAL
@@ -33,3 +33,9 @@ FROM (
           AND time >= sqlc.arg('from')::TIMESTAMP
     ) AS phvs ON (g.time = phvs.time)
 ORDER BY g.time;
+
+-- name: ProfileHourlyViewsStatsByPeriod :one
+SELECT COALESCE(SUM(count), 0)::BIGINT AS count
+FROM profile_hourly_views_stats
+WHERE user_id = @user_id
+  AND time >= @time_after;

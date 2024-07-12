@@ -53,7 +53,12 @@ func main() {
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/stats.json", statsController.GitHubStats)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-week-month-total-count.svg", statsController.GitHubDayWeekMonthTotalCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/pixel.svg", statsController.Pixel)
+
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/day-count.svg", statsController.DayCountBadge)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/week-count.svg", statsController.WeekCountBadge)
+	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/month-count.svg", statsController.MonthCountBadge)
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/views/total-count.svg", statsController.TotalCountBadge)
+
 	r.GET("/api/v1/github/profiles/:social_provider_user_id/referrals/stats.json", statsController.ReferralsStats)
 	r.GET("/api/v1/users/stats.json", statsController.UsersCreatedAtStatsByDay)
 
