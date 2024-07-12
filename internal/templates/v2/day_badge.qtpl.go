@@ -18,7 +18,7 @@ var (
 )
 
 //line internal/templates/v2/day_badge.qtpl:1
-func StreamDayBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
+func StreamDayBadge(qw422016 *qt422016.Writer, stats int64) {
 //line internal/templates/v2/day_badge.qtpl:1
 	qw422016.N().S(`
 <svg width="568" height="24" viewBox="0 0 568 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ func StreamDayBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
       <text x="57.5" y="16">Views per day</text>
       <text x="138" y="16">`)
 //line internal/templates/v2/day_badge.qtpl:14
-	qw422016.N().DL(stats.DayCount)
+	qw422016.N().DL(stats)
 //line internal/templates/v2/day_badge.qtpl:14
 	qw422016.N().S(`</text>
     </g>
@@ -46,7 +46,7 @@ func StreamDayBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
 }
 
 //line internal/templates/v2/day_badge.qtpl:18
-func WriteDayBadge(qq422016 qtio422016.Writer, stats ProfileViewsStats) {
+func WriteDayBadge(qq422016 qtio422016.Writer, stats int64) {
 //line internal/templates/v2/day_badge.qtpl:18
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line internal/templates/v2/day_badge.qtpl:18
@@ -57,7 +57,7 @@ func WriteDayBadge(qq422016 qtio422016.Writer, stats ProfileViewsStats) {
 }
 
 //line internal/templates/v2/day_badge.qtpl:18
-func DayBadge(stats ProfileViewsStats) string {
+func DayBadge(stats int64) string {
 //line internal/templates/v2/day_badge.qtpl:18
 	qb422016 := qt422016.AcquireByteBuffer()
 //line internal/templates/v2/day_badge.qtpl:18

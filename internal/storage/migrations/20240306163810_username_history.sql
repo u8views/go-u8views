@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS username_history
+CREATE TABLE username_history
 (
     id                 BIGSERIAL                NOT NULL PRIMARY KEY,
     user_id            BIGINT                   NOT NULL REFERENCES users (id),

@@ -54,42 +54,60 @@ func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 }
 
 func (c *StatsController) DayCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1)
-
-	c.TimePeriodCountBadge(ctx, period)
-}
-
-func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7)
-
-	c.TimePeriodCountBadge(ctx, period)
-}
-
-func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0)
-
-	c.TimePeriodCountBadge(ctx, period)
-}
-
-func (c *StatsController) TimePeriodCountBadge(ctx *gin.Context, period time.Time) {
-	currentTime := time.Now().UTC().Truncate(time.Hour)
+	period := time.Now().UTC().AddDate(0, 0, -1)
 
 	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
 		return
 	}
 
+	render := []byte(tmv2.DayBadge(statsCount))
+
+	c.TimePeriodCountBadge(ctx, period, render)
+}
+
+func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().AddDate(0, 0, -7)
+
+	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	render := []byte(tmv2.WeekBadge(statsCount))
+
+	c.TimePeriodCountBadge(ctx, period, render)
+}
+
+func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
+	period := time.Now().UTC().AddDate(0, -1, 0)
+
+	statsCount, done := c.TimePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
+	if done {
+		return
+	}
+
+	render := []byte(tmv2.MonthBadge(statsCount))
+
+	c.TimePeriodCountBadge(ctx, period, render)
+}
+
+func (c *StatsController) TimePeriodCountBadge(ctx *gin.Context, period time.Time, render []byte) {
+
 	ctx.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	ctx.Header("Pragma", "no-cache")
 	ctx.Header("Expires", "0")
-	switch currentTime {
-	case period.AddDate(0, 0, 1):
-		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.DayBadge(statsCount)))
-	case period.AddDate(0, 0, 7):
-		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.WeekBadge(statsCount)))
-	case period.AddDate(0, 1, 0):
-		ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.MonthBadge(statsCount)))
-	}
+
+	ctx.Data(http.StatusOK, "image/svg+xml", render)
+
+	//switch currentTime {
+	//case period.AddDate(0, 0, 1):
+	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.DayBadge(statsCount)))
+	//case period.AddDate(0, 0, 7):
+	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.WeekBadge(statsCount)))
+	//case period.AddDate(0, 1, 0):
+	//	ctx.Data(http.StatusOK, "image/svg+xml", []byte(tmv2.MonthBadge(statsCount)))
+	//}
 }
 
 func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
@@ -211,7 +229,7 @@ func (c *StatsController) ReferralsStats(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount services.ProfileViewsStats, done bool) {
+func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.SocialProvider, period time.Time) (statsCount int64, done bool) {
 
 	socialProviderUserID, done := c.parseSocialProviderUserID(ctx)
 	if done {
@@ -244,17 +262,7 @@ func (c *StatsController) TimePeriodStatsCount(ctx *gin.Context, provider dbs.So
 		return statsCount, true
 	}
 
-	switch period.UTC().Truncate(time.Hour) {
-	case time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1):
-		statsCount.DayCount = statsCountNum
-	case time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7):
-		statsCount.WeekCount = statsCountNum
-	case time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0):
-		statsCount.MonthCount = statsCountNum
-	}
-	statsCount.TotalCount = statsCountNum
-
-	return statsCount, false
+	return statsCountNum, false
 }
 
 func (c *StatsController) statsCount(ctx *gin.Context, provider dbs.SocialProvider) (statsCount services.ProfileViewsStats, done bool) {

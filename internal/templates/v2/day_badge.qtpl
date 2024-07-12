@@ -1,4 +1,4 @@
-{% func DayBadge(stats ProfileViewsStats) %}
+{% func DayBadge(stats int64) %}
 <svg width="568" height="24" viewBox="0 0 568 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g>
     <rect width="113" height="24" rx="4" fill="#24292F"></rect>
@@ -11,7 +11,7 @@
       font-size="14"
     >
       <text x="57.5" y="16">Views per day</text>
-      <text x="138" y="16">{%dl stats.DayCount %}</text>
+      <text x="138" y="16">{%dl stats %}</text>
     </g>
   </g>
 </svg>
