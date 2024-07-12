@@ -55,7 +55,7 @@ func (c *StatsController) GitHubDayWeekMonthTotalCount(ctx *gin.Context) {
 }
 
 func (c *StatsController) DayCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().AddDate(0, 0, -1)
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -1)
 
 	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
@@ -66,7 +66,7 @@ func (c *StatsController) DayCountBadge(ctx *gin.Context) {
 }
 
 func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().AddDate(0, 0, -7)
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, 0, -7)
 
 	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
@@ -77,7 +77,7 @@ func (c *StatsController) WeekCountBadge(ctx *gin.Context) {
 }
 
 func (c *StatsController) MonthCountBadge(ctx *gin.Context) {
-	period := time.Now().UTC().AddDate(0, -1, 0)
+	period := time.Now().UTC().Truncate(time.Hour).AddDate(0, -1, 0)
 
 	statsCount, done := c.timePeriodStatsCount(ctx, dbs.SocialProviderGithub, period)
 	if done {
