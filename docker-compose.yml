@@ -15,7 +15,7 @@ services:
 
   app:
     container_name: "go_u8views_app"
-    image: golang:1.21.0-alpine
+    image: golang:1.23.5-alpine
     working_dir: /go/src/github.com/u8views/go-u8views
     volumes:
       - .:/go/src/github.com/u8views/go-u8views
