@@ -75,6 +75,7 @@ func (c *WebController) Index(ctx *gin.Context) {
 				Name:                 user.Name,
 			},
 			ProfileViewsStats: tmv2.ProfileViewsStats{
+				HourCount:  stats.HourCount,
 				DayCount:   stats.DayCount,
 				WeekCount:  stats.WeekCount,
 				MonthCount: stats.MonthCount,
