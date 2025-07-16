@@ -6,6 +6,7 @@ ON CONFLICT (user_id, time) DO UPDATE
 
 -- name: ProfileHourlyViewsStats :many
 SELECT user_id,
+       COALESCE(SUM(count) FILTER ( WHERE time >= @hour ), 0)::BIGINT AS hour_count,
        COALESCE(SUM(count) FILTER ( WHERE time >= @day ), 0)::BIGINT  AS day_count,
        COALESCE(SUM(count) FILTER ( WHERE time >= @week ), 0)::BIGINT AS week_count,
        SUM(count)                                                     AS month_count

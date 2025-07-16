@@ -16,6 +16,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	// language=SVG
+	pixel = `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1">
+  <rect width="1" height="1" fill="white" />
+</svg>`
+)
+
 type StatsController struct {
 	userService  *services.UserService
 	statsService *services.StatsService
@@ -113,17 +120,17 @@ func (c *StatsController) GitHubDayWeekMonthTotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
+	// Temporary solution to reduce traffic volume
+	if statsCount.HourCount > 1024 {
+		c.renderImage(ctx, []byte(pixel))
+
+		return
+	}
+
 	c.renderImage(ctx, []byte(tmv2.Badge(statsCount)))
 }
 
 func (c *StatsController) Pixel(ctx *gin.Context) {
-	const (
-		// language=SVG
-		pixel = `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1">
-  <rect width="1" height="1" fill="white" />
-</svg>`
-	)
-
 	done := c.increment(ctx, dbs.SocialProviderGithub)
 	if done {
 		return

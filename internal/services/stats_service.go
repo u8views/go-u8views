@@ -76,6 +76,7 @@ func (s *StatsService) StatsCount(ctx context.Context, userID int64, increment b
 	}
 
 	return ProfileViewsStats{
+		HourCount:  stats.HourCount,
 		DayCount:   stats.DayCount,
 		WeekCount:  stats.WeekCount,
 		MonthCount: stats.MonthCount,
@@ -98,6 +99,7 @@ func (s *StatsService) Increment(ctx context.Context, userID int64) (err error) 
 
 func (s *StatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userIDs []int64, now time.Time) (map[int64]models.DayWeekMonthViewsStats, error) {
 	rows, err := s.repository.Queries().ProfileHourlyViewsStats(ctx, dbs.ProfileHourlyViewsStatsParams{
+		Hour:    now,
 		Day:     now.AddDate(0, 0, -1),
 		Week:    now.AddDate(0, 0, -7),
 		Month:   now.AddDate(0, -1, 0),
@@ -110,6 +112,7 @@ func (s *StatsService) UserDayWeekMonthViewsStatsMap(ctx context.Context, userID
 	result := make(map[int64]models.DayWeekMonthViewsStats, len(rows))
 	for _, row := range rows {
 		result[row.UserID] = models.DayWeekMonthViewsStats{
+			HourCount:  row.HourCount,
 			DayCount:   row.DayCount,
 			WeekCount:  row.WeekCount,
 			MonthCount: row.MonthCount,
