@@ -100,6 +100,13 @@ func (c *StatsController) TotalCountBadge(ctx *gin.Context) {
 		return
 	}
 
+	// Temporary solution to reduce traffic volume
+	if statsCount.HourCount > 1024 {
+		c.renderImage(ctx, []byte(pixel))
+
+		return
+	}
+
 	totalCountBadge, err := createBadge("Total views", statsCount.TotalCount)
 	if err != nil {
 		log.Printf("Cannot generate badge %s\n", err)
