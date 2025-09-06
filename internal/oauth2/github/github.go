@@ -12,6 +12,12 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+var (
+	defaultClient = &fasthttp.Client{
+		ReadBufferSize: 16 * 1024,
+	}
+)
+
 func User(secret oauth2.Secret, code string) (result oauth2.SocialProviderUser, err error) {
 	accessTokenResponse, err := getAccessToken(secret, code)
 	if err != nil {
@@ -68,7 +74,7 @@ func getAccessToken(secret oauth2.Secret, code string) (result github.AccessToke
 	q.Add("client_secret", secret.ClientSecret)
 	q.Add("code", code)
 
-	err = fasthttp.Do(request, response)
+	err = defaultClient.Do(request, response)
 	if err != nil {
 		return result, fmt.Errorf("GitHub (get access token) http err %v", err)
 	}
@@ -99,7 +105,7 @@ func getUser(accessToken string) (result github.User, err error) {
 	request.SetRequestURI(github.ApiUserURI)
 	request.Header.Set("Authorization", "token "+accessToken)
 
-	err = fasthttp.Do(request, response)
+	err = defaultClient.Do(request, response)
 	if err != nil {
 		return result, fmt.Errorf("GitHub (get user) http err %v", err)
 	}
