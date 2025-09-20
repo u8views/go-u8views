@@ -77,8 +77,8 @@ func main() {
 		ctx.File("./public/design/v2/profile-auth.html")
 	})
 
-	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
-	r.GET("/sitemap-github-profiles-:filename", sitemapController.SitemapGithubProfilesPaginated)
+	r.GET("/sitemap/github/profiles.xml", sitemapController.SitemapGithubProfilesIndex)
+	r.GET("/sitemap/github/:offset/:limit/profiles.xml", sitemapController.SitemapGithubProfiles)
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
@@ -119,6 +119,7 @@ func main() {
 
 		// Sitemaps
 		StaticFile("/sitemap.xml", "./public/sitemap.xml").
+		StaticFile("/sitemap-github-profiles.xml", "./public/sitemap-github-profiles.xml").
 		StaticFile("/sitemap-main.xml", "./public/sitemap-main.xml").
 
 		// System
