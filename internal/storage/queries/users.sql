@@ -72,3 +72,19 @@ ORDER BY g.time;
 SELECT u.username
 FROM users u
 ORDER BY u.id DESC;
+
+-- name: UsersGetUsernamesCount :one
+SELECT COUNT(*) FROM users 
+WHERE social_provider = 'github' 
+AND EXISTS (
+    SELECT 1 FROM profile_total_views ptv 
+    WHERE ptv.user_id = users.id AND ptv.count > 0
+);
+
+-- name: UsersGetUsernamesPaginated :many
+SELECT u.username FROM users u
+INNER JOIN profile_total_views ptv ON u.id = ptv.user_id
+WHERE u.social_provider = 'github' 
+AND ptv.count > 0
+ORDER BY u.username ASC 
+LIMIT $2 OFFSET $1;

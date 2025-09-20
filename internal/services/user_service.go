@@ -52,6 +52,17 @@ func (s *UserService) GetAllUsernames(ctx context.Context) ([]string, error) {
 	return s.repository.Queries().UsersGetAllUsernames(ctx)
 }
 
+func (s *UserService) GetUsernamesCount(ctx context.Context) (int64, error) {
+	return s.repository.Queries().UsersGetUsernamesCount(ctx)
+}
+
+func (s *UserService) GetUsernamesPaginated(ctx context.Context, offset, limit int64) ([]string, error) {
+	return s.repository.Queries().UsersGetUsernamesPaginated(ctx, dbs.UsersGetUsernamesPaginatedParams{
+		Offset: int32(offset),
+		Limit:  int32(limit),
+	})
+}
+
 func (s *UserService) UsersCreatedAtStatsByDay(ctx context.Context) ([]models.TimeCount, error) {
 	to := time.Now().UTC().Truncate(24 * time.Hour)
 	from := to.AddDate(0, -1, 0)
