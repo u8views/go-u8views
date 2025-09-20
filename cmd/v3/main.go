@@ -78,6 +78,7 @@ func main() {
 	})
 
 	r.GET("/sitemap-github-profiles.xml", sitemapController.SitemapGithubProfiles)
+	r.GET("/sitemap-github-profiles-:filename", sitemapController.SitemapGithubProfilesPaginated)
 
 	r.GET("/stats", webController.Stats)
 	r.GET("/design/stats", func(ctx *gin.Context) {
