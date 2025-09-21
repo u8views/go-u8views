@@ -44,22 +44,17 @@ func SitemapGithubProfiles(usernames []string) string {
 	return qs422016
 }
 
-func StreamSitemapGithubProfilesIndex(qw422016 *qt422016.Writer, totalCount, pageSize int64) {
+func StreamSitemapGithubProfilesIndex(qw422016 *qt422016.Writer, totalCount, limit int64) {
 	qw422016.N().S(`<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `)
-	for begin := int64(0); begin < totalCount; begin += pageSize {
-		end := begin + pageSize
-		if end > totalCount {
-			end = totalCount
-		}
-
+	for offset := int64(0); offset < totalCount; offset += limit {
 		qw422016.N().S(`    <sitemap>
-        <loc>https://u8views.com/sitemap-github-profiles-`)
-		qw422016.N().DL(begin)
-		qw422016.N().S(`-`)
-		qw422016.N().DL(end)
-		qw422016.N().S(`.xml</loc>
+        <loc>https://u8views.com/sitemap/github/`)
+		qw422016.N().DL(offset)
+		qw422016.N().S(`/`)
+		qw422016.N().DL(limit)
+		qw422016.N().S(`/profiles.xml</loc>
     </sitemap>
 `)
 	}
@@ -67,15 +62,15 @@ func StreamSitemapGithubProfilesIndex(qw422016 *qt422016.Writer, totalCount, pag
 `)
 }
 
-func WriteSitemapGithubProfilesIndex(qq422016 qtio422016.Writer, totalCount, pageSize int64) {
+func WriteSitemapGithubProfilesIndex(qq422016 qtio422016.Writer, totalCount, limit int64) {
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	StreamSitemapGithubProfilesIndex(qw422016, totalCount, pageSize)
+	StreamSitemapGithubProfilesIndex(qw422016, totalCount, limit)
 	qt422016.ReleaseWriter(qw422016)
 }
 
-func SitemapGithubProfilesIndex(totalCount, pageSize int64) string {
+func SitemapGithubProfilesIndex(totalCount, limit int64) string {
 	qb422016 := qt422016.AcquireByteBuffer()
-	WriteSitemapGithubProfilesIndex(qb422016, totalCount, pageSize)
+	WriteSitemapGithubProfilesIndex(qb422016, totalCount, limit)
 	qs422016 := string(qb422016.B)
 	qt422016.ReleaseByteBuffer(qb422016)
 	return qs422016

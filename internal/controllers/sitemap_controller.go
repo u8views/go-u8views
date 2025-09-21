@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"strings"
 
 	"github.com/u8views/go-u8views/internal/services"
 	tmv2 "github.com/u8views/go-u8views/internal/templates/v2"
@@ -21,81 +19,65 @@ func NewSitemapController(userService *services.UserService) *SitemapController 
 	return &SitemapController{userService: userService}
 }
 
-const sitemapPageSize = 1024
+const (
+	sitemapProfilesLimit    = 1024
+	sitemapProfilesMaxLimit = 8096
+)
 
-func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
-	totalCount, err := c.userService.GetUsernamesCount(ctx)
+func (c *SitemapController) SitemapGithubProfilesIndex(ctx *gin.Context) {
+	totalCount, err := c.userService.UsersCount(ctx)
 	if err != nil {
 		log.Printf("Database error (sitemap count) %s\n", err)
-		c.renderError(ctx, "Database error")
-		return
-	}
-
-	if totalCount <= sitemapPageSize {
-		usernames, err := c.userService.GetAllUsernames(ctx)
-		if err != nil {
-			log.Printf("Database error (sitemap) %s\n", err)
-			c.renderError(ctx, "Database error")
-			return
-		}
-		ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfiles(usernames)))
+		c.renderError(ctx, http.StatusInternalServerError, "Database error")
 		return
 	}
 
 	// Return sitemap index
-	ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfilesIndex(totalCount, sitemapPageSize)))
+	ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfilesIndex(totalCount, sitemapProfilesLimit)))
 }
 
-func (c *SitemapController) SitemapGithubProfilesPaginated(ctx *gin.Context) {
-	filename := ctx.Param("filename")
+func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
+	type sitemapParams struct {
+		Offset int32 `uri:"offset"`
+		Limit  int32 `uri:"limit"`
+	}
 
-	if !strings.HasSuffix(filename, ".xml") {
-		c.renderError(ctx, "Invalid file format")
+	var params sitemapParams
+	if err := ctx.ShouldBindUri(&params); err != nil {
+		c.renderError(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	rangeStr := strings.TrimSuffix(filename, ".xml")
-
-	parts := strings.Split(rangeStr, "-")
-	log.Printf("Split parts: %v (length: %d)", parts, len(parts))
-
-	if len(parts) != 2 {
-		c.renderError(ctx, fmt.Sprintf("Invalid range format. Got %d parts: %v", len(parts), parts))
+	if params.Offset <= 0 {
+		c.renderError(ctx, http.StatusBadRequest, "Offset required")
 		return
 	}
 
-	begin, err := strconv.ParseInt(parts[0], 10, 64)
-	if err != nil {
-		c.renderError(ctx, "Invalid begin parameter")
+	if params.Limit <= 0 {
+		c.renderError(ctx, http.StatusBadRequest, "Limit required")
 		return
 	}
 
-	end, err := strconv.ParseInt(parts[1], 10, 64)
-	if err != nil {
-		c.renderError(ctx, "Invalid end parameter")
+	if params.Limit > sitemapProfilesMaxLimit {
+		c.renderError(ctx, http.StatusBadRequest, fmt.Sprintf("Limit max %d", sitemapProfilesMaxLimit))
 		return
 	}
 
-	if end-begin > sitemapPageSize {
-		c.renderError(ctx, "Page size too large")
-		return
-	}
-
-	usernames, err := c.userService.GetUsernamesPaginated(ctx, begin, end-begin)
+	usernames, err := c.userService.Usernames(ctx, params.Offset, params.Limit)
 	if err != nil {
 		log.Printf("Database error (sitemap paginated) %s\n", err)
-		c.renderError(ctx, "Database error")
+		c.renderError(ctx, http.StatusInternalServerError, "Database error")
 		return
 	}
 
 	ctx.Data(http.StatusOK, "application/xml", []byte(tmv2.SitemapGithubProfiles(usernames)))
 }
 
-func (c *SitemapController) renderError(ctx *gin.Context, message string) {
+func (c *SitemapController) renderError(ctx *gin.Context, code int, message string) {
 	// language=XML
 	errorMessage := `<?xml version="1.0" encoding="UTF-8"?>
 <error>
     <message>` + message + `</message>
 </error>`
-	ctx.Data(http.StatusInternalServerError, "text/xml", []byte(errorMessage))
+	ctx.Data(code, "text/xml", []byte(errorMessage))
 }

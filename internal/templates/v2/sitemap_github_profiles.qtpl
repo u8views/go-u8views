@@ -9,18 +9,12 @@
 </urlset>
 {%- endfunc -%}
 
-{%- func SitemapGithubProfilesIndex(totalCount, pageSize int64) -%}
+{%- func SitemapGithubProfilesIndex(totalCount, limit int64) -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- for begin := int64(0); begin < totalCount; begin += pageSize -%}
-    {%- code 
-        end := begin + pageSize
-        if end > totalCount {
-            end = totalCount
-        }
-    -%}
+{%- for offset := int64(0); offset < totalCount; offset += limit -%}
     <sitemap>
-        <loc>https://u8views.com/sitemap-github-profiles-{%dl begin %}-{%dl end %}.xml</loc>
+        <loc>https://u8views.com/sitemap/github/{%dl offset %}/{%dl limit %}/profiles.xml</loc>
     </sitemap>
 {%- endfor -%}
 </sitemapindex>

@@ -48,18 +48,14 @@ func (s *UserService) Users(ctx context.Context, limit int32) ([]dbs.UsersGetRow
 	return s.repository.Queries().UsersGet(ctx, limit)
 }
 
-func (s *UserService) GetAllUsernames(ctx context.Context) ([]string, error) {
-	return s.repository.Queries().UsersGetAllUsernames(ctx)
+func (s *UserService) UsersCount(ctx context.Context) (int64, error) {
+	return s.repository.Queries().UsersCount(ctx)
 }
 
-func (s *UserService) GetUsernamesCount(ctx context.Context) (int64, error) {
-	return s.repository.Queries().UsersGetUsernamesCount(ctx)
-}
-
-func (s *UserService) GetUsernamesPaginated(ctx context.Context, offset, limit int64) ([]string, error) {
-	return s.repository.Queries().UsersGetUsernamesPaginated(ctx, dbs.UsersGetUsernamesPaginatedParams{
-		Offset: int32(offset),
-		Limit:  int32(limit),
+func (s *UserService) Usernames(ctx context.Context, offset, limit int32) ([]string, error) {
+	return s.repository.Queries().Usernames(ctx, dbs.UsernamesParams{
+		Offset: offset,
+		Limit:  limit,
 	})
 }
 
