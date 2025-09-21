@@ -48,11 +48,6 @@ func (c *SitemapController) SitemapGithubProfiles(ctx *gin.Context) {
 		return
 	}
 
-	if params.Offset <= 0 {
-		c.renderError(ctx, http.StatusBadRequest, "Offset required")
-		return
-	}
-
 	if params.Limit <= 0 {
 		c.renderError(ctx, http.StatusBadRequest, "Limit required")
 		return
