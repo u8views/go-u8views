@@ -39,7 +39,7 @@ func streamdjinni(qw422016 *qt422016.Writer) {
 	`)
 	if djinniButtonSignUpOrJobs() {
 		qw422016.N().S(`
-		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Browse</a>
+		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Jobs</a>
 	`)
 	} else {
 		qw422016.N().S(`

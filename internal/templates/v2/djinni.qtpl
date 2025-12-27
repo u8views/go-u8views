@@ -14,7 +14,7 @@
 </figure>
 <button class="hero__donate-button">
 	{% if djinniButtonSignUpOrJobs() %}
-		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Browse</a>
+		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Jobs</a>
 	{% else %}
 		<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
 	{% endif %}
