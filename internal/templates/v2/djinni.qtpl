@@ -9,6 +9,10 @@
 	</figcaption>
 </figure>
 <button class="hero__donate-button">
-	<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+	{% if djinniSignUpOrJobs() %}
+		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Browse jobs</a>
+	{% else %}
+		<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+	{% endif %}
 </button>
 {% endfunc %}

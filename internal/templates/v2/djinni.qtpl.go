@@ -26,7 +26,17 @@ func streamdjinni(qw422016 *qt422016.Writer) {
 	</figcaption>
 </figure>
 <button class="hero__donate-button">
-	<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+	`)
+	if djinniSignUpOrJobs() {
+		qw422016.N().S(`
+		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Browse jobs</a>
+	`)
+	} else {
+		qw422016.N().S(`
+		<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+	`)
+	}
+	qw422016.N().S(`
 </button>
 `)
 }
