@@ -2,8 +2,15 @@ package v2
 
 import "sync/atomic"
 
-var djinniIndex int64
+var (
+	djinniTextIndex   int64
+	djinniButtonIndex int64
+)
 
-func djinniSignUpOrJobs() bool {
-	return atomic.AddInt64(&djinniIndex, 1)&1 == 0
+func djinniTextLongOrShort() bool {
+	return atomic.AddInt64(&djinniTextIndex, 1)&1 == 0
+}
+
+func djinniButtonSignUpOrJobs() bool {
+	return atomic.AddInt64(&djinniButtonIndex, 1)&1 == 0
 }
