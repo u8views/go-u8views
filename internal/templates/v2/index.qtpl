@@ -28,7 +28,7 @@
         <section class="hero">
             {% if showCharity %}
             <div class="hero__donate-block">
-                {%= charity() %}
+                {%= djinni() %}
             </div>
             {% endif %}
             <div class="hero__main">

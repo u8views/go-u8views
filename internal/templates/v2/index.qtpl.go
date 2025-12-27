@@ -56,7 +56,7 @@ func StreamIndex(qw422016 *qt422016.Writer, sessionProfile ProfileView, exampleP
 		qw422016.N().S(`
             <div class="hero__donate-block">
                 `)
-		streamcharity(qw422016)
+		streamdjinni(qw422016)
 		qw422016.N().S(`
             </div>
             `)

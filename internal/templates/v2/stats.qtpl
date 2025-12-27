@@ -25,7 +25,7 @@
     <div class="wrapper-u8">
         {% if showCharity %}
         <div class="hero__donate-block profile">
-            {%= charity() %}
+            {%= djinni() %}
         </div>
         {% endif %}
         <section class="stat-reg">

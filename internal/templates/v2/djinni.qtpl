@@ -1,0 +1,14 @@
+{% func djinni() %}
+<figure class="hero__figure-donate">
+	<img
+		src="/assets/images/djinni.png"
+		alt="Anonymous job search for developers – Djinni"
+	/>
+	<figcaption class="hero__figcaption">
+		Anonymous job search for developers
+	</figcaption>
+</figure>
+<button class="hero__donate-button">
+	<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+</button>
+{% endfunc %}
