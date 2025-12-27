@@ -18,7 +18,7 @@ func streamdjinni(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <figure class="hero__figure-donate">
 	<img
-		src="/assets/images/djinni.png"
+		src="/assets/images/djinni.jpeg"
 		alt="Anonymous job search for developers – Djinni"
 	/>
 	<figcaption class="hero__figcaption">
