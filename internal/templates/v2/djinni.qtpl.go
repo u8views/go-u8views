@@ -22,9 +22,7 @@ func streamdjinni(qw422016 *qt422016.Writer) {
 		alt="Anonymous job search for developers – Djinni"
 	/>
 	<figcaption class="hero__figcaption">
-		Looking for a job? Try anonymous job search: you create a profile,
-		recruiters reach out to you,
-		and you share your contacts only with those you like.
+		Anonymous job search for developers and everyone working in tech.
 	</figcaption>
 </figure>
 <button class="hero__donate-button">
