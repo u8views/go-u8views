@@ -23,7 +23,7 @@ func streamdjinni(qw422016 *qt422016.Writer) {
 	/>
 	<figcaption class="hero__figcaption">
 		`)
-	if djinniSignUpOrJobs() {
+	if djinniTextLongOrShort() {
 		qw422016.N().S(`
 			Looking for a job? Try anonymous job search: you create a profile, recruiters reach out to you, and you share your contacts only with those you like.
 		`)
