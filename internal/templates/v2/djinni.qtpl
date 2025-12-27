@@ -5,7 +5,11 @@
 		alt="Anonymous job search for developers – Djinni"
 	/>
 	<figcaption class="hero__figcaption">
-		Anonymous job search for developers and everyone working in tech.
+		{% if djinniSignUpOrJobs() %}
+			Looking for a job? Try anonymous job search: you create a profile, recruiters reach out to you, and you share your contacts only with those you like.
+		{% else %}
+			Anonymous job search for developers and everyone working in tech.
+		{% endif %}
 	</figcaption>
 </figure>
 <button class="hero__donate-button">
