@@ -109,7 +109,7 @@ LIMIT 100;
 SELECT g.time::TIMESTAMP
 FROM (
     SELECT time::TIMESTAMP
-    FROM generate_series(
+    FROM GENERATE_SERIES(
         (DATE_TRUNC('DAY', NOW()) - INTERVAL '1 MONTH')::TIMESTAMP,
         (DATE_TRUNC('DAY', NOW()))::TIMESTAMP,
         '1 DAY'::INTERVAL
@@ -164,6 +164,9 @@ ORDER BY 1;
 | 2025-09-01 | 24146 | 727   | 87879   |
 | 2025-10-01 | 25860 | 758   | 85042   |
 | 2025-11-01 | 28348 | 830   | 84664   |
+| 2025-12-01 | 37425 | 882   | 93729   |
+| 2026-01-01 | 40140 | 889   | 121395  |
+| 2026-02-01 | 35127 | 890   | 106999  |
 
 ```sql
 SELECT                                    
@@ -210,4 +213,8 @@ ORDER BY 1;
 | 2025-09-01 | 125   |
 | 2025-10-01 | 81    |
 | 2025-11-01 | 132   |
+| 2025-12-01 | 151   |
+| 2026-01-01 | 133   |
+| 2026-02-01 | 103   |
+
 
