@@ -1,0 +1,22 @@
+{% func djinni() %}
+<figure class="hero__figure-donate">
+	<img
+		src="/assets/images/djinni.jpeg"
+		alt="Anonymous job search for developers – Djinni"
+	/>
+	<figcaption class="hero__figcaption">
+		{% if djinniTextLongOrShort() %}
+			Looking for a job? Try anonymous job search: you create a profile, recruiters reach out to you, and you share your contacts only with those you like.
+		{% else %}
+			Anonymous job search for developers and everyone working in tech.
+		{% endif %}
+	</figcaption>
+</figure>
+<button class="hero__donate-button">
+	{% if djinniButtonSignUpOrJobs() %}
+		<a href="https://djinni.co/jobs?lang=en&from=u8" class="hero__donate-link">Jobs</a>
+	{% else %}
+		<a href="https://djinni.co/signup?lang=en&from=u8" class="hero__donate-link">Sign up</a>
+	{% endif %}
+</button>
+{% endfunc %}
