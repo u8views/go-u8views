@@ -4,9 +4,31 @@ TRUNCATE profile_hourly_views_stats CASCADE;
 TRUNCATE profile_total_views CASCADE;
 TRUNCATE users CASCADE;
 
-INSERT INTO users (id)
-SELECT generated_id
+INSERT INTO users (
+    id,
+    social_provider,
+    social_provider_user_id,
+    username,
+    name,
+    canonical_username,
+    created_at,
+    updated_at,
+    last_login_at
+)
+SELECT generated_id,
+       'github',
+       generated_id::VARCHAR,
+       'user-' || generated_id,
+       'User ' || generated_id,
+       'user-' || generated_id,
+       NOW(),
+       NOW(),
+       NOW()
 FROM GENERATE_SERIES(1, 10 * 1000) AS generated_id;
+
+INSERT INTO username_history (user_id, social_provider, canonical_username, created_at, updated_at)
+SELECT id, social_provider, canonical_username, created_at, updated_at
+FROM users;
 
 INSERT INTO profile_total_views (user_id, count)
 SELECT generated_user_id, 876100
