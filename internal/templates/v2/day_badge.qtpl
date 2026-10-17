@@ -1,9 +1,13 @@
 {% func DayBadge(stats int64) %}
 <svg width="568" height="24" viewBox="0 0 568 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g>
-    <rect width="113" height="24" rx="4" fill="#24292F"></rect>
-    <rect x="112" width="54" height="24" rx="4" fill="#6D96FF"></rect>
-    <rect x="112" width="1" height="24" fill="#E4EAF1"></rect>
+    <clipPath id="badge-day">
+      <rect width="166" height="24" rx="4"></rect>
+    </clipPath>
+    <g clip-path="url(#badge-day)">
+      <rect width="112" height="24" fill="#24292F"></rect>
+      <rect x="112" width="54" height="24" fill="#6D96FF"></rect>
+    </g>
     <g
       fill="#fff"
       text-anchor="middle"
