@@ -18,9 +18,13 @@ func StreamBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
 	qw422016.N().S(`
 <svg width="568" height="24" viewBox="0 0 568 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g>
-    <rect width="113" height="24" rx="4" fill="#24292F"></rect>
-    <rect x="112" width="54" height="24" rx="4" fill="#6D96FF"></rect>
-    <rect x="112" width="1" height="24" fill="#E4EAF1"></rect>
+    <clipPath id="badge-day">
+      <rect width="166" height="24" rx="4"></rect>
+    </clipPath>
+    <g clip-path="url(#badge-day)">
+      <rect width="112" height="24" fill="#24292F"></rect>
+      <rect x="112" width="54" height="24" fill="#6D96FF"></rect>
+    </g>
     <g
       fill="#fff"
       text-anchor="middle"
@@ -34,9 +38,13 @@ func StreamBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
     </g>
   </g>
   <g>
-    <rect x="171" width="82" height="24" rx="4" fill="#24292F"></rect>
-    <rect x="252" width="54" height="24" rx="4" fill="#6D96FF"></rect>
-    <rect x="252" width="1" height="24" fill="#E4EAF1"></rect>
+    <clipPath id="badge-week">
+      <rect x="171" width="135" height="24" rx="4"></rect>
+    </clipPath>
+    <g clip-path="url(#badge-week)">
+      <rect x="171" width="81" height="24" fill="#24292F"></rect>
+      <rect x="252" width="54" height="24" fill="#6D96FF"></rect>
+    </g>
     <g
       fill="#fff"
       text-anchor="middle"
@@ -51,9 +59,13 @@ func StreamBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
   </g>
 
   <g>
-    <rect x="311" width="90" height="24" rx="4" fill="#24292F"></rect>
-    <rect x="400" width="54" height="24" rx="4" fill="#6D96FF"></rect>
-    <rect x="400" width="1" height="24" fill="#E4EAF1"></rect>
+    <clipPath id="badge-month">
+      <rect x="311" width="143" height="24" rx="4"></rect>
+    </clipPath>
+    <g clip-path="url(#badge-month)">
+      <rect x="311" width="89" height="24" fill="#24292F"></rect>
+      <rect x="400" width="54" height="24" fill="#6D96FF"></rect>
+    </g>
     <g
       fill="#fff"
       text-anchor="middle"
@@ -67,9 +79,13 @@ func StreamBadge(qw422016 *qt422016.Writer, stats ProfileViewsStats) {
     </g>
   </g>
   <g>
-    <rect x="459" width="54" height="24" rx="4" fill="#24292F"></rect>
-    <rect x="512" width="54" height="24" rx="4" fill="#6D96FF"></rect>
-    <rect x="512" width="1" height="24" fill="#E4EAF1"></rect>
+    <clipPath id="badge-total">
+      <rect x="459" width="107" height="24" rx="4"></rect>
+    </clipPath>
+    <g clip-path="url(#badge-total)">
+      <rect x="459" width="53" height="24" fill="#24292F"></rect>
+      <rect x="512" width="54" height="24" fill="#6D96FF"></rect>
+    </g>
     <g
       fill="#fff"
       text-anchor="middle"
