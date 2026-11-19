@@ -1,8 +1,8 @@
 -- name: ProfileHourlyViewsStatsUpsert :exec
-INSERT INTO profile_hourly_views_stats (user_id, time, count)
+INSERT INTO profile_hourly_views_stats AS t (user_id, time, count)
 VALUES (@user_id, @time, @count)
 ON CONFLICT (user_id, time) DO UPDATE
-    SET count = profile_hourly_views_stats.count + @count;
+    SET count = t.count + @count;
 
 -- name: ProfileHourlyViewsStats :many
 SELECT user_id,
