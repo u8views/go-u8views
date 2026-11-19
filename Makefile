@@ -3,7 +3,7 @@ POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 include Makefile.ansible
 
 env-up:
-	docker-compose -f docker-compose.yml --env-file .env up -d
+	docker compose -f docker-compose.yml --env-file .env up -d
 
 restart:
 	docker restart go_u8views_app
@@ -14,11 +14,37 @@ logs:
 pg:
 	docker exec -it go_u8views_postgres bash
 
+# Read-only statistics of the database, see scripts/pg-stats.sh (PG_CONTAINER overrides the container name)
+pg-stats:
+	./scripts/pg-stats.sh
+
+pg-stats-size:
+	./scripts/pg-stats.sh size
+
+pg-stats-tables:
+	./scripts/pg-stats.sh tables
+
+pg-stats-users:
+	./scripts/pg-stats.sh users
+
+pg-stats-referrals:
+	./scripts/pg-stats.sh referrals
+
+pg-stats-usernames:
+	./scripts/pg-stats.sh usernames
+
+pg-stats-views:
+	./scripts/pg-stats.sh views
+
+# Slow: reads profile_hourly_views_stats, PG_STATS_VIEW_MONTHS=3 make pg-stats-views-monthly
+pg-stats-views-monthly:
+	./scripts/pg-stats.sh views-monthly
+
 env-down:
-	docker-compose -f docker-compose.yml --env-file .env down
+	docker compose -f docker-compose.yml --env-file .env down
 
 env-down-with-clear:
-	docker-compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
+	docker compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
 
 app-build:
 	docker exec go_u8views_app go build -o /bin/u8views-server ./cmd/v3/main.go
@@ -84,6 +110,48 @@ postgres-fixtures-clear:
 go-mod-update:
 	go mod tidy
 	go mod vendor
+
+# Go dependencies security. Requires Go and jq on the host.
+# https://go.dev/doc/security/vuln/
+GOVULNCHECK_VERSION ?= v1.10.0
+GOVULNCHECK = go run golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION)
+
+# Ignore a local (git-ignored) vendor directory: check go.mod, not a possibly stale copy of the dependencies
+deps-%: export GOFLAGS := -mod=mod
+
+# go.mod and go.sum are consistent with the code and with the downloaded modules
+deps-verify:
+	go mod verify
+	go mod tidy -diff
+
+# Fails if a reachable vulnerability is found (including the Go standard library)
+deps-vulncheck:
+	$(GOVULNCHECK) ./...
+
+# Direct dependencies which have newer versions
+deps-outdated:
+	go list -u -m -f '{{if and .Update (not .Indirect)}}{{.Path}} {{.Version}} -> {{.Update.Version}}{{end}}' all
+
+deps-check: deps-verify deps-vulncheck
+
+# Updates only vulnerable modules to the minimal fixed version, review `git diff` afterwards
+deps-update-security:
+	GOVULNCHECK="$(GOVULNCHECK)" ./scripts/deps/update-security.sh
+
+# Patch versions only, the lowest risk of breaking changes.
+# ./vendor (if it exists) is regenerated, otherwise default builds fail with "inconsistent vendoring".
+deps-update-patch:
+	go get -u=patch ./...
+	go mod tidy
+	go build ./...
+	test ! -d vendor || go mod vendor
+
+# Minor versions too, run the tests and review `git diff` afterwards
+deps-update-all:
+	go get -u ./...
+	go mod tidy
+	go build ./...
+	test ! -d vendor || go mod vendor
 
 local-go-app-run:
 	POSTGRES_DSN=$(POSTGRES_DSN) PORT=:8080 go run ./cmd/v1/main.go

@@ -2,8 +2,6 @@ package services
 
 import (
 	"context"
-	"database/sql"
-	"log"
 	"time"
 
 	"github.com/u8views/go-u8views/internal/db"
@@ -89,85 +87,17 @@ func (s *UserService) Upsert(
 	name string,
 	referrerUserID int64,
 ) (id int64, err error) {
-	var referral bool
-
-	if referrerUserID > 0 {
-		_, err := s.repository.Queries().UsersGetBySocialProvider(ctx, dbs.UsersGetBySocialProviderParams{
-			SocialProvider:       provider,
-			SocialProviderUserID: socialProviderUserID,
-		})
-		if err == sql.ErrNoRows {
-			// NEW
-
-			referral = true
-		} else if err != nil {
-			log.Printf("Database err %s\n", err)
-		} else {
-			// ALREADY EXISTS
-		}
-	}
-
-	now := time.Now().UTC()
-
-	err = s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
-		txID, err := queries.UsersNew(ctx, dbs.UsersNewParams{
-			SocialProvider:       provider,
-			SocialProviderUserID: socialProviderUserID,
-			Username:             username,
-			Name:                 name,
-			CreatedAt:            now,
-			UpdatedAt:            now,
-			LastLoginAt:          now,
-		})
-		if err != nil {
-			return err
-		}
-
-		err = queries.UsersUpdateUsername(ctx, dbs.UsersUpdateUsernameParams{
-			Username:  username,
-			Name:      name,
-			UpdatedAt: now,
-			ID:        txID,
-		})
-		if err != nil {
-			return err
-		}
-
-		err = queries.UsernameHistoryNew(ctx, dbs.UsernameHistoryNewParams{
-			UserID:         txID,
-			SocialProvider: provider,
-			Username:       username,
-			CreatedAt:      now,
-			UpdatedAt:      now,
-		})
-		if err != nil {
-			return err
-		}
-
-		err = queries.ProfileTotalViewsNew(ctx, txID)
-		if err != nil {
-			return err
-		}
-
-		if referral {
-			err := queries.ReferralsNew(ctx, dbs.ReferralsNewParams{
-				RefereeUserID:  txID,
-				ReferrerUserID: referrerUserID,
-			})
-			if err != nil {
-				log.Printf("Database err %s\n", err)
-
-				// NOP
-			}
-		}
-
-		id = txID
-
-		return nil
+	row, err := s.repository.Queries().UsersUpsert(ctx, dbs.UsersUpsertParams{
+		SocialProvider:       provider,
+		SocialProviderUserID: socialProviderUserID,
+		Username:             username,
+		Name:                 name,
+		Now:                  time.Now().UTC(),
+		ReferrerUserID:       referrerUserID,
 	})
 	if err != nil {
-		return id, err
+		return 0, err
 	}
 
-	return id, nil
+	return row.ID, nil
 }

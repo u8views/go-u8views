@@ -1,8 +1,3 @@
--- name: ReferralsNew :exec
-INSERT INTO referrals (referee_user_id, referrer_user_id)
-VALUES (@referee_user_id, @referrer_user_id)
-ON CONFLICT DO NOTHING;
-
 -- name: ReferralsCreatedAtStatsByDay :many
 SELECT g.time                        AS time,
        COALESCE(rc.count, 0)::BIGINT AS count
