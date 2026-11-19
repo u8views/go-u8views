@@ -3,12 +3,6 @@
   hosts: "web"
   # ansible_distribution_release is needed for the Docker APT repository
   gather_facts: "yes"
-  vars:
-    # The standalone binary, the Makefile calls `docker-compose`.
-    # https://github.com/docker/compose/releases (sha256 is published next to every asset:
-    # docker-compose-linux-x86_64.sha256), must be updated together with DOCKER_COMPOSE_VERSION
-    DOCKER_COMPOSE_VERSION: "5.7.2"
-    DOCKER_COMPOSE_SHA256: "e14235d9c622c5bd57eb8adeed4a0f7308c7f3862e6812dd843f6fe27f1307cc"
 
   tasks:
     - name: "Update apt cache"
@@ -56,6 +50,8 @@
           - "docker-ce"
           - "docker-ce-cli"
           - "containerd.io"
+          # `docker compose`, the Makefile calls it
+          - "docker-compose-plugin"
         state: "present"
 
     - name: "Start and enable Docker service"
@@ -63,14 +59,6 @@
         name: "docker"
         state: "started"
         enabled: "yes"
-
-    # The target platform (not the controller one): the server is linux/x86_64
-    - name: "Install Docker Compose"
-      get_url:
-        url: "https://github.com/docker/compose/releases/download/v{{ DOCKER_COMPOSE_VERSION }}/docker-compose-linux-x86_64"
-        dest: "/usr/local/bin/docker-compose"
-        checksum: "sha256:{{ DOCKER_COMPOSE_SHA256 }}"
-        mode: "a+x"
 
     - name: "Get Docker version"
       command: "docker --version"
@@ -80,7 +68,7 @@
         var: "docker_version.stdout"
 
     - name: "Get Docker Compose version"
-      command: "docker compose --version"
+      command: "docker compose version"
       register: "docker_compose_version"
       changed_when: false
     - debug:
