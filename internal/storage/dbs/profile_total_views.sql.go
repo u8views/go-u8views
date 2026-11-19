@@ -21,14 +21,3 @@ func (q *Queries) ProfileTotalViews(ctx context.Context, userID int64) (int64, e
 	err := row.Scan(&count)
 	return count, err
 }
-
-const profileTotalViewsInc = `-- name: ProfileTotalViewsInc :exec
-UPDATE profile_total_views
-SET count = count + 1
-WHERE user_id = $1
-`
-
-func (q *Queries) ProfileTotalViewsInc(ctx context.Context, userID int64) error {
-	_, err := q.exec(ctx, q.profileTotalViewsIncStmt, profileTotalViewsInc, userID)
-	return err
-}

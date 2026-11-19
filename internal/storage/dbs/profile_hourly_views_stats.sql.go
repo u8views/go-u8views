@@ -149,20 +149,24 @@ func (q *Queries) ProfileHourlyViewsStatsByPeriod(ctx context.Context, arg Profi
 	return count, err
 }
 
-const profileHourlyViewsStatsUpsert = `-- name: ProfileHourlyViewsStatsUpsert :exec
+const profileViewsInc = `-- name: ProfileViewsInc :exec
+WITH total AS (
+    UPDATE profile_total_views
+    SET count = count + 1
+    WHERE user_id = $1
+)
 INSERT INTO profile_hourly_views_stats AS t (user_id, time, count)
-VALUES ($1, $2, $3)
+VALUES ($1, $2, 1)
 ON CONFLICT (user_id, time) DO UPDATE
-    SET count = t.count + $3
+    SET count = t.count + 1
 `
 
-type ProfileHourlyViewsStatsUpsertParams struct {
+type ProfileViewsIncParams struct {
 	UserID int64
 	Time   time.Time
-	Count  int64
 }
 
-func (q *Queries) ProfileHourlyViewsStatsUpsert(ctx context.Context, arg ProfileHourlyViewsStatsUpsertParams) error {
-	_, err := q.exec(ctx, q.profileHourlyViewsStatsUpsertStmt, profileHourlyViewsStatsUpsert, arg.UserID, arg.Time, arg.Count)
+func (q *Queries) ProfileViewsInc(ctx context.Context, arg ProfileViewsIncParams) error {
+	_, err := q.exec(ctx, q.profileViewsIncStmt, profileViewsInc, arg.UserID, arg.Time)
 	return err
 }

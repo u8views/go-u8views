@@ -33,14 +33,11 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileHourlyViewsStatsByPeriodStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsByPeriod); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsByPeriod: %w", err)
 	}
-	if q.profileHourlyViewsStatsUpsertStmt, err = db.PrepareContext(ctx, profileHourlyViewsStatsUpsert); err != nil {
-		return nil, fmt.Errorf("error preparing query ProfileHourlyViewsStatsUpsert: %w", err)
-	}
 	if q.profileTotalViewsStmt, err = db.PrepareContext(ctx, profileTotalViews); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViews: %w", err)
 	}
-	if q.profileTotalViewsIncStmt, err = db.PrepareContext(ctx, profileTotalViewsInc); err != nil {
-		return nil, fmt.Errorf("error preparing query ProfileTotalViewsInc: %w", err)
+	if q.profileViewsIncStmt, err = db.PrepareContext(ctx, profileViewsInc); err != nil {
+		return nil, fmt.Errorf("error preparing query ProfileViewsInc: %w", err)
 	}
 	if q.referralsCreatedAtStatsByDayStmt, err = db.PrepareContext(ctx, referralsCreatedAtStatsByDay); err != nil {
 		return nil, fmt.Errorf("error preparing query ReferralsCreatedAtStatsByDay: %w", err)
@@ -92,19 +89,14 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing profileHourlyViewsStatsByPeriodStmt: %w", cerr)
 		}
 	}
-	if q.profileHourlyViewsStatsUpsertStmt != nil {
-		if cerr := q.profileHourlyViewsStatsUpsertStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing profileHourlyViewsStatsUpsertStmt: %w", cerr)
-		}
-	}
 	if q.profileTotalViewsStmt != nil {
 		if cerr := q.profileTotalViewsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing profileTotalViewsStmt: %w", cerr)
 		}
 	}
-	if q.profileTotalViewsIncStmt != nil {
-		if cerr := q.profileTotalViewsIncStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing profileTotalViewsIncStmt: %w", cerr)
+	if q.profileViewsIncStmt != nil {
+		if cerr := q.profileViewsIncStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing profileViewsIncStmt: %w", cerr)
 		}
 	}
 	if q.referralsCreatedAtStatsByDayStmt != nil {
@@ -199,9 +191,8 @@ type Queries struct {
 	profileHourlyViewsStatsStmt          *sql.Stmt
 	profileHourlyViewsStatsByHourStmt    *sql.Stmt
 	profileHourlyViewsStatsByPeriodStmt  *sql.Stmt
-	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
 	profileTotalViewsStmt                *sql.Stmt
-	profileTotalViewsIncStmt             *sql.Stmt
+	profileViewsIncStmt                  *sql.Stmt
 	referralsCreatedAtStatsByDayStmt     *sql.Stmt
 	usernameHistoryGetByOldUsernameStmt  *sql.Stmt
 	usernamesStmt                        *sql.Stmt
@@ -221,9 +212,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileHourlyViewsStatsStmt:          q.profileHourlyViewsStatsStmt,
 		profileHourlyViewsStatsByHourStmt:    q.profileHourlyViewsStatsByHourStmt,
 		profileHourlyViewsStatsByPeriodStmt:  q.profileHourlyViewsStatsByPeriodStmt,
-		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
-		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
+		profileViewsIncStmt:                  q.profileViewsIncStmt,
 		referralsCreatedAtStatsByDayStmt:     q.referralsCreatedAtStatsByDayStmt,
 		usernameHistoryGetByOldUsernameStmt:  q.usernameHistoryGetByOldUsernameStmt,
 		usernamesStmt:                        q.usernamesStmt,

@@ -169,27 +169,8 @@ func (s *StatsService) ReferralsStats(ctx context.Context, userID int64) ([]mode
 }
 
 func (s *StatsService) increment(ctx context.Context, userID int64, now time.Time) error {
-	txErr := s.repository.WithTransaction(ctx, func(queries *dbs.Queries) error {
-		err := queries.ProfileTotalViewsInc(ctx, userID)
-		if err != nil {
-			return err
-		}
-
-		err = queries.ProfileHourlyViewsStatsUpsert(ctx, dbs.ProfileHourlyViewsStatsUpsertParams{
-			UserID: userID,
-			Time:   now,
-			Count:  1,
-		})
-		if err != nil {
-			return err
-		}
-
-		return nil
+	return s.repository.Queries().ProfileViewsInc(ctx, dbs.ProfileViewsIncParams{
+		UserID: userID,
+		Time:   now,
 	})
-
-	if txErr != nil {
-		return txErr
-	}
-
-	return nil
 }

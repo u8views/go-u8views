@@ -1,9 +1,3 @@
--- name: ProfileHourlyViewsStatsUpsert :exec
-INSERT INTO profile_hourly_views_stats AS t (user_id, time, count)
-VALUES (@user_id, @time, @count)
-ON CONFLICT (user_id, time) DO UPDATE
-    SET count = t.count + @count;
-
 -- name: ProfileHourlyViewsStats :many
 SELECT user_id,
        COALESCE(SUM(count) FILTER ( WHERE time >= @hour ), 0)::BIGINT AS hour_count,
@@ -40,3 +34,14 @@ SELECT COALESCE(SUM(count), 0)::BIGINT AS count
 FROM profile_hourly_views_stats
 WHERE user_id = @user_id
   AND time >= @time_after;
+
+-- name: ProfileViewsInc :exec
+WITH total AS (
+    UPDATE profile_total_views
+    SET count = count + 1
+    WHERE user_id = @user_id
+)
+INSERT INTO profile_hourly_views_stats AS t (user_id, time, count)
+VALUES (@user_id, @time, 1)
+ON CONFLICT (user_id, time) DO UPDATE
+    SET count = t.count + 1;
