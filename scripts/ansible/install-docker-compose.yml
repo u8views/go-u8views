@@ -1,9 +1,14 @@
 ---
 - name: "Install Docker and Docker Compose"
   hosts: "web"
-  gather_facts: "no"
+  # ansible_distribution_release is needed for the Docker APT repository
+  gather_facts: "yes"
   vars:
-    - DOCKER_COMPOSE_VERSION: "2.22.0"
+    # The standalone binary, the Makefile calls `docker-compose`.
+    # https://github.com/docker/compose/releases (sha256 is published next to every asset:
+    # docker-compose-linux-x86_64.sha256), must be updated together with DOCKER_COMPOSE_VERSION
+    DOCKER_COMPOSE_VERSION: "5.7.2"
+    DOCKER_COMPOSE_SHA256: "e14235d9c622c5bd57eb8adeed4a0f7308c7f3862e6812dd843f6fe27f1307cc"
 
   tasks:
     - name: "Update apt cache"
@@ -20,19 +25,37 @@
         - "curl"
         - "software-properties-common"
 
+    - name: "Ensure /etc/apt/keyrings exists"
+      file:
+        path: "/etc/apt/keyrings"
+        state: "directory"
+        mode: "0755"
+
     - name: "Add Docker GPG key"
-      apt_key:
+      get_url:
         url: "https://download.docker.com/linux/ubuntu/gpg"
-        state: "present"
+        dest: "/etc/apt/keyrings/docker.asc"
+        mode: "0644"
+
+    # The previous version of this playbook created this file (apt_repository default name) with the hardcoded `focal`
+    - name: "Remove the old Docker APT repository file"
+      file:
+        path: "/etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list"
+        state: "absent"
 
     - name: "Add Docker APT repository"
       apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        filename: "docker"
         state: "present"
+        update_cache: "yes"
 
     - name: "Install Docker"
       package:
-        name: "docker-ce"
+        name:
+          - "docker-ce"
+          - "docker-ce-cli"
+          - "containerd.io"
         state: "present"
 
     - name: "Start and enable Docker service"
@@ -41,20 +64,24 @@
         state: "started"
         enabled: "yes"
 
+    # The target platform (not the controller one): the server is linux/x86_64
     - name: "Install Docker Compose"
       get_url:
-        url: "https://github.com/docker/compose/releases/download/v{{ DOCKER_COMPOSE_VERSION }}/docker-compose-{{ lookup('pipe', 'uname -s') }}-{{ lookup('pipe', 'uname -m') }}"
+        url: "https://github.com/docker/compose/releases/download/v{{ DOCKER_COMPOSE_VERSION }}/docker-compose-linux-x86_64"
         dest: "/usr/local/bin/docker-compose"
+        checksum: "sha256:{{ DOCKER_COMPOSE_SHA256 }}"
         mode: "a+x"
 
     - name: "Get Docker version"
       command: "docker --version"
       register: "docker_version"
+      changed_when: false
     - debug:
         var: "docker_version.stdout"
 
     - name: "Get Docker Compose version"
       command: "docker-compose --version"
       register: "docker_compose_version"
+      changed_when: false
     - debug:
         var: "docker_compose_version.stdout"

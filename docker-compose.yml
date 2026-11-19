@@ -3,7 +3,7 @@ version: "3.7"
 services:
   postgres:
     container_name: "go_u8views_postgres"
-    image: postgres:14.2
+    image: postgres:14.25-trixie
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -15,7 +15,7 @@ services:
 
   app:
     container_name: "go_u8views_app"
-    image: golang:1.26.1-alpine
+    image: golang:1.27.4-alpine
     working_dir: /go/src/github.com/u8views/go-u8views
     volumes:
       - .:/go/src/github.com/u8views/go-u8views

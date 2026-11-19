@@ -1,6 +1,6 @@
 module github.com/u8views/go-u8views
 
-go 1.26.1
+go 1.27
 
 require (
 	github.com/gin-contrib/gzip v1.2.2
@@ -12,13 +12,13 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/valyala/fasthttp v1.58.0
 	github.com/valyala/quicktemplate v1.8.0
-	golang.org/x/crypto v0.48.0
+	golang.org/x/crypto v0.57.0
 	golang.org/x/image v0.24.0
-	golang.org/x/sync v0.19.0
+	golang.org/x/sync v0.23.0
 )
 
 require (
-	github.com/andybalholm/brotli v1.1.1 // indirect
+	github.com/andybalholm/brotli v1.2.7 // indirect
 	github.com/bytedance/sonic v1.12.8 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/go-playground/validator/v10 v10.24.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/klauspost/compress v1.20.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -45,9 +45,9 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.14.0 // indirect
-	golang.org/x/net v0.49.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
+	golang.org/x/net v0.60.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
