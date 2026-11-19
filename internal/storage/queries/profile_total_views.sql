@@ -1,8 +1,3 @@
--- name: ProfileTotalViewsNew :exec
-INSERT INTO profile_total_views (user_id, count)
-VALUES (@user_id, 0)
-ON CONFLICT DO NOTHING;
-
 -- name: ProfileTotalViews :one
 SELECT count
 FROM profile_total_views

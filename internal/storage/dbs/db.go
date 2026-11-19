@@ -42,20 +42,11 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.profileTotalViewsIncStmt, err = db.PrepareContext(ctx, profileTotalViewsInc); err != nil {
 		return nil, fmt.Errorf("error preparing query ProfileTotalViewsInc: %w", err)
 	}
-	if q.profileTotalViewsNewStmt, err = db.PrepareContext(ctx, profileTotalViewsNew); err != nil {
-		return nil, fmt.Errorf("error preparing query ProfileTotalViewsNew: %w", err)
-	}
 	if q.referralsCreatedAtStatsByDayStmt, err = db.PrepareContext(ctx, referralsCreatedAtStatsByDay); err != nil {
 		return nil, fmt.Errorf("error preparing query ReferralsCreatedAtStatsByDay: %w", err)
 	}
-	if q.referralsNewStmt, err = db.PrepareContext(ctx, referralsNew); err != nil {
-		return nil, fmt.Errorf("error preparing query ReferralsNew: %w", err)
-	}
 	if q.usernameHistoryGetByOldUsernameStmt, err = db.PrepareContext(ctx, usernameHistoryGetByOldUsername); err != nil {
 		return nil, fmt.Errorf("error preparing query UsernameHistoryGetByOldUsername: %w", err)
-	}
-	if q.usernameHistoryNewStmt, err = db.PrepareContext(ctx, usernameHistoryNew); err != nil {
-		return nil, fmt.Errorf("error preparing query UsernameHistoryNew: %w", err)
 	}
 	if q.usernamesStmt, err = db.PrepareContext(ctx, usernames); err != nil {
 		return nil, fmt.Errorf("error preparing query Usernames: %w", err)
@@ -78,11 +69,8 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.usersGetBySocialProviderUsernameStmt, err = db.PrepareContext(ctx, usersGetBySocialProviderUsername); err != nil {
 		return nil, fmt.Errorf("error preparing query UsersGetBySocialProviderUsername: %w", err)
 	}
-	if q.usersNewStmt, err = db.PrepareContext(ctx, usersNew); err != nil {
-		return nil, fmt.Errorf("error preparing query UsersNew: %w", err)
-	}
-	if q.usersUpdateUsernameStmt, err = db.PrepareContext(ctx, usersUpdateUsername); err != nil {
-		return nil, fmt.Errorf("error preparing query UsersUpdateUsername: %w", err)
+	if q.usersUpsertStmt, err = db.PrepareContext(ctx, usersUpsert); err != nil {
+		return nil, fmt.Errorf("error preparing query UsersUpsert: %w", err)
 	}
 	return &q, nil
 }
@@ -119,29 +107,14 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing profileTotalViewsIncStmt: %w", cerr)
 		}
 	}
-	if q.profileTotalViewsNewStmt != nil {
-		if cerr := q.profileTotalViewsNewStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing profileTotalViewsNewStmt: %w", cerr)
-		}
-	}
 	if q.referralsCreatedAtStatsByDayStmt != nil {
 		if cerr := q.referralsCreatedAtStatsByDayStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing referralsCreatedAtStatsByDayStmt: %w", cerr)
 		}
 	}
-	if q.referralsNewStmt != nil {
-		if cerr := q.referralsNewStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing referralsNewStmt: %w", cerr)
-		}
-	}
 	if q.usernameHistoryGetByOldUsernameStmt != nil {
 		if cerr := q.usernameHistoryGetByOldUsernameStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing usernameHistoryGetByOldUsernameStmt: %w", cerr)
-		}
-	}
-	if q.usernameHistoryNewStmt != nil {
-		if cerr := q.usernameHistoryNewStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing usernameHistoryNewStmt: %w", cerr)
 		}
 	}
 	if q.usernamesStmt != nil {
@@ -179,14 +152,9 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing usersGetBySocialProviderUsernameStmt: %w", cerr)
 		}
 	}
-	if q.usersNewStmt != nil {
-		if cerr := q.usersNewStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing usersNewStmt: %w", cerr)
-		}
-	}
-	if q.usersUpdateUsernameStmt != nil {
-		if cerr := q.usersUpdateUsernameStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing usersUpdateUsernameStmt: %w", cerr)
+	if q.usersUpsertStmt != nil {
+		if cerr := q.usersUpsertStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing usersUpsertStmt: %w", cerr)
 		}
 	}
 	return err
@@ -234,11 +202,8 @@ type Queries struct {
 	profileHourlyViewsStatsUpsertStmt    *sql.Stmt
 	profileTotalViewsStmt                *sql.Stmt
 	profileTotalViewsIncStmt             *sql.Stmt
-	profileTotalViewsNewStmt             *sql.Stmt
 	referralsCreatedAtStatsByDayStmt     *sql.Stmt
-	referralsNewStmt                     *sql.Stmt
 	usernameHistoryGetByOldUsernameStmt  *sql.Stmt
-	usernameHistoryNewStmt               *sql.Stmt
 	usernamesStmt                        *sql.Stmt
 	usersCountStmt                       *sql.Stmt
 	usersCreatedAtStatsByDayStmt         *sql.Stmt
@@ -246,8 +211,7 @@ type Queries struct {
 	usersGetByIDStmt                     *sql.Stmt
 	usersGetBySocialProviderStmt         *sql.Stmt
 	usersGetBySocialProviderUsernameStmt *sql.Stmt
-	usersNewStmt                         *sql.Stmt
-	usersUpdateUsernameStmt              *sql.Stmt
+	usersUpsertStmt                      *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
@@ -260,11 +224,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		profileHourlyViewsStatsUpsertStmt:    q.profileHourlyViewsStatsUpsertStmt,
 		profileTotalViewsStmt:                q.profileTotalViewsStmt,
 		profileTotalViewsIncStmt:             q.profileTotalViewsIncStmt,
-		profileTotalViewsNewStmt:             q.profileTotalViewsNewStmt,
 		referralsCreatedAtStatsByDayStmt:     q.referralsCreatedAtStatsByDayStmt,
-		referralsNewStmt:                     q.referralsNewStmt,
 		usernameHistoryGetByOldUsernameStmt:  q.usernameHistoryGetByOldUsernameStmt,
-		usernameHistoryNewStmt:               q.usernameHistoryNewStmt,
 		usernamesStmt:                        q.usernamesStmt,
 		usersCountStmt:                       q.usersCountStmt,
 		usersCreatedAtStatsByDayStmt:         q.usersCreatedAtStatsByDayStmt,
@@ -272,7 +233,6 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		usersGetByIDStmt:                     q.usersGetByIDStmt,
 		usersGetBySocialProviderStmt:         q.usersGetBySocialProviderStmt,
 		usersGetBySocialProviderUsernameStmt: q.usersGetBySocialProviderUsernameStmt,
-		usersNewStmt:                         q.usersNewStmt,
-		usersUpdateUsernameStmt:              q.usersUpdateUsernameStmt,
+		usersUpsertStmt:                      q.usersUpsertStmt,
 	}
 }

@@ -7,7 +7,6 @@ package dbs
 
 import (
 	"context"
-	"time"
 )
 
 const usernameHistoryGetByOldUsername = `-- name: UsernameHistoryGetByOldUsername :one
@@ -30,30 +29,4 @@ func (q *Queries) UsernameHistoryGetByOldUsername(ctx context.Context, arg Usern
 	var username string
 	err := row.Scan(&username)
 	return username, err
-}
-
-const usernameHistoryNew = `-- name: UsernameHistoryNew :exec
-INSERT INTO username_history (user_id, social_provider, canonical_username, created_at, updated_at)
-VALUES ($1, $2, LOWER($3), $4, $5)
-ON CONFLICT (canonical_username, social_provider, user_id) DO UPDATE
-    SET updated_at = excluded.updated_at
-`
-
-type UsernameHistoryNewParams struct {
-	UserID         int64
-	SocialProvider SocialProvider
-	Username       string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-}
-
-func (q *Queries) UsernameHistoryNew(ctx context.Context, arg UsernameHistoryNewParams) error {
-	_, err := q.exec(ctx, q.usernameHistoryNewStmt, usernameHistoryNew,
-		arg.UserID,
-		arg.SocialProvider,
-		arg.Username,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
-	return err
 }

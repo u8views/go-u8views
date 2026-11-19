@@ -32,14 +32,3 @@ func (q *Queries) ProfileTotalViewsInc(ctx context.Context, userID int64) error 
 	_, err := q.exec(ctx, q.profileTotalViewsIncStmt, profileTotalViewsInc, userID)
 	return err
 }
-
-const profileTotalViewsNew = `-- name: ProfileTotalViewsNew :exec
-INSERT INTO profile_total_views (user_id, count)
-VALUES ($1, 0)
-ON CONFLICT DO NOTHING
-`
-
-func (q *Queries) ProfileTotalViewsNew(ctx context.Context, userID int64) error {
-	_, err := q.exec(ctx, q.profileTotalViewsNewStmt, profileTotalViewsNew, userID)
-	return err
-}

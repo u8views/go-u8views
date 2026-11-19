@@ -241,64 +241,83 @@ func (q *Queries) UsersGetBySocialProviderUsername(ctx context.Context, arg User
 	return i, err
 }
 
-const usersNew = `-- name: UsersNew :one
-INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, name, created_at, updated_at,
-                   last_login_at)
-VALUES ($1, $2, $3, LOWER($3::VARCHAR), $4, $5,
-        $6, $7)
-ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
-    SET last_login_at = excluded.last_login_at
-RETURNING id
+const usersUpsert = `-- name: UsersUpsert :one
+WITH
+    --
+    upserted AS (
+        INSERT INTO users AS t (social_provider, social_provider_user_id, username, canonical_username, name,
+                                created_at, updated_at, last_login_at)
+        VALUES ($1, $2, $3, LOWER($3::VARCHAR), $4,
+                $5::TIMESTAMPTZ, $5::TIMESTAMPTZ, $5::TIMESTAMPTZ)
+        ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
+            SET last_login_at      = excluded.last_login_at,
+                username           = excluded.username,
+                canonical_username = excluded.canonical_username,
+                name               = excluded.name,
+                updated_at         = CASE
+                                         WHEN t.username <> excluded.username OR t.name <> excluded.name
+                                             THEN excluded.updated_at
+                                         ELSE t.updated_at
+                    END
+        RETURNING id, (created_at = $5::TIMESTAMPTZ) AS inserted
+        --
+    ),
+    history AS (
+        --
+        INSERT INTO username_history (user_id, social_provider, canonical_username, created_at, updated_at)
+        SELECT id, $1, LOWER($3::VARCHAR), $5::TIMESTAMPTZ, $5::TIMESTAMPTZ
+        FROM upserted
+        ON CONFLICT (canonical_username, social_provider, user_id) DO UPDATE
+            SET updated_at = excluded.updated_at
+        --
+    ),
+    total_views AS (
+        --
+        INSERT INTO profile_total_views (user_id, count)
+        SELECT id, 0
+        FROM upserted
+        ON CONFLICT DO NOTHING
+        --
+    ),
+    referral AS (
+        --
+        INSERT INTO referrals (referee_user_id, referrer_user_id)
+        SELECT id, $6::BIGINT
+        FROM upserted
+        WHERE inserted
+          AND $6::BIGINT > 0
+          AND EXISTS (SELECT 1 FROM users WHERE id = $6::BIGINT)
+        ON CONFLICT DO NOTHING
+        --
+    )
+SELECT id, inserted
+FROM upserted
 `
 
-type UsersNewParams struct {
+type UsersUpsertParams struct {
 	SocialProvider       SocialProvider
 	SocialProviderUserID string
 	Username             string
 	Name                 string
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-	LastLoginAt          time.Time
+	Now                  time.Time
+	ReferrerUserID       int64
 }
 
-func (q *Queries) UsersNew(ctx context.Context, arg UsersNewParams) (int64, error) {
-	row := q.queryRow(ctx, q.usersNewStmt, usersNew,
+type UsersUpsertRow struct {
+	ID       int64
+	Inserted bool
+}
+
+func (q *Queries) UsersUpsert(ctx context.Context, arg UsersUpsertParams) (UsersUpsertRow, error) {
+	row := q.queryRow(ctx, q.usersUpsertStmt, usersUpsert,
 		arg.SocialProvider,
 		arg.SocialProviderUserID,
 		arg.Username,
 		arg.Name,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-		arg.LastLoginAt,
+		arg.Now,
+		arg.ReferrerUserID,
 	)
-	var id int64
-	err := row.Scan(&id)
-	return id, err
-}
-
-const usersUpdateUsername = `-- name: UsersUpdateUsername :exec
-UPDATE users
-SET username           = $1,
-    canonical_username = LOWER($1),
-    name               = $2,
-    updated_at         = $3
-WHERE id = $4
-  AND (username <> $1 OR name <> $2)
-`
-
-type UsersUpdateUsernameParams struct {
-	Username  string
-	Name      string
-	UpdatedAt time.Time
-	ID        int64
-}
-
-func (q *Queries) UsersUpdateUsername(ctx context.Context, arg UsersUpdateUsernameParams) error {
-	_, err := q.exec(ctx, q.usersUpdateUsernameStmt, usersUpdateUsername,
-		arg.Username,
-		arg.Name,
-		arg.UpdatedAt,
-		arg.ID,
-	)
-	return err
+	var i UsersUpsertRow
+	err := row.Scan(&i.ID, &i.Inserted)
+	return i, err
 }

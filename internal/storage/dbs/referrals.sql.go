@@ -66,19 +66,3 @@ func (q *Queries) ReferralsCreatedAtStatsByDay(ctx context.Context, arg Referral
 	}
 	return items, nil
 }
-
-const referralsNew = `-- name: ReferralsNew :exec
-INSERT INTO referrals (referee_user_id, referrer_user_id)
-VALUES ($1, $2)
-ON CONFLICT DO NOTHING
-`
-
-type ReferralsNewParams struct {
-	RefereeUserID  int64
-	ReferrerUserID int64
-}
-
-func (q *Queries) ReferralsNew(ctx context.Context, arg ReferralsNewParams) error {
-	_, err := q.exec(ctx, q.referralsNewStmt, referralsNew, arg.RefereeUserID, arg.ReferrerUserID)
-	return err
-}

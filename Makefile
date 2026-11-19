@@ -3,7 +3,7 @@ POSTGRES_DSN="postgresql://u8user:u8pass@localhost:5432/u8views?sslmode=disable"
 include Makefile.ansible
 
 env-up:
-	docker-compose -f docker-compose.yml --env-file .env up -d
+	docker compose -f docker-compose.yml --env-file .env up -d
 
 restart:
 	docker restart go_u8views_app
@@ -41,10 +41,10 @@ pg-stats-views-monthly:
 	./scripts/pg-stats.sh views-monthly
 
 env-down:
-	docker-compose -f docker-compose.yml --env-file .env down
+	docker compose -f docker-compose.yml --env-file .env down
 
 env-down-with-clear:
-	docker-compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
+	docker compose -f docker-compose.yml --env-file .env down --remove-orphans -v # --rmi=all
 
 app-build:
 	docker exec go_u8views_app go build -o /bin/u8views-server ./cmd/v3/main.go

@@ -1,21 +1,3 @@
--- name: UsersNew :one
-INSERT INTO users (social_provider, social_provider_user_id, username, canonical_username, name, created_at, updated_at,
-                   last_login_at)
-VALUES (@social_provider, @social_provider_user_id, @username, LOWER(@username::VARCHAR), @name, @created_at,
-        @updated_at, @last_login_at)
-ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
-    SET last_login_at = excluded.last_login_at
-RETURNING id;
-
--- name: UsersUpdateUsername :exec
-UPDATE users
-SET username           = @username,
-    canonical_username = LOWER(@username),
-    name               = @name,
-    updated_at         = @updated_at
-WHERE id = @id
-  AND (username <> @username OR name <> @name);
-
 -- name: UsersGetBySocialProvider :one
 SELECT id
 FROM users
@@ -77,3 +59,56 @@ LIMIT sqlc.arg('limit') OFFSET sqlc.arg('offset');
 -- name: UsersCount :one
 SELECT COUNT(*)
 FROM users;
+
+
+-- name: UsersUpsert :one
+WITH
+    --
+    upserted AS (
+        INSERT INTO users AS t (social_provider, social_provider_user_id, username, canonical_username, name,
+                                created_at, updated_at, last_login_at)
+        VALUES (@social_provider, @social_provider_user_id, @username, LOWER(@username::VARCHAR), @name,
+                @now::TIMESTAMPTZ, @now::TIMESTAMPTZ, @now::TIMESTAMPTZ)
+        ON CONFLICT (social_provider, social_provider_user_id) DO UPDATE
+            SET last_login_at      = excluded.last_login_at,
+                username           = excluded.username,
+                canonical_username = excluded.canonical_username,
+                name               = excluded.name,
+                updated_at         = CASE
+                                         WHEN t.username <> excluded.username OR t.name <> excluded.name
+                                             THEN excluded.updated_at
+                                         ELSE t.updated_at
+                    END
+        RETURNING id, (created_at = @now::TIMESTAMPTZ) AS inserted
+        --
+    ),
+    history AS (
+        --
+        INSERT INTO username_history (user_id, social_provider, canonical_username, created_at, updated_at)
+        SELECT id, @social_provider, LOWER(@username::VARCHAR), @now::TIMESTAMPTZ, @now::TIMESTAMPTZ
+        FROM upserted
+        ON CONFLICT (canonical_username, social_provider, user_id) DO UPDATE
+            SET updated_at = excluded.updated_at
+        --
+    ),
+    total_views AS (
+        --
+        INSERT INTO profile_total_views (user_id, count)
+        SELECT id, 0
+        FROM upserted
+        ON CONFLICT DO NOTHING
+        --
+    ),
+    referral AS (
+        --
+        INSERT INTO referrals (referee_user_id, referrer_user_id)
+        SELECT id, @referrer_user_id::BIGINT
+        FROM upserted
+        WHERE inserted
+          AND @referrer_user_id::BIGINT > 0
+          AND EXISTS (SELECT 1 FROM users WHERE id = @referrer_user_id::BIGINT)
+        ON CONFLICT DO NOTHING
+        --
+    )
+SELECT id, inserted
+FROM upserted;
