@@ -4,7 +4,7 @@
   "description": "GitHub profile views statistics",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.17.6"
+    "esbuild": "^0.28.2"
   },
   "scripts": {
     "esbuild": "node esbuild.js"
